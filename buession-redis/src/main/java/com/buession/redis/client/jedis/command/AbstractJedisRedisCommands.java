@@ -39,7 +39,6 @@ import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;
-import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
 import redis.clients.jedis.UnifiedJedis;
@@ -75,14 +74,14 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 
 	protected <R> R executeCommand(final RedisCommand command,
 	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
-	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
 		return executeCommand(command, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command,
 	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
-	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
 		if(isTransaction()){
@@ -106,14 +105,14 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args,
 	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
-	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
 		return executeCommand(command, args, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final CommandArguments args,
 	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
-	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
 		if(isTransaction()){
@@ -137,14 +136,14 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
-	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
 		return executeCommand(command, subCommand, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
-	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
 		if(isTransaction()){
@@ -171,7 +170,7 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final CommandArguments args,
 	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
-	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
 		return executeCommand(command, subCommand, args, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
@@ -179,7 +178,7 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                                   final CommandArguments args,
 	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
-	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
 		if(isTransaction()){
@@ -333,7 +332,8 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 	 *
 	 * @since 4.0.0
 	 */
-	protected final static class JedisPipelineCommand<SR, R> extends AbstractPipelineCommand<Pipeline, Response<SR>, SR,
+	protected final static class JedisPipelineCommand<SR, R>
+			extends AbstractPipelineCommand<redis.clients.jedis.AbstractPipeline, Response<SR>, SR,
 			R> {
 
 		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command) {
@@ -341,7 +341,8 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		}
 
 		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command,
-		                            final Executor<Pipeline, Response<SR>> executor, final Converter<SR, R> converter) {
+		                            final Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> executor,
+		                            final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
@@ -351,7 +352,8 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		}
 
 		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command,
-		                            final RedisSubCommand subCommand, final Executor<Pipeline, Response<SR>> executor,
+		                            final RedisSubCommand subCommand,
+		                            final Executor<redis.clients.jedis.AbstractPipeline, Response<SR>> executor,
 		                            final Converter<SR, R> converter) {
 			super(client, command, subCommand, executor, converter);
 		}
@@ -365,8 +367,8 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 				throw new NotMultiRedisException(getCommand(), getSubCommand());
 			}
 
-			final PipelineProxy<Pipeline, JedisResult<SR, R>> pipelineProxy =
-					(PipelineProxy<redis.clients.jedis.Pipeline, JedisResult<SR, R>>) pipeline;
+			final PipelineProxy<redis.clients.jedis.AbstractPipeline, JedisResult<SR, R>> pipelineProxy =
+					(PipelineProxy<redis.clients.jedis.AbstractPipeline, JedisResult<SR, R>>) pipeline;
 			final Response<SR> response = executor.execute(pipelineProxy.getObject());
 			final JedisResult<SR, R> result =
 					converter == null ? newJedisResult(response) : newJedisResult(response, converter);

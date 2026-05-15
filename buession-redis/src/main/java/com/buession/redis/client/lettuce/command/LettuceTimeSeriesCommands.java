@@ -123,68 +123,68 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                           final long timeBucket) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
-				.add(timeBucket);
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType).add(timeBucket);
 		return executeCommand(RedisCommand.TS_CREATERULE, args);
 	}
 
 	@Override
 	public Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
 	                           final long timeBucket) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
-				.add(timeBucket);
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType).add(timeBucket);
 		return executeCommand(RedisCommand.TS_CREATERULE, args);
 	}
 
 	@Override
 	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                           final long timeBucket, final long alignTimestamp) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
-				.add(timeBucket, alignTimestamp);
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType).add(timeBucket).add(alignTimestamp);
 		return executeCommand(RedisCommand.TS_CREATERULE, args);
 	}
 
 	@Override
 	public Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
 	                           final long timeBucket, final long alignTimestamp) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
-				.add(timeBucket, alignTimestamp);
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType).add(timeBucket).add(alignTimestamp);
 		return executeCommand(RedisCommand.TS_CREATERULE, args);
 	}
 
 	@Override
 	public Long tsDecrBy(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_DECRBY, args);
 	}
 
 	@Override
 	public Long tsDecrBy(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_DECRBY, args);
 	}
 
 	@Override
 	public Long tsDecrBy(final String key, final double value, final DecrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_DECRBY, args);
 	}
 
 	@Override
 	public Long tsDecrBy(final byte[] key, final double value, final DecrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_DECRBY, args);
 	}
 
 	@Override
 	public Long tsDel(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_DEL, args);
 	}
 
 	@Override
 	public Long tsDel(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_DEL, args);
 	}
 
@@ -226,25 +226,25 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Long tsIncrBy(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_INCRBY, args);
 	}
 
 	@Override
 	public Long tsIncrBy(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_INCRBY, args);
 	}
 
 	@Override
 	public Long tsIncrBy(final String key, final double value, final IncrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_INCRBY, args);
 	}
 
 	@Override
 	public Long tsIncrBy(final byte[] key, final double value, final IncrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_INCRBY, args);
 	}
 
@@ -305,7 +305,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
@@ -313,7 +313,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
@@ -321,7 +321,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
@@ -329,7 +329,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
@@ -338,8 +338,8 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final int count,
 	                                                     final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
 
@@ -347,31 +347,31 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final int count,
 	                                                     final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
@@ -379,7 +379,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
@@ -387,7 +387,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
@@ -395,7 +395,7 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
@@ -404,8 +404,8 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final int count,
 	                                                        final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
 
@@ -413,24 +413,24 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final int count,
 	                                                        final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_MREVRANGE, args);
 	}
 
@@ -448,117 +448,117 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                       final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                          final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args);
 	}
 

@@ -107,13 +107,13 @@ public final class LettuceTDigestCommands extends AbstractLettuceRedisCommands i
 
 	@Override
 	public Status tdigestCreate(final String key, final int compression) {
-		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
+		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION").add(compression);
 		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
 	@Override
 	public Status tdigestCreate(final byte[] key, final int compression) {
-		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
+		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION").add(compression);
 		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
@@ -156,14 +156,14 @@ public final class LettuceTDigestCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("COMPRESSION", compression);
+				.add("COMPRESSION").add(compression);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("COMPRESSION", compression);
+				.add("COMPRESSION").add(compression);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
@@ -171,7 +171,7 @@ public final class LettuceTDigestCommands extends AbstractLettuceRedisCommands i
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression,
 	                           final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
+				.add("COMPRESSION").add(compression).add(override ? "OVERRIDE" : null);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
@@ -179,7 +179,7 @@ public final class LettuceTDigestCommands extends AbstractLettuceRedisCommands i
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression,
 	                           final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
+				.add("COMPRESSION").add(compression).add(override ? "OVERRIDE" : null);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 

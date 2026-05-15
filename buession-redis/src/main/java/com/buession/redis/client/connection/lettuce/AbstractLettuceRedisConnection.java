@@ -159,12 +159,12 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 
 	@Override
 	public boolean isConnected() {
-		return false;//conn != null && conn.isOpen();
+		return client != null && client.isConnected();
 	}
 
 	@Override
 	public boolean isClosed() {
-		return false;// conn == null || conn.isOpen() == false;
+		return client == null || client.isClosed();
 	}
 
 	@Override

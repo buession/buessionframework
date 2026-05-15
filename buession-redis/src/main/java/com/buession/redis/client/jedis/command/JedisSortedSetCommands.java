@@ -66,7 +66,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.BZMPOP, args,
 				(cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), keys),
@@ -77,7 +77,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.BZMPOP, args,
 				(cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), keys),
@@ -89,8 +89,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax,
 	                                            final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax)
+				.add(Keyword.Common.COUNT).add(count);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.BZMPOP, args,
 				(cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), count, keys),
@@ -102,8 +102,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax,
 	                                            final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax)
+				.add(Keyword.Common.COUNT).add(count);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.BZMPOP, args,
 				(cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), count, keys),
@@ -214,14 +214,14 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zCount(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZCOUNT, args, (cmd)->cmd.zcount(key, min, max),
 				(cmd)->cmd.zcount(key, min, max), (cmd)->cmd.zcount(key, min, max));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZCOUNT, args, (cmd)->cmd.zcount(key, min, max),
 				(cmd)->cmd.zcount(key, min, max), (cmd)->cmd.zcount(key, min, max));
 	}
@@ -298,37 +298,39 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zInter(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zInter(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zInter(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zInter(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zInter(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zInter(keys, new JedisZParams(weights), args);
 	}
 
@@ -346,42 +348,44 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate)
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate)
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights)
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights)
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights)
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights)
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights)
 				.add(Keyword.Common.WITHSCORES);
 		return zInterWithScores(keys, new JedisZParams(weights), args);
 	}
@@ -402,14 +406,16 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public long zInterCard(final String[] keys, final int limit) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT)
+				.add(limit);
 		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, keys),
 				(cmd)->cmd.zintercard(limit, keys), (cmd)->cmd.zintercard(limit, keys));
 	}
 
 	@Override
 	public long zInterCard(final byte[][] keys, final int limit) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT)
+				.add(limit);
 		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, keys),
 				(cmd)->cmd.zintercard(limit, keys), (cmd)->cmd.zintercard(limit, keys));
 	}
@@ -431,14 +437,14 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("AGGREGATE", aggregate);
+				.add("AGGREGATE").add(aggregate);
 		return zInterStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("AGGREGATE", aggregate);
+				.add("AGGREGATE").add(aggregate);
 		return zInterStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
@@ -446,7 +452,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+				.add("AGGREGATE").add(aggregate).add("WEIGHTS").add(weights);
 		return zInterStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
@@ -454,21 +460,21 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+				.add("AGGREGATE").add(aggregate).add("WEIGHTS").add(weights);
 		return zInterStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("WEIGHTS", weights);
+				.add("WEIGHTS").add(weights);
 		return zInterStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
-				.add("WEIGHTS", weights);
+				.add("WEIGHTS").add(weights);
 		return zInterStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
@@ -514,7 +520,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax, final int count) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax).add("COUNT", count);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax)
+				.add(Keyword.Common.COUNT).add(count);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.ZMPOP, args,
 				(cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), count, keys),
@@ -525,7 +532,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax, final int count) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax).add("COUNT", count);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax)
+				.add(Keyword.Common.COUNT).add(count);
 		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
 		return executeCommand(RedisCommand.ZMPOP, args,
 				(cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), count, keys),
@@ -684,119 +692,123 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return zRange(key, new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return zRange(key, new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return zRange(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return zRange(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null);
 		return zRange(key, new JedisZRangeParams(type, start, end, rev), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null);
 		return zRange(key, new JedisZRangeParams(type, start, end, rev), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null);
 		return zRange(key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null);
 		return zRange(key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 	                           final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
 	                           final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
 	                           final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRange(key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
 				(cmd)->cmd.zrangeWithScores(key, start, end), (cmd)->cmd.zrangeWithScores(key, start, end),
 				new ListConverter<>(new TupleConverter()));
@@ -804,7 +816,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
 				(cmd)->cmd.zrangeWithScores(key, start, end), (cmd)->cmd.zrangeWithScores(key, start, end),
 				new ListConverter<>(new TupleConverter()));
@@ -812,109 +824,113 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final int offset,
 	                                    final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final int offset,
 	                                    final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
 	                                    final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
 	                                    final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev,
 	                                    final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev,
 	                                    final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeWithScores(key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZRANGEBYLEX, args,
 				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)),
@@ -923,7 +939,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZRANGEBYLEX, args,
 				(cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				(cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
@@ -933,8 +949,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final int offset,
 	                                final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYLEX, args,
 				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max), offset, count),
 				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max), offset, count),
@@ -944,8 +960,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
 	                                final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYLEX, args,
 				(cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max),
 						offset, count),
@@ -957,7 +973,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max)),
@@ -966,7 +982,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args, (cmd)->cmd.zrangeByScore(key, min, max),
 				(cmd)->cmd.zrangeByScore(key, min, max), (cmd)->cmd.zrangeByScore(key, min, max));
 	}
@@ -974,8 +990,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max, final int offset,
 	                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max), offset, count),
 				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max), offset, count),
@@ -985,8 +1001,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
 	                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScore(key, min, max, offset, count),
 				(cmd)->cmd.zrangeByScore(key, min, max, offset, count),
@@ -995,7 +1011,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.WITHSCORES);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
@@ -1005,7 +1021,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.WITHSCORES);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max),
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max),
@@ -1015,8 +1031,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 	                                           final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.WITHSCORES)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max), offset,
 						count),
@@ -1029,8 +1045,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
 	                                           final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.WITHSCORES)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
@@ -1040,34 +1056,34 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(type);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final ZRangeType type) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(type);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final ZRangeType type, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(type)
 				.add(rev ? "REV" : null);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, rev), args);
 	}
@@ -1075,7 +1091,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final ZRangeType type, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(type)
 				.add(rev ? "REV" : null);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, rev), args);
 	}
@@ -1083,78 +1099,80 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(rev ? "REV" : null);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(rev ? "REV" : null);
+		final CommandArguments args = CommandArguments.create(destKey, key).add(start).add(end).add(rev ? "REV" : null);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final int offset,
 	                        final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final int offset,
 	                        final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final ZRangeType type, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final ZRangeType type, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(type)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final ZRangeType type, final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
-				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final ZRangeType type, final boolean rev, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
-				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(type)
+				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(type, start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
 	                        final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
 	                        final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(rev ? "REV" : null)
-				.add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
 		return zRangeStore(destKey, key, new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
@@ -1204,7 +1222,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREMRANGEBYLEX, args,
 				(cmd)->cmd.zremrangeByLex(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zremrangeByLex(key, Double.toString(min), Double.toString(max)),
@@ -1213,7 +1231,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREMRANGEBYLEX, args,
 				(cmd)->cmd.zremrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				(cmd)->cmd.zremrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
@@ -1222,21 +1240,21 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangeByRank(key, start, end),
 				(cmd)->cmd.zremrangeByRank(key, start, end), (cmd)->cmd.zremrangeByRank(key, start, end));
 	}
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangeByRank(key, start, end),
 				(cmd)->cmd.zremrangeByRank(key, start, end), (cmd)->cmd.zremrangeByRank(key, start, end));
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREMRANGEBYSCORE, args,
 				(cmd)->cmd.zremrangeByScore(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zremrangeByScore(key, Double.toString(min), Double.toString(max)),
@@ -1245,7 +1263,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREMRANGEBYSCORE, args,
 				(cmd)->cmd.zremrangeByScore(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				(cmd)->cmd.zremrangeByScore(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
@@ -1254,21 +1272,21 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zRevRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(key, start, end),
 				(cmd)->cmd.zrevrange(key, start, end), (cmd)->cmd.zrevrange(key, start, end));
 	}
 
 	@Override
 	public List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(key, start, end),
 				(cmd)->cmd.zrevrange(key, start, end), (cmd)->cmd.zrevrange(key, start, end));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrangeWithScores(key, start, end),
 				(cmd)->cmd.zrevrangeWithScores(key, start, end), (cmd)->cmd.zrevrangeWithScores(key, start, end),
 				new ListConverter<>(new TupleConverter()));
@@ -1276,7 +1294,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrangeWithScores(key, start, end),
 				(cmd)->cmd.zrevrangeWithScores(key, start, end), (cmd)->cmd.zrevrangeWithScores(key, start, end),
 				new ListConverter<>(new TupleConverter()));
@@ -1284,7 +1302,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
 				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max)),
@@ -1293,7 +1311,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
@@ -1303,8 +1321,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
 	                                   final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
 				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max), offset, count),
 				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max), offset, count),
@@ -1314,8 +1332,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
 	                                   final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max),
 						offset, count),
@@ -1327,7 +1345,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max)),
@@ -1336,7 +1354,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
@@ -1346,8 +1364,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
 	                                     final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max), offset, count),
 				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max), offset, count),
@@ -1357,8 +1375,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
 	                                     final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max),
 						offset, count),
@@ -1370,7 +1388,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
@@ -1380,7 +1398,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max), (cmd)->cmd.zrangeByScoreWithScores(key, min, max),
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max), new ListConverter<>(new TupleConverter()));
@@ -1389,8 +1407,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 	                                              final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max), offset,
 						count),
@@ -1403,8 +1421,8 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
 	                                              final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
 				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
@@ -1460,39 +1478,39 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return zScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return zScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return zScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return zScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return zScan(key, cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return zScan(key, cursor, new JedisScanParams(count), args);
 	}
 
@@ -1524,37 +1542,39 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zUnion(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zUnion(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zUnion(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zUnion(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zUnion(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zUnion(keys, new JedisZParams(weights), args);
 	}
 
@@ -1572,37 +1592,39 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zUnionWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate);
 		return zUnionWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zUnionWithScores(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE").add(aggregate).add("WEIGHTS")
+				.add(weights);
 		return zUnionWithScores(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zUnionWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS").add(weights);
 		return zUnionWithScores(keys, new JedisZParams(weights), args);
 	}
 
@@ -1622,41 +1644,41 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE").add(aggregate);
 		return zUnionStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE").add(aggregate);
 		return zUnionStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 	                        final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
-				.add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE").add(aggregate)
+				.add("WEIGHTS").add(weights);
 		return zUnionStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 	                        final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
-				.add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE").add(aggregate)
+				.add("WEIGHTS").add(weights);
 		return zUnionStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS").add(weights);
 		return zUnionStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS").add(weights);
 		return zUnionStore(destKey, keys, new JedisZParams(weights), args);
 	}
 

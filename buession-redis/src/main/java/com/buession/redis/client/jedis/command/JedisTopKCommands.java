@@ -133,7 +133,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<KeyValue<String, Long>> topKListWithCount(final String key) {
-		final CommandArguments args = CommandArguments.create(key, "WITHCOUNT");
+		final CommandArguments args = CommandArguments.create(key).add("WITHCOUNT");
 		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(key),
 				(cmd)->cmd.topkListWithCount(key), (cmd)->cmd.topkListWithCount(key), (v)->{
 					final List<KeyValue<String, Long>> result = new ArrayList<>(v.size());
@@ -148,7 +148,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<KeyValue<byte[], Long>> topKListWithCount(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key, "WITHCOUNT");
+		final CommandArguments args = CommandArguments.create(key).add("WITHCOUNT");
 		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)),
 				(cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)),
 				(cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)), (v)->{
@@ -176,7 +176,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public Status topKReserve(final String key, final long topK) {
-		final CommandArguments args = CommandArguments.create(key, topK);
+		final CommandArguments args = CommandArguments.create(key).add(topK);
 		return executeCommand(RedisCommand.TOPK_RESERVE, args, (cmd)->cmd.topkReserve(key, topK),
 				(cmd)->cmd.topkReserve(key, topK), (cmd)->cmd.topkReserve(key, topK),
 				new OkStatusConverter());
@@ -190,7 +190,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status topKReserve(final String key, final long topK, final long width, final long depth,
 	                          final double decay) {
-		final CommandArguments args = CommandArguments.create(key, topK).add(width).add(depth).add(decay);
+		final CommandArguments args = CommandArguments.create(key).add(topK).add(width).add(depth).add(decay);
 		return executeCommand(RedisCommand.TOPK_QUERY, args, (cmd)->cmd.topkReserve(key, topK, width, depth, decay),
 				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
 				(cmd)->cmd.topkReserve(key, topK, width, depth, decay), new OkStatusConverter());

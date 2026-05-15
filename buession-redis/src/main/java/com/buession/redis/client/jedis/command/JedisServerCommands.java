@@ -25,6 +25,8 @@
 package com.buession.redis.client.jedis.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.client.connection.RedisSentinelConnection;
+import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
@@ -56,6 +58,7 @@ import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.server.ShutdownArgument;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import redis.clients.jedis.Pipeline;
 
 import java.util.List;
 import java.util.Map;
@@ -237,7 +240,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public List<String> commandGetKeys(final RedisCommand command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command, args);
+		final CommandArguments args1 = CommandArguments.create(command).add(args);
 		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_GETKEYS, args1);
 	}
 
@@ -306,7 +309,12 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(RedisCommand.DBSIZE, null, (cmd)->cmd.dbSize(), (cmd)->cmd.dbSize());
+		if(client.getConnection() instanceof RedisStandaloneConnection ||
+				client.getConnection() instanceof RedisSentinelConnection){
+			return executeCommand(RedisCommand.DBSIZE, null, (cmd)->((Pipeline) cmd).dbSize(), (cmd)->cmd.dbSize());
+		}else{
+			return executeCommand(RedisCommand.DBSIZE, null, null, (cmd)->cmd.dbSize());
+		}
 	}
 
 	@Override
@@ -481,7 +489,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES").add(samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(key, samples), (cmd)->cmd.memoryUsage(key, samples),
 				(cmd)->cmd.memoryUsage(key, samples));
@@ -489,7 +497,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES").add(samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(key, samples), (cmd)->cmd.memoryUsage(key, samples),
 				(cmd)->cmd.memoryUsage(key, samples));
@@ -560,7 +568,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host, port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		return executeCommand(RedisCommand.REPLICAOF, args);
 	}
 
@@ -613,7 +621,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host, port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		return executeCommand(RedisCommand.SLAVEOF, args);
 	}
 

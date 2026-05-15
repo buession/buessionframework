@@ -88,13 +88,13 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB).add(db);
 		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB).add(db);
 		return copy(key, destKey, db, false, args);
 	}
 
@@ -114,14 +114,14 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db)
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB).add(db)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db)
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB).add(db)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(key, destKey, db, replace, args);
 	}
@@ -275,22 +275,22 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout)
-				.add(Keyword.Key.KEYS, keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add("").add(db).add(timeout)
+				.add(Keyword.Key.KEYS).add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(SafeEncoder.encode(keys)), args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout)
-				.add(Keyword.Key.KEYS, keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add("").add(db).add(timeout)
+				.add(Keyword.Key.KEYS).add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(keys), args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 	                      final MigrateArgument argument, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout).add(argument)
+		final CommandArguments args = CommandArguments.create(host).add(port).add("").add(db).add(timeout).add(argument)
 				.add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(argument, SafeEncoder.encode(keys)), args);
 	}
@@ -298,7 +298,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 	                      final MigrateArgument argument, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout).add(argument)
+		final CommandArguments args = CommandArguments.create(host).add(port).add("").add(db).add(timeout).add(argument)
 				.add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(argument, keys), args);
 	}
@@ -563,39 +563,39 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public ScanResult<String> scan(final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return scan(cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> scan(final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return scan(cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<String> scan(final String cursor, final String pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return scan(cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> scan(final byte[] cursor, final byte[] pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return scan(cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<String> scan(final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Common.COUNT).add(count);
 		return scan(cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> scan(final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(cursor).add(Keyword.Common.COUNT).add(count);
 		return scan(cursor, new LettuceScanArgs(count), args);
 	}
 
@@ -627,26 +627,26 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+				.add(offset).add(count);
 		return stringSort(SafeEncoder.encode(key), new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+				.add(offset).add(count);
 		return binarySort(key, new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public List<String> sort(final String key, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return stringSort(SafeEncoder.encode(key), new LettuceSortArgs(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return binarySort(key, new LettuceSortArgs(offset, count), args);
 	}
 
@@ -658,7 +658,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create(key).add("STORE", destKey);
+		final CommandArguments args = CommandArguments.create(key).add("STORE").add(destKey);
 		return sortStore(key, destKey, new LettuceSortArgs(), args);
 	}
 
@@ -670,7 +670,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("STORE", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("STORE").add(destKey);
 		return sortStore(key, destKey, new LettuceSortArgs(argument), args);
 	}
 
@@ -678,7 +678,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	public Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
 	                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count).add("STORE", destKey);
+				.add(offset).add(count).add("STORE", destKey);
 		return sortStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
 				new LettuceSortArgs(argument, offset, count),
 				args);
@@ -688,13 +688,13 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
 	                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count).add("STORE", destKey);
+				.add(offset).add(count).add("STORE").add(destKey);
 		return sortStore(key, destKey, new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count)
 				.add("STORE", destKey);
 		return sortStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), new LettuceSortArgs(offset, count),
 				args);
@@ -702,8 +702,8 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
-				.add("STORE", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count)
+				.add("STORE").add(destKey);
 		return sortStore(key, destKey, new LettuceSortArgs(offset, count), args);
 	}
 
@@ -736,26 +736,26 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<String> sortRo(final String key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+				.add(offset).add(count);
 		return stringSortRo(SafeEncoder.encode(key), new LettuceSortArgs(argument).limit(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
-				.add(offset, count);
+				.add(offset).add(count);
 		return binarySortRo(key, new LettuceSortArgs(argument).limit(offset, count), args);
 	}
 
 	@Override
 	public List<String> sortRo(final String key, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return stringSortRo(SafeEncoder.encode(key), new LettuceSortArgs().limit(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset).add(count);
 		return binarySortRo(key, new LettuceSortArgs().limit(offset, count), args);
 	}
 

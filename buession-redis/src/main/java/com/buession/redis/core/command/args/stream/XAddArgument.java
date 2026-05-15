@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.stream;
 
 import com.buession.redis.core.StreamDeletionPolicy;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
@@ -35,7 +36,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XAddArgument {
+public class XAddArgument implements Argument {
 
 	/**
 	 * 如果流不存在，不自动创建它
@@ -115,7 +116,7 @@ public class XAddArgument {
 	 *        {@link MaxLenMinId}
 	 */
 	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy,
-						final MaxLenMinId<?> maxLenMinId) {
+	                    final MaxLenMinId<?> maxLenMinId) {
 		this(noMkStream, deletionPolicy);
 		this.maxLenMinId = maxLenMinId;
 	}
@@ -133,7 +134,7 @@ public class XAddArgument {
 	 *        {@link MaxLenMinId}
 	 */
 	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp,
-						final MaxLenMinId<?> maxLenMinId) {
+	                    final MaxLenMinId<?> maxLenMinId) {
 		this(noMkStream, deletionPolicy, idmp);
 		this.maxLenMinId = maxLenMinId;
 	}
@@ -216,7 +217,7 @@ public class XAddArgument {
 	 *        {@link MaxLenMinId}
 	 */
 	public XAddArgument(final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp,
-						final MaxLenMinId<?> maxLenMinId) {
+	                    final MaxLenMinId<?> maxLenMinId) {
 		this(deletionPolicy, idmp);
 		this.maxLenMinId = maxLenMinId;
 	}

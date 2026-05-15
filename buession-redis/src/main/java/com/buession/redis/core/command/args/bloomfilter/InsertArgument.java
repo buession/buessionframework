@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.bloomfilter;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class InsertArgument {
+public class InsertArgument implements Argument {
 
 	/**
 	 * 初始容量
@@ -116,7 +117,7 @@ public class InsertArgument {
 	 * 		是否禁用自动扩容
 	 */
 	public InsertArgument(final long capacity, final double errorRate, final boolean noCreate,
-						  final boolean nonScaling) {
+	                      final boolean nonScaling) {
 		this(capacity, errorRate);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -137,7 +138,7 @@ public class InsertArgument {
 	 * 		是否禁用自动扩容
 	 */
 	public InsertArgument(final long capacity, final double errorRate, final int expansion, final boolean noCreate,
-						  final boolean nonScaling) {
+	                      final boolean nonScaling) {
 		this(capacity, errorRate, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -169,7 +170,7 @@ public class InsertArgument {
 	 * 		是否禁用自动扩容
 	 */
 	public InsertArgument(final long capacity, final int expansion, final boolean noCreate,
-						  final boolean nonScaling) {
+	                      final boolean nonScaling) {
 		this(capacity, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -242,7 +243,7 @@ public class InsertArgument {
 	 * 		是否禁用自动扩容
 	 */
 	public InsertArgument(final double errorRate, final int expansion, final boolean noCreate,
-						  final boolean nonScaling) {
+	                      final boolean nonScaling) {
 		this(errorRate, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;

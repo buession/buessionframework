@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.bitmap;
 
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -33,7 +34,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public interface BitFieldArgument {
+public interface BitFieldArgument extends Argument {
 
 	interface Op extends BitFieldArgument {
 
@@ -119,7 +120,7 @@ public interface BitFieldArgument {
 		private final long value;
 
 		private BaseSetOp(final String commandType, final BitFieldEncoding encoding, final boolean bitOffset,
-						  final int offset, final long value) {
+		                  final int offset, final long value) {
 			this.commandType = commandType;
 			this.encoding = encoding;
 			this.bitOffset = bitOffset;
@@ -167,7 +168,7 @@ public interface BitFieldArgument {
 	class DefaultSet extends BaseSetOp {
 
 		public DefaultSet(final BitFieldEncoding encoding, final boolean bitOffset, final int offset,
-						  final long value) {
+		                  final long value) {
 			super(Keyword.Common.SET.name(), encoding, bitOffset, offset, value);
 		}
 

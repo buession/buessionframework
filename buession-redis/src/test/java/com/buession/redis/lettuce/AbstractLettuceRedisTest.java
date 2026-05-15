@@ -90,7 +90,7 @@ public abstract class AbstractLettuceRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(clusterDataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

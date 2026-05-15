@@ -61,63 +61,63 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object eval(final String script) {
-		final CommandArguments args = CommandArguments.create(script, 0);
+		final CommandArguments args = CommandArguments.create(script).add(0);
 		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script), (cmd)->cmd.eval(script),
 				(cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
-		final CommandArguments args = CommandArguments.create(script, 0);
+		final CommandArguments args = CommandArguments.create(script).add(0);
 		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script), (cmd)->cmd.eval(script),
 				(cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final String script, final String... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
 		return eval(script, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
 		return eval(script, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys).add(arguments);
 		return eval(script, keys, arguments, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys).add(arguments);
 		return eval(script, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalRo(final String script) {
-		final CommandArguments args = CommandArguments.create(script, 0);
+		final CommandArguments args = CommandArguments.create(script).add(0);
 		return evalRo(script, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script) {
-		final CommandArguments args = CommandArguments.create(script, 0);
+		final CommandArguments args = CommandArguments.create(script).add(0);
 		return evalRo(script, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final String script, final String... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
 		return evalRo(script, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
 		return evalRo(script, keys, new byte[][]{}, args);
 	}
 
@@ -135,147 +135,147 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object evalSha(final String digest) {
-		final CommandArguments args = CommandArguments.create(digest, 0);
+		final CommandArguments args = CommandArguments.create(digest).add(0);
 		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest), (cmd)->cmd.evalsha(digest),
 				(cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create(digest, 0);
+		final CommandArguments args = CommandArguments.create(digest).add(0);
 		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest), (cmd)->cmd.evalsha(digest),
 				(cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
 		return evalSha(digest, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
 		return evalSha(digest, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
 		return evalSha(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
 		return evalSha(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest) {
-		final CommandArguments args = CommandArguments.create(digest, 0);
+		final CommandArguments args = CommandArguments.create(digest).add(0);
 		return evalShaRo(digest, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create(digest, 0);
+		final CommandArguments args = CommandArguments.create(digest).add(0);
 		return evalShaRo(digest, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
 		return evalShaRo(digest, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
 		return evalShaRo(digest, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
 		return evalShaRo(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
 		return evalShaRo(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCall(final String function) {
-		final CommandArguments args = CommandArguments.create(function, 0);
+		final CommandArguments args = CommandArguments.create(function).add(0);
 		return fCall(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function) {
-		final CommandArguments args = CommandArguments.create(function, 0);
+		final CommandArguments args = CommandArguments.create(function).add(0);
 		return fCall(function, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCall(final String function, final String... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
 		return fCall(function, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
 		return fCall(function, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCall(final String function, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys).add(arguments);
 		return fCall(function, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys).add(arguments);
 		return fCall(function, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function) {
-		final CommandArguments args = CommandArguments.create(function, 0);
+		final CommandArguments args = CommandArguments.create(function).add(0);
 		return fCallRo(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function) {
-		final CommandArguments args = CommandArguments.create(function, 0);
+		final CommandArguments args = CommandArguments.create(function).add(0);
 		return fCallRo(function, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
 		return fCallRo(function, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
 		return fCallRo(function, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys).add(arguments);
 		return fCallRo(function, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys).add(arguments);
 		return fCallRo(function, keys, arguments, args);
 	}
 

@@ -151,7 +151,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                           final long timeBucket) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType)
 				.add(timeBucket);
 		final AggregationTypeConverter aggregationTypeConverter = new AggregationTypeConverter();
 		return executeCommand(RedisCommand.TS_CREATERULE, args,
@@ -172,8 +173,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                           final long timeBucket, final long alignTimestamp) {
-		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
-				.add(timeBucket, alignTimestamp);
+		final CommandArguments args = CommandArguments.create(destKey).add(sourceKey).add("AGGREGATION")
+				.add(aggregationType).add(timeBucket).add(alignTimestamp);
 		final AggregationTypeConverter aggregationTypeConverter = new AggregationTypeConverter();
 		return executeCommand(RedisCommand.TS_CREATERULE, args,
 				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
@@ -194,7 +195,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Long tsDecrBy(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_DECRBY, args, (cmd)->cmd.tsDecrBy(key, value),
 				(cmd)->cmd.tsDecrBy(key, value), (cmd)->cmd.tsDecrBy(key, value));
 	}
@@ -206,7 +207,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Long tsDecrBy(final String key, final double value, final DecrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_DECRBY, args,
 				(cmd)->cmd.tsDecrBy(key, value, new JedisTSDecrByParams(argument)),
 				(cmd)->cmd.tsDecrBy(key, value, new JedisTSDecrByParams(argument)),
@@ -220,7 +221,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Long tsDel(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_DEL, args, (cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp), (cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp));
 	}
@@ -270,7 +271,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Long tsIncrBy(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.TS_INCRBY, args, (cmd)->cmd.tsIncrBy(key, value),
 				(cmd)->cmd.tsIncrBy(key, value), (cmd)->cmd.tsIncrBy(key, value));
 	}
@@ -282,7 +283,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Long tsIncrBy(final String key, final double value, final IncrByArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
 		return executeCommand(RedisCommand.TS_INCRBY, args,
 				(cmd)->cmd.tsIncrBy(key, value, new JedisTSIncrByParams(argument)),
 				(cmd)->cmd.tsIncrBy(key, value, new JedisTSIncrByParams(argument)),
@@ -359,7 +360,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return tsMRange(fromTimestamp, toTimestamp, filters, (k)->k, args);
 	}
@@ -367,7 +368,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return tsMRange(fromTimestamp, toTimestamp, SafeEncoder.encode(filters), SafeEncoder::encode, args);
 	}
@@ -375,7 +376,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters), (k)->k, args);
 	}
@@ -383,7 +384,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters), SafeEncoder::encode, args);
 	}
@@ -392,8 +393,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final int count,
 	                                                     final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), (k)->k, args);
 	}
 
@@ -401,31 +402,31 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final TSMRangeArgument argument, final int count,
 	                                                     final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), SafeEncoder::encode, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), (k)->k, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                     final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return tsMRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), SafeEncoder::encode, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return tsMRevRange(fromTimestamp, toTimestamp, filters, (k)->k, args);
 	}
@@ -433,7 +434,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters);
 		return tsMRevRange(fromTimestamp, toTimestamp, SafeEncoder.encode(filters), SafeEncoder::encode, args);
 	}
@@ -441,7 +442,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters), (k)->k, args);
 	}
@@ -449,7 +450,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
 				.add(filters).add(argument);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters), SafeEncoder::encode, args);
 	}
@@ -458,8 +459,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final int count,
 	                                                        final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), (k)->k, args);
 	}
 
@@ -467,8 +468,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final TSMRangeArgument argument, final int count,
 	                                                        final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT).add(count);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), SafeEncoder::encode,
 				args);
 	}
@@ -476,16 +477,16 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), (k)->k, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                        final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
-				.add(filters).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp).add(toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT).add(count);
 		return tsMRevRange(new JedisTSMRangeParams(fromTimestamp, toTimestamp, filters, count), SafeEncoder::encode,
 				args);
 	}
@@ -507,7 +508,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_RANGE, args, (cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp), new ListConverter<>(new TSElementConverter()));
@@ -521,7 +522,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_RANGE, args,
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument)),
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument)),
@@ -538,8 +539,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args,
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument, count)),
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument, count)),
@@ -556,8 +557,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                       final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_RANGE, args,
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, count)),
 				(cmd)->cmd.tsRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, count)),
@@ -573,7 +574,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp);
 		return executeCommand(RedisCommand.TS_REVRANGE, args, (cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
@@ -588,7 +589,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument);
 		return executeCommand(RedisCommand.TS_REVRANGE, args,
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument)),
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument)),
@@ -605,8 +606,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final TSRangeArgument argument, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp).add(argument)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp).add(argument)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args,
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument, count)),
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, argument, count)),
@@ -623,8 +624,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                          final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp).add(toTimestamp)
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.TS_REVRANGE, args,
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, count)),
 				(cmd)->cmd.tsRevRange(key, new JedisTSRangeParams(fromTimestamp, toTimestamp, count)),

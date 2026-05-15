@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.command.args.timeseries;
 
+import com.buession.redis.core.command.args.Argument;
+
 import java.util.Map;
 
 /**
@@ -32,7 +34,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseTsAACArgument {
+abstract class BaseTsAACArgument implements Argument {
 
 	/**
 	 * 数据的保留时间（单位：毫秒）

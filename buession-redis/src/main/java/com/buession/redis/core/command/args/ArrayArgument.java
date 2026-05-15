@@ -22,46 +22,31 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.lettuce;
-
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.User;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
+package com.buession.redis.core.command.args;
 
 /**
+ * 数组参数
+ *
+ * @param <T>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceTransactionTest extends AbstractLettuceRedisTest {
+public interface ArrayArgument<T> extends Argument {
 
-	@Test
-	public void multi1() {
-		RedisTemplate redisTemplate = redisTemplate();
-		redisTemplate.multi();
-		redisTemplate.set("lp_s_1_1", "1");
-		redisTemplate.set("lp_s_1_2", "2");
-		List<Object> result = redisTemplate.exec();
-		System.out.println(result);
-		System.out.println(redisTemplate.get("lp_s_2"));
-	}
+	/**
+	 * 将参数以数组形式返回
+	 *
+	 * @return 以数组形式返回参数列表
+	 */
+	T[] toArray();
 
-	@Test
-	public void multi2() {
-		RedisTemplate redisTemplate = redisTemplate();
-		//redisTemplate.multi();
-		//redisTemplate.set("lp_s_2_1", "1");
-		//redisTemplate.set("lp_s_2_2", "2");
-		System.out.println(redisTemplate.get("lp_s_discard"));
-	}
-
-	@Test
-	public void discard() {
-		RedisTemplate redisTemplate = redisTemplate();
-		redisTemplate.multi();
-		redisTemplate.set("lp_s_discard", "B");
-		redisTemplate.discard();
-	}
+	/**
+	 * 将参数以二进制数组形式返回
+	 *
+	 * @return 以数组形式返回参数列表
+	 */
+	byte[][] toBinaryArray();
 
 }

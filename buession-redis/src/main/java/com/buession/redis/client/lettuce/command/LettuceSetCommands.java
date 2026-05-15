@@ -141,14 +141,16 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sInterCard(final String[] keys, final int limit) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT)
+				.add(limit);
 		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, SafeEncoder.encode(keys)),
 				(cmd)->cmd.sintercard(limit, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Long sInterCard(final byte[][] keys, final int limit) {
-		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT)
+				.add(limit);
 		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, keys),
 				(cmd)->cmd.sintercard(limit, keys));
 	}
@@ -317,39 +319,39 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return sScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return sScan(key, cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final String pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return sScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return sScan(key, cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return sScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return sScan(key, cursor, new LettuceScanArgs(count), args);
 	}
 

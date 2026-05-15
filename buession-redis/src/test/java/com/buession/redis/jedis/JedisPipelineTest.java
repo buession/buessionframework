@@ -40,14 +40,20 @@ public class JedisPipelineTest extends AbstractJedisRedisTest {
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
-		redisTemplate.set("ap_1", "AP_1");
-		redisTemplate.expire("ap_1", 60);
-		String ret = redisTemplate.get("ak");
-		//redisTemplate.role();
-		User user = redisTemplate.get("user", User.class);
-		System.out.println(user);
+		redisTemplate.set("lp_1", "1");
+		redisTemplate.set("lp_2", "2");
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
+		System.out.println(redisTemplate.get("lp_1"));
+	}
+
+	@Test
+	public void test2() {
+		RedisTemplate redisTemplate = redisTemplate();
+		redisTemplate.pipeline();
+		redisTemplate.set("lp_1_2", "1");
+		redisTemplate.set("lp_2_2", "2");
+		System.out.println(redisTemplate.get("lp_1_2"));
 	}
 
 }

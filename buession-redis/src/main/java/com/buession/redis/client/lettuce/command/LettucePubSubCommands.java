@@ -51,13 +51,13 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.PSUBSCRIBE, args);
 	}
 
@@ -199,25 +199,25 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels);
 		executeCommand(RedisCommand.SUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels);
 		executeCommand(RedisCommand.SUBSCRIBE, args);
 	}
 

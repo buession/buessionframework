@@ -96,7 +96,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args, (cmd)->cmd.hexpire(key, ttl, fields),
 				(cmd)->cmd.hexpire(key, ttl, fields), (cmd)->cmd.hexpire(key, ttl, fields));
@@ -104,7 +104,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args, (cmd)->cmd.hexpire(key, ttl, fields),
 				(cmd)->cmd.hexpire(key, ttl, fields), (cmd)->cmd.hexpire(key, ttl, fields));
@@ -112,8 +112,8 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HEXPIRE, args,
 				(cmd)->cmd.hexpire(key, ttl, optionConverter.convert(option), fields),
@@ -123,8 +123,8 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HEXPIRE, args,
 				(cmd)->cmd.hexpire(key, ttl, optionConverter.convert(option), fields),
@@ -134,8 +134,8 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args, (cmd)->cmd.hexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, fields));
@@ -143,8 +143,8 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args, (cmd)->cmd.hexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, fields));
@@ -154,7 +154,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 	                            final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HEXPIREAT, args,
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, optionConverter.convert(option), fields),
@@ -166,7 +166,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 	                            final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HEXPIREAT, args,
 				(cmd)->cmd.hexpireAt(key, unixTimestamp, optionConverter.convert(option), fields),
@@ -176,14 +176,16 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRETIME, args, (cmd)->cmd.hexpireTime(key, fields),
 				(cmd)->cmd.hexpireTime(key, fields), (cmd)->cmd.hexpireTime(key, fields));
 	}
 
 	@Override
 	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRETIME, args, (cmd)->cmd.hexpireTime(key, fields),
 				(cmd)->cmd.hexpireTime(key, fields), (cmd)->cmd.hexpireTime(key, fields));
 	}
@@ -218,68 +220,72 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<String> hGetDel(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETDEL, args, (cmd)->cmd.hgetdel(key, fields),
 				(cmd)->cmd.hgetdel(key, fields), (cmd)->cmd.hgetdel(key, fields));
 	}
 
 	@Override
 	public List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETDEL, args, (cmd)->cmd.hgetdel(key, fields),
 				(cmd)->cmd.hgetdel(key, fields), (cmd)->cmd.hgetdel(key, fields));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return hGetEx(key, new JedisHGetExParams(), fields, args);
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return hGetEx(key, new JedisHGetExParams(), fields, args);
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires)
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return hGetEx(key, new JedisHGetExParams(exType, expires), fields, args);
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires)
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return hGetEx(key, new JedisHGetExParams(exType, expires), fields, args);
 	}
 
 	@Override
 	public Long hIncrBy(final String key, final String field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBY, args, (cmd)->cmd.hincrBy(key, field, value),
 				(cmd)->cmd.hincrBy(key, field, value), (cmd)->cmd.hincrBy(key, field, value));
 	}
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBY, args, (cmd)->cmd.hincrBy(key, field, value),
 				(cmd)->cmd.hincrBy(key, field, value), (cmd)->cmd.hincrBy(key, field, value));
 	}
 
 	@Override
 	public Double hIncrByFloat(final String key, final String field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBYFLOAT, args, (cmd)->cmd.hincrByFloat(key, field, value),
 				(cmd)->cmd.hincrByFloat(key, field, value), (cmd)->cmd.hincrByFloat(key, field, value));
 	}
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBYFLOAT, args, (cmd)->cmd.hincrByFloat(key, field, value),
 				(cmd)->cmd.hincrByFloat(key, field, value), (cmd)->cmd.hincrByFloat(key, field, value));
 	}
@@ -350,21 +356,23 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hPersist(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPERSIST, args, (cmd)->cmd.hpersist(key, fields),
 				(cmd)->cmd.hpersist(key, fields), (cmd)->cmd.hpersist(key, fields));
 	}
 
 	@Override
 	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPERSIST, args, (cmd)->cmd.hpersist(key, fields),
 				(cmd)->cmd.hpersist(key, fields), (cmd)->cmd.hpersist(key, fields));
 	}
 
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl, fields),
 				(cmd)->cmd.hpexpire(key, ttl, fields), (cmd)->cmd.hpexpire(key, ttl, fields));
@@ -372,7 +380,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl, fields),
 				(cmd)->cmd.hpexpire(key, ttl, fields), (cmd)->cmd.hpexpire(key, ttl, fields));
@@ -381,7 +389,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HPEXPIRE, args,
 				(cmd)->cmd.hpexpire(key, ttl, optionConverter.convert(option), fields),
@@ -392,7 +400,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HPEXPIRE, args,
 				(cmd)->cmd.hpexpire(key, ttl, optionConverter.convert(option), fields),
@@ -403,7 +411,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args, (cmd)->cmd.hpexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, fields));
@@ -412,7 +420,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args, (cmd)->cmd.hpexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, fields),
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, fields));
@@ -422,7 +430,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 	                             final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HPEXPIREAT, args,
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, optionConverter.convert(option), fields),
@@ -434,7 +442,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 	                             final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		final ExpireOptionConverter optionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.HPEXPIREAT, args,
 				(cmd)->cmd.hpexpireAt(key, unixTimestamp, optionConverter.convert(option), fields),
@@ -444,28 +452,32 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hPExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRETIME, args, (cmd)->cmd.hpexpireTime(key, fields),
 				(cmd)->cmd.hpexpireTime(key, fields), (cmd)->cmd.hpexpireTime(key, fields));
 	}
 
 	@Override
 	public List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRETIME, args, (cmd)->cmd.hpexpireTime(key, fields),
 				(cmd)->cmd.hpexpireTime(key, fields), (cmd)->cmd.hpexpireTime(key, fields));
 	}
 
 	@Override
 	public List<Long> hPTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPTTL, args, (cmd)->cmd.hpttl(key, fields),
 				(cmd)->cmd.hpttl(key, fields), (cmd)->cmd.hpttl(key, fields));
 	}
 
 	@Override
 	public List<Long> hPTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPTTL, args, (cmd)->cmd.hpttl(key, fields),
 				(cmd)->cmd.hpttl(key, fields), (cmd)->cmd.hpttl(key, fields));
 	}
@@ -532,41 +544,41 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return hScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return hScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
 	                                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return hScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 	                                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return hScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return hScan(key, cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return hScan(key, cursor, new JedisScanParams(count), args);
 	}
 
@@ -588,14 +600,14 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
 				.add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
 				.add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(pattern), args);
 	}
@@ -603,29 +615,29 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern,
 	                                        final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count).add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern,
 	                                        final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count).add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count)
 				.add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count)
 				.add("NOVALUES");
 		return hScanNoValues(key, cursor, new JedisScanParams(count), args);
 	}
@@ -684,7 +696,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
 	                     final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType).add(expires).add(data);
 		return hSetEx(key, data, new JedisHSetExParams(fnxFxx, exType, expires), args);
 	}
 
@@ -692,7 +704,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
 	                     final KeyValue<byte[], byte[]>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType).add(expires).add(data);
 		return hSetEx(key, data, new JedisHSetExParams(fnxFxx, exType, expires), args);
 	}
 
@@ -700,7 +712,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final String key, final PxExType exType, final long expires,
 	                     final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(data);
 		return hSetEx(key, data, new JedisHSetExParams(exType, expires), args);
 	}
 
@@ -708,7 +720,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final byte[] key, final PxExType exType, final long expires,
 	                     final KeyValue<byte[], byte[]>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(data);
 		return hSetEx(key, data, new JedisHSetExParams(exType, expires), args);
 	}
 
@@ -744,14 +756,16 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> hTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HTTL, args, (cmd)->cmd.httl(key, fields),
 				(cmd)->cmd.httl(key, fields), (cmd)->cmd.httl(key, fields));
 	}
 
 	@Override
 	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HTTL, args, (cmd)->cmd.httl(key, fields),
 				(cmd)->cmd.httl(key, fields), (cmd)->cmd.httl(key, fields));
 	}

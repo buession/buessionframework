@@ -29,7 +29,7 @@ import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.RedisSubCommand;
-import com.buession.redis.core.ArrayArgument;
+import com.buession.redis.core.command.args.ArrayArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;

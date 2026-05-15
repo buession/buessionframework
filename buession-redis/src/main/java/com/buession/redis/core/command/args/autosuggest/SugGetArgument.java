@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.autosuggest;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SugGetArgument {
+public class SugGetArgument implements Argument {
 
 	private Boolean fuzzy;
 

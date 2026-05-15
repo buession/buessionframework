@@ -140,7 +140,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrIndex(final String key, final String path, final String value, final int start,
 	                               final int stop) {
-		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(SafeEncoder.encode(key), new LettuceJsonPath(path), value,
 						new LettuceJsonRangeArgs(start, stop)),
@@ -151,7 +151,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start,
 	                               final int stop) {
-		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(key, new LettuceJsonPath(path), SafeEncoder.encode(value),
 						new LettuceJsonRangeArgs(start, stop)),
@@ -255,7 +255,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
-		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key, path).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
 				(cmd)->cmd.jsonArrtrim(SafeEncoder.encode(key), new LettuceJsonPath(path),
 						new LettuceJsonRangeArgs(start, stop)),
@@ -265,7 +265,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> jsonArrTrim(final byte[] key, final byte[] path, final int start, final int stop) {
-		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key, path).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
 				(cmd)->cmd.jsonArrtrim(key, new LettuceJsonPath(path), new LettuceJsonRangeArgs(start, stop)),
 				(cmd)->cmd.jsonArrtrim(key, new LettuceJsonPath(path), new LettuceJsonRangeArgs(start, stop)));

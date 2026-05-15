@@ -136,7 +136,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args, (cmd)->cmd.bfInsert(key, items),
 				(cmd)->cmd.bfInsert(key, items), (cmd)->cmd.bfInsert(key, items));
 	}
@@ -148,7 +148,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args,
 				(cmd)->cmd.bfInsert(key, new JedisBFInsertParams(argument), items),
 				(cmd)->cmd.bfInsert(key, new JedisBFInsertParams(argument), items),
@@ -215,7 +215,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion);
+				.add("EXPANSION").add(expansion);
 		return bfReserve(key, errorRate, capacity, new JedisBFReserveParams(expansion), args);
 	}
 
@@ -228,7 +228,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
 	                        final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion).add("NONSCALING");
+				.add("EXPANSION").add(expansion).add("NONSCALING");
 		return bfReserve(key, errorRate, capacity, new JedisBFReserveParams(expansion, nonScaling), args);
 	}
 

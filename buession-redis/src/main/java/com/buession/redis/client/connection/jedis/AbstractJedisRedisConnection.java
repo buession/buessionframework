@@ -189,50 +189,45 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		}
 
 		propertyMapper.from(getDataSource().getClientName()).to(builder::clientName);
-		if(getSslOptions() != null){
-			builder.ssl(getSslOptions().isEnabled());
+		if(getSslOptions() != null && getSslOptions().isEnabled()){
+			builder.hostnameVerifier(getSslOptions().getHostnameVerifier());
 
-			if(getSslOptions().isEnabled()){
-				builder.hostnameVerifier(getSslOptions().getHostnameVerifier());
+			SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
 
-				SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
+			propertyMapper.from(getSslOptions().getKeyStoreType()).to(sslOptionsBuilder::keyStoreType);
 
-				propertyMapper.from(getSslOptions().getKeyStoreType()).to(sslOptionsBuilder::keyStoreType);
-
-				if(Validate.hasText(getSslOptions().getKeyStore())){
-					if(Validate.hasText(getSslOptions().getKeyStorePassword())){
-						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()),
-								getSslOptions().getKeyStorePassword().toCharArray());
-					}else{
-						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()));
-					}
+			if(Validate.hasText(getSslOptions().getKeyStore())){
+				if(Validate.hasText(getSslOptions().getKeyStorePassword())){
+					sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()),
+							getSslOptions().getKeyStorePassword().toCharArray());
+				}else{
+					sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()));
 				}
-
-				propertyMapper.from(getSslOptions().getTrustStoreType()).to(sslOptionsBuilder::trustStoreType);
-
-				if(Validate.hasText(getSslOptions().getTrustStore())){
-					if(Validate.hasText(getSslOptions().getTrustStorePassword())){
-						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()),
-								getSslOptions().getTrustStorePassword().toCharArray());
-					}else{
-						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()));
-					}
-				}
-
-				propertyMapper.from(getSslOptions().getProtocol()).to(sslOptionsBuilder::sslProtocol);
-				propertyMapper.from(getSslOptions().getSslParameters()).to(sslOptionsBuilder::sslParameters);
-
-				if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.CA){
-					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.CA);
-				}else if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.FULL){
-					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.FULL);
-				}else if(getSslOptions().getSslVerifyMode() ==
-						com.buession.redis.core.SslOptions.SslVerifyMode.INSECURE){
-					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.INSECURE);
-				}
-
-				builder.sslOptions(sslOptionsBuilder.build());
 			}
+
+			propertyMapper.from(getSslOptions().getTrustStoreType()).to(sslOptionsBuilder::trustStoreType);
+
+			if(Validate.hasText(getSslOptions().getTrustStore())){
+				if(Validate.hasText(getSslOptions().getTrustStorePassword())){
+					sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()),
+							getSslOptions().getTrustStorePassword().toCharArray());
+				}else{
+					sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()));
+				}
+			}
+
+			propertyMapper.from(getSslOptions().getProtocol()).to(sslOptionsBuilder::sslProtocol);
+			propertyMapper.from(getSslOptions().getSslParameters()).to(sslOptionsBuilder::sslParameters);
+
+			if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.CA){
+				sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.CA);
+			}else if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.FULL){
+				sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.FULL);
+			}else if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.INSECURE){
+				sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.INSECURE);
+			}
+
+			builder.sslOptions(sslOptionsBuilder.build());
 		}
 	}
 

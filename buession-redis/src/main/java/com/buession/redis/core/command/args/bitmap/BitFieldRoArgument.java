@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.bitmap;
 
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -33,7 +34,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class BitFieldRoArgument {
+public class BitFieldRoArgument implements Argument {
 
 	private final BitFieldEncoding encoding;
 

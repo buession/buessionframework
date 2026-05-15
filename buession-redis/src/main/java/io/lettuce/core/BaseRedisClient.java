@@ -86,6 +86,22 @@ public abstract class BaseRedisClient<K, V> {
 		return null;
 	}
 
+	public boolean isConnected() {
+		if(connectionProvider == null){
+			return false;
+		}
+
+		return connectionProvider.getConnection() != null && connectionProvider.getConnection().isOpen();
+	}
+
+	public boolean isClosed() {
+		if(connectionProvider == null){
+			return true;
+		}
+
+		return connectionProvider.getConnection() == null || connectionProvider.getConnection().isOpen() == false;
+	}
+
 	public void close() {
 		try{
 			connectionProvider.close();

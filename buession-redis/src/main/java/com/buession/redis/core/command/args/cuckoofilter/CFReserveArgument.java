@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.cuckoofilter;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CFReserveArgument {
+public class CFReserveArgument implements Argument {
 
 	/**
 	 * 每个桶能存储的指纹数量

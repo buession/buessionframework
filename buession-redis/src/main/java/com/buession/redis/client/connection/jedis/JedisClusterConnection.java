@@ -83,6 +83,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource) {
 		super(dataSource);
+		setMaxRedirects(dataSource.getMaxRedirects());
 	}
 
 	/**
@@ -97,6 +98,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
+		setMaxRedirects(dataSource.getMaxRedirects());
 	}
 
 	@Override

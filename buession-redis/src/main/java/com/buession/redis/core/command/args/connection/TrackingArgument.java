@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.connection;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -33,7 +34,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TrackingArgument {
+public class TrackingArgument implements Argument {
 
 	/**
 	 * 将失效消息转发给另一个客户端

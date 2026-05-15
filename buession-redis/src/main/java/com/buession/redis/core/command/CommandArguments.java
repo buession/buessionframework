@@ -30,6 +30,9 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;
@@ -47,6 +50,14 @@ public final class CommandArguments {
 	private CommandArguments() {
 	}
 
+	private CommandArguments(final Number value) {
+		add(value);
+	}
+
+	private CommandArguments(final boolean value) {
+		add(value);
+	}
+
 	private CommandArguments(final byte[] value) {
 		add(value);
 	}
@@ -55,11 +66,27 @@ public final class CommandArguments {
 		add(value);
 	}
 
-	private CommandArguments(final boolean value) {
+	private CommandArguments(final String value) {
 		add(value);
 	}
 
-	private CommandArguments(final String value) {
+	private CommandArguments(final Enum<?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final StreamEntryId value) {
+		add(value);
+	}
+
+	private CommandArguments(final KeyValue<?, ?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final Range<?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final Tuple value) {
 		add(value);
 	}
 
@@ -71,27 +98,15 @@ public final class CommandArguments {
 		add(value);
 	}
 
-	private CommandArguments(final Range<?> value) {
+	private CommandArguments(final Argument value) {
 		add(value);
 	}
 
-	private CommandArguments(final Enum<?> value) {
-		add(value);
-	}
-
-	private CommandArguments(final KeyValue<?, ?> value) {
-		add(value);
-	}
-
-	private CommandArguments(final Object value) {
-		add(value);
-	}
-
-	private CommandArguments(final byte[]... values) {
+	private CommandArguments(final float... values) {
 		add(values);
 	}
 
-	private CommandArguments(final char... values) {
+	private CommandArguments(final double... values) {
 		add(values);
 	}
 
@@ -107,11 +122,7 @@ public final class CommandArguments {
 		add(values);
 	}
 
-	private CommandArguments(final float... values) {
-		add(values);
-	}
-
-	private CommandArguments(final double... values) {
+	private CommandArguments(final Number... values) {
 		add(values);
 	}
 
@@ -119,7 +130,35 @@ public final class CommandArguments {
 		add(values);
 	}
 
+	private CommandArguments(final byte[]... values) {
+		add(values);
+	}
+
+	private CommandArguments(final char... values) {
+		add(values);
+	}
+
 	private CommandArguments(final String... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Enum<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final StreamEntryId... values) {
+		add(values);
+	}
+
+	private CommandArguments(final KeyValue<?, ?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Range<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Tuple... values) {
 		add(values);
 	}
 
@@ -131,32 +170,12 @@ public final class CommandArguments {
 		add(values);
 	}
 
-	private CommandArguments(final Range<?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Enum<?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final KeyValue<?, ?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Object... values) {
+	private CommandArguments(final Argument... values) {
 		add(values);
 	}
 
 	public static CommandArguments create() {
 		return new CommandArguments();
-	}
-
-	public static CommandArguments create(final byte[] value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final char value) {
-		return new CommandArguments(value);
 	}
 
 	public static CommandArguments create(final Number value) {
@@ -167,7 +186,35 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	public static CommandArguments create(final byte[] value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final char value) {
+		return new CommandArguments(value);
+	}
+
 	public static CommandArguments create(final String value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final Enum<?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final StreamEntryId value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final KeyValue<?, ?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final Range<?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final Tuple value) {
 		return new CommandArguments(value);
 	}
 
@@ -179,28 +226,15 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Range<?> value) {
+	public static CommandArguments create(final Argument value) {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Enum<?> value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final KeyValue<?, ?> value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final Object value) {
-		return new CommandArguments(value);
-	}
-
-	/*
-	public static CommandArguments create(final byte[]... values) {
+	public static CommandArguments create(final float... values) {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final char... values) {
+	public static CommandArguments create(final double... values) {
 		return new CommandArguments(values);
 	}
 
@@ -216,11 +250,7 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final float... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final double... values) {
+	public static CommandArguments create(final Number... values) {
 		return new CommandArguments(values);
 	}
 
@@ -228,19 +258,19 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
+	public static CommandArguments create(final byte[]... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final char... values) {
+		return new CommandArguments(values);
+	}
+
 	public static CommandArguments create(final String... values) {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final Collection<?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Map<?, ?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Range<?>... values) {
+	public static CommandArguments create(final StreamEntryId... values) {
 		return new CommandArguments(values);
 	}
 
@@ -252,10 +282,34 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
-	 */
-
-	public static CommandArguments create(final Object... values) {
+	public static CommandArguments create(final Range<?>... values) {
 		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Tuple... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Collection<?>... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Map<?, ?>... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Argument... values) {
+		return new CommandArguments(values);
+	}
+
+	public CommandArguments add(final Number value) {
+		parameters.add(value);
+		return this;
+	}
+
+	public CommandArguments add(final boolean value) {
+		parameters.add(value ? "1" : "0");
+		return this;
 	}
 
 	public CommandArguments add(final byte[] value) {
@@ -271,70 +325,9 @@ public final class CommandArguments {
 		return this;
 	}
 
-	public CommandArguments add(final short value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final int value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final long value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final float value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final double value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final boolean value) {
-		parameters.add(value ? "1" : "0");
-		return this;
-	}
-
 	public CommandArguments add(final String value) {
 		if(value != null){
 			parameters.add(value);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Collection<?> value) {
-		if(value != null){
-			value.forEach(this::add);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Map<?, ?> value) {
-		if(value != null){
-			for(Map.Entry<?, ?> e : value.entrySet()){
-				if(e.getValue() != null){
-					add(e.getKey(), e.getValue());
-				}
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Range<?> value) {
-		if(value != null){
-			if(value.getStart() != null && value.getEnd() != null){
-				parameters.add(value.getStart());
-				parameters.add(value.getEnd());
-			}
 		}
 
 		return this;
@@ -352,6 +345,14 @@ public final class CommandArguments {
 		return this;
 	}
 
+	public CommandArguments add(final StreamEntryId value) {
+		if(value != null){
+			parameters.add(value);
+		}
+
+		return this;
+	}
+
 	public CommandArguments add(final KeyValue<?, ?> value) {
 		if(value != null){
 			if(value.getKey() != null && value.getValue() != null){
@@ -363,75 +364,239 @@ public final class CommandArguments {
 		return this;
 	}
 
-	public CommandArguments add(final Object value) {
+	public CommandArguments add(final Range<?> value) {
 		if(value != null){
-			parameters.add(value);
+			if(value.getStart() != null && value.getEnd() != null){
+				parameters.add(value.getStart());
+				parameters.add(value.getEnd());
+			}
 		}
 
 		return this;
 	}
 
-	/*
-	public CommandArguments add(final byte[]... values) {
-		return doBatchAdd(values);
+	public CommandArguments add(final Tuple value) {
+		if(value != null){
+			if(value.getElement() != null){
+				parameters.add(value.getElement());
+				parameters.add(value.getScore());
+			}
+		}
+
+		return this;
 	}
 
-	public CommandArguments add(final char... values) {
-		return doBatchAdd(values);
+	public CommandArguments add(final Collection<?> value) {
+		if(Validate.isNotEmpty(value)){
+			for(Object v : value){
+				if(v != null){
+					parameters.add(v);
+				}
+			}
+		}
+
+		return this;
 	}
 
-	public CommandArguments add(final short... values) {
-		return doBatchAdd(values);
+	public CommandArguments add(final Map<?, ?> value) {
+		if(value != null){
+			for(Map.Entry<?, ?> e : value.entrySet()){
+				if(e.getValue() != null){
+					parameters.add(e.getKey());
+					parameters.add(e.getValue());
+				}
+			}
+		}
+
+		return this;
 	}
 
-	public CommandArguments add(final int... values) {
-		return doBatchAdd(values);
-	}
+	public CommandArguments add(final Argument value) {
+		if(value != null){
+			parameters.add(value.toString());
+		}
 
-	public CommandArguments add(final long... values) {
-		return doBatchAdd(values);
+		return this;
 	}
 
 	public CommandArguments add(final float... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(float value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public CommandArguments add(final double... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(double value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final short... values) {
+		if(Validate.isNotEmpty(values)){
+			for(short value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final int... values) {
+		if(Validate.isNotEmpty(values)){
+			for(int value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final long... values) {
+		if(Validate.isNotEmpty(values)){
+			for(long value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Number... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Number value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public CommandArguments add(final boolean... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(boolean value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final byte[]... values) {
+		if(Validate.isNotEmpty(values)){
+			for(byte[] value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final char... values) {
+		if(Validate.isNotEmpty(values)){
+			for(char value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public CommandArguments add(final String... values) {
-		return doBatchAdd(values);
-	}
+		if(Validate.isNotEmpty(values)){
+			for(String value : values){
+				add(value);
+			}
+		}
 
-	public CommandArguments add(final Collection<?>... values) {
-		return doBatchAdd(values);
-	}
-
-	public CommandArguments add(final Map<?, ?>... values) {
-		return doBatchAdd(values);
+		return this;
 	}
 
 	public CommandArguments add(final Enum<?>... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(Enum<?> value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final StreamEntryId... values) {
+		if(Validate.isNotEmpty(values)){
+			for(StreamEntryId value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public CommandArguments add(final KeyValue<?, ?>... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(KeyValue<?, ?> value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public CommandArguments add(final Range<?>... values) {
-		return doBatchAdd(values);
+		if(Validate.isNotEmpty(values)){
+			for(Range<?> value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
-	 */
+	public CommandArguments add(final Tuple... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Tuple value : values){
+				add(value);
+			}
+		}
 
-	public CommandArguments add(final Object... values) {
-		return doBatchAdd(values);
+		return this;
+	}
+
+	public CommandArguments add(final Collection<?>... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Collection<?> value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Map<?, ?>... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Map<?, ?> value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Argument... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Argument value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 	public List<Object> getParameters() {
@@ -453,17 +618,6 @@ public final class CommandArguments {
 	@Override
 	public String toString() {
 		return asString();
-	}
-
-	@SafeVarargs
-	private <T> CommandArguments doBatchAdd(final T... values) {
-		if(Validate.isNotEmpty(values)){
-			for(T value : values){
-				add(value);
-			}
-		}
-
-		return this;
 	}
 
 }

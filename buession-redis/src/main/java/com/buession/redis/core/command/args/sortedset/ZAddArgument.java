@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.sortedset;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.core.command.args.GtLt;
 import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.utils.ArgStringBuilder;
@@ -34,7 +35,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ZAddArgument {
+public class ZAddArgument implements Argument {
 
 	private NxXx nxXx;
 

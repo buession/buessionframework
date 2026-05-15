@@ -69,21 +69,21 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(key, start, end),
 				(cmd)->cmd.bitcount(key, start, end), (cmd)->cmd.bitcount(key, start, end));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(key, start, end),
 				(cmd)->cmd.bitcount(key, start, end), (cmd)->cmd.bitcount(key, start, end));
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		return executeCommand(RedisCommand.BITCOUNT, args,
 				(cmd)->cmd.bitcount(key, start, end, bitTypeConverter.convert(type)),
@@ -93,7 +93,7 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		return executeCommand(RedisCommand.BITCOUNT, args,
 				(cmd)->cmd.bitcount(key, start, end, bitTypeConverter.convert(type)),
@@ -189,7 +189,7 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
 		return executeCommand(RedisCommand.BITPOS, args,
 				(cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)),
 				(cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)),
@@ -198,7 +198,7 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
 		return executeCommand(RedisCommand.BITPOS, args,
 				(cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)),
 				(cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)),
@@ -207,7 +207,7 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(type);
 		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
@@ -220,7 +220,7 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(type);
 		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 

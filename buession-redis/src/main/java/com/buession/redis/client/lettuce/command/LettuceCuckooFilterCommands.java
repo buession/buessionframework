@@ -122,113 +122,113 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final Long capacity, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final Long capacity, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final Long capacity, final boolean noCreate,
 	                              final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final Long capacity, final boolean noCreate,
 	                              final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final boolean noCreate, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final boolean noCreate, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final Long capacity, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final Long capacity, final boolean noCreate,
 	                                final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final boolean noCreate,
 	                                final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final boolean noCreate, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final boolean noCreate, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
@@ -258,25 +258,25 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public Status cfReserve(final String key, final long capacity) {
-		final CommandArguments args = CommandArguments.create(key, capacity);
+		final CommandArguments args = CommandArguments.create(key).add(capacity);
 		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final byte[] key, final long capacity) {
-		final CommandArguments args = CommandArguments.create(key, capacity);
+		final CommandArguments args = CommandArguments.create(key).add(capacity);
 		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final String key, final long capacity, final CFReserveArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(capacity).add(argument);
 		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final byte[] key, final long capacity, final CFReserveArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
+		final CommandArguments args = CommandArguments.create(key).add(capacity).add(argument);
 		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 

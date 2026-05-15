@@ -34,7 +34,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class MaxLenMinId<T> {
+public abstract class MaxLenMinId<T> implements Argument {
 
 	private final Type type;
 

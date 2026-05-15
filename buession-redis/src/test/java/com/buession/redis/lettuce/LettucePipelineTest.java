@@ -24,10 +24,7 @@
  */
 package com.buession.redis.lettuce;
 
-import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
-import com.buession.redis.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,20 +36,23 @@ import java.util.List;
 public class LettucePipelineTest extends AbstractLettuceRedisTest {
 
 	@Test
-	public void test() {
+	public void test1() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
-		Status status = redisTemplate.set("t59", "A");
-		redisTemplate.set("user", new User(1000, "buession"));
-		System.out.println(status);
-		redisTemplate.exists("a_l_p");
-		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("t58");
-		//redisTemplate.role();
-		User user = redisTemplate.get("user", User.class);
-		System.out.println(user);
-		List<Object> result = null;// redisTemplate.exec();
+		redisTemplate.set("lp_s_1", "1");
+		redisTemplate.set("lp_s_2", "2");
+		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
+		System.out.println(redisTemplate.get("lp_s_2"));
+	}
+
+	@Test
+	public void test2() {
+		RedisTemplate redisTemplate = redisTemplate();
+		redisTemplate.pipeline();
+		redisTemplate.set("lp_s_2", "1");
+		redisTemplate.set("lp_s_2", "2");
+		System.out.println(redisTemplate.get("lp_1_2"));
 	}
 
 }

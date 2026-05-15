@@ -93,7 +93,7 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr,
 	                     final byte[] payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
-				.add("PAYLOAD", payload);
+				.add("PAYLOAD").add(payload);
 		return ftSugAdd(key, value, score, new LettuceSugAddArgs<>(incr, payload), args);
 	}
 
@@ -106,7 +106,7 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload) {
-		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD").add(payload);
 		return ftSugAdd(key, value, score, new LettuceSugAddArgs<>(payload), args);
 	}
 

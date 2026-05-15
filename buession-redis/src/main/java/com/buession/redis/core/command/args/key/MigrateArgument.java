@@ -26,6 +26,7 @@ package com.buession.redis.core.command.args.key;
 
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -35,7 +36,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class MigrateArgument {
+public class MigrateArgument implements Argument {
 
 	/**
 	 * 迁移模式

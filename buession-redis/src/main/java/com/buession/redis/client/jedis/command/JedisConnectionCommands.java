@@ -110,13 +110,13 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create().add(host, port);
+		final CommandArguments args = CommandArguments.create().add(host).add(port);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public Status clientKill(final byte[] host, final int port) {
-		final CommandArguments args = CommandArguments.create().add(host, port);
+		final CommandArguments args = CommandArguments.create().add(host).add(port);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args);
 	}
 
@@ -127,7 +127,7 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("TYPE", clientType);
+		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args);
 	}
 
@@ -267,16 +267,16 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
 		final CommandArguments args = CommandArguments.create(protover)
-				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password)
-				.add("SETNAME", clientName);
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username).add(password)
+				.add("SETNAME").add(clientName);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover)
-				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password)
-				.add("SETNAME", clientName);
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username).add(password)
+				.add("SETNAME").add(clientName);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 

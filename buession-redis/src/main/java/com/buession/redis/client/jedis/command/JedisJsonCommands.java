@@ -47,7 +47,7 @@ import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisJsonSetParams;
 import com.buession.redis.core.internal.jedis.JedisPath;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.AbstractPipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
 import redis.clients.jedis.UnifiedJedis;
@@ -128,7 +128,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> jsonArrIndex(final String key, final String path, final String value, final int start,
 	                               final int stop) {
-		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
 				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
@@ -241,7 +241,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
-		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
+		final CommandArguments args = CommandArguments.create(key, path).add(start).add(stop);
 		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
 				(cmd)->cmd.jsonArrTrim(key, new JedisPath(path), start, stop),
 				(cmd)->cmd.jsonArrTrim(key, new JedisPath(path), start, stop),
@@ -682,7 +682,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	private byte[] jsonBinaryGet(final Command.Executor<Transaction, Response<Object>> transactionExecutor,
-	                             final Command.Executor<Pipeline, Response<Object>> pipelineExecutor,
+	                             final Command.Executor<AbstractPipeline, Response<Object>> pipelineExecutor,
 	                             final Command.Executor<UnifiedJedis, Object> executor, final CommandArguments args) {
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
 		return executeCommand(RedisCommand.JSON_GET, args, transactionExecutor, pipelineExecutor, executor, (v)->{
@@ -696,7 +696,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 
 	@SuppressWarnings({"unchecked"})
 	private List<String> jsonListStringGet(final Command.Executor<Transaction, Response<Object>> transactionExecutor,
-	                                       final Command.Executor<Pipeline, Response<Object>> pipelineExecutor,
+	                                       final Command.Executor<AbstractPipeline, Response<Object>> pipelineExecutor,
 	                                       final Command.Executor<UnifiedJedis, Object> executor,
 	                                       final CommandArguments args) {
 		return executeCommand(RedisCommand.JSON_GET, args, transactionExecutor, pipelineExecutor, executor, (v)->{
@@ -707,7 +707,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 
 	@SuppressWarnings({"unchecked"})
 	private List<byte[]> jsonListBinaryGet(final Command.Executor<Transaction, Response<Object>> transactionExecutor,
-	                                       final Command.Executor<Pipeline, Response<Object>> pipelineExecutor,
+	                                       final Command.Executor<AbstractPipeline, Response<Object>> pipelineExecutor,
 	                                       final Command.Executor<UnifiedJedis, Object> executor,
 	                                       final CommandArguments args) {
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();

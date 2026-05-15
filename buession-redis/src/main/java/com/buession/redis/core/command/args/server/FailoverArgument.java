@@ -27,6 +27,7 @@ package com.buession.redis.core.command.args.server;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -35,7 +36,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class FailoverArgument {
+public class FailoverArgument implements Argument {
 
 	/**
 	 * 目标主机地址
@@ -170,7 +171,7 @@ public class FailoverArgument {
 	 * 		超时（单位：毫秒）
 	 */
 	public FailoverArgument(final String host, final int port, final boolean force, final boolean abort,
-							final long timeout) {
+	                        final long timeout) {
 		this(host, port, force, abort);
 		this.timeout = timeout;
 	}

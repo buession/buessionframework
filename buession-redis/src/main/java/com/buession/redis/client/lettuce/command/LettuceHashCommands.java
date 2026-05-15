@@ -103,7 +103,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args,
 				(cmd)->cmd.hexpire(SafeEncoder.encode(key), ttl, SafeEncoder.encode(fields)),
@@ -112,7 +112,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args, (cmd)->cmd.hexpire(key, ttl, fields),
 				(cmd)->cmd.hexpire(key, ttl, fields));
@@ -121,7 +121,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args,
 				(cmd)->cmd.hexpire(SafeEncoder.encode(key), ttl, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)),
@@ -132,7 +132,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIRE, args,
 				(cmd)->cmd.hexpire(key, ttl, new LettuceExpireArgs(option), fields),
 				(cmd)->cmd.hexpire(key, ttl, new LettuceExpireArgs(option), fields));
@@ -141,7 +141,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args,
 				(cmd)->cmd.hexpireat(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields)),
 				(cmd)->cmd.hexpireat(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields)));
@@ -150,7 +150,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args, (cmd)->cmd.hexpireat(key, unixTimestamp, fields),
 				(cmd)->cmd.hexpireat(key, unixTimestamp, fields));
 	}
@@ -159,7 +159,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 	                            final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args,
 				(cmd)->cmd.hexpireat(SafeEncoder.encode(key), unixTimestamp, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)),
@@ -171,7 +171,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 	                            final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HEXPIREAT, args,
 				(cmd)->cmd.hexpireat(key, unixTimestamp, new LettuceExpireArgs(option), fields),
 				(cmd)->cmd.hexpireat(key, unixTimestamp, new LettuceExpireArgs(option), fields));
@@ -179,7 +179,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRETIME, args,
 				(cmd)->cmd.hexpiretime(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hexpiretime(SafeEncoder.encode(key), SafeEncoder.encode(fields)));
@@ -187,7 +188,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HEXPIRETIME, args, (cmd)->cmd.hexpiretime(key, fields),
 				(cmd)->cmd.hexpiretime(key, fields));
 	}
@@ -223,7 +225,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<String> hGetDel(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETDEL, args,
 				(cmd)->cmd.hgetdel(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hgetdel(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
@@ -232,14 +235,16 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETDEL, args, (cmd)->cmd.hgetdel(key, fields),
 				(cmd)->cmd.hgetdel(key, fields), new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETEX, args,
 				(cmd)->cmd.hgetex(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hgetex(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
@@ -248,15 +253,16 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HGETEX, args, (cmd)->cmd.hgetex(key, fields),
 				(cmd)->cmd.hgetex(key, fields), new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HGETEX, args,
 				(cmd)->cmd.hgetex(SafeEncoder.encode(key), new LettuceHGetExArgs(exType, expires),
 						SafeEncoder.encode(fields)),
@@ -267,8 +273,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(Keyword.Hash.FIELDS)
+				.add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HGETEX, args,
 				(cmd)->cmd.hgetex(key, new LettuceHGetExArgs(exType, expires), fields),
 				(cmd)->cmd.hgetex(key, new LettuceHGetExArgs(exType, expires), fields),
@@ -277,7 +283,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Long hIncrBy(final String key, final String field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBY, args,
 				(cmd)->cmd.hincrby(SafeEncoder.encode(key), SafeEncoder.encode(field), value),
 				(cmd)->cmd.hincrby(SafeEncoder.encode(key), SafeEncoder.encode(field), value));
@@ -285,14 +291,14 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBY, args, (cmd)->cmd.hincrby(key, field, value),
 				(cmd)->cmd.hincrby(key, field, value));
 	}
 
 	@Override
 	public Double hIncrByFloat(final String key, final String field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBYFLOAT, args,
 				(cmd)->cmd.hincrbyfloat(SafeEncoder.encode(key), SafeEncoder.encode(field), value),
 				(cmd)->cmd.hincrbyfloat(SafeEncoder.encode(key), SafeEncoder.encode(field), value));
@@ -300,7 +306,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HINCRBYFLOAT, args, (cmd)->cmd.hincrbyfloat(key, field, value),
 				(cmd)->cmd.hincrbyfloat(key, field, value));
 	}
@@ -373,7 +379,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPersist(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPERSIST, args,
 				(cmd)->cmd.hpersist(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hpersist(SafeEncoder.encode(key), SafeEncoder.encode(fields)));
@@ -381,14 +388,15 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPERSIST, args, (cmd)->cmd.hpersist(key, fields),
 				(cmd)->cmd.hpersist(key, fields));
 	}
 
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args,
 				(cmd)->cmd.hpexpire(SafeEncoder.encode(key), ttl, SafeEncoder.encode(fields)),
@@ -397,7 +405,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS).add(fields.length)
 				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl, fields),
 				(cmd)->cmd.hpexpire(key, ttl, fields));
@@ -406,7 +414,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args,
 				(cmd)->cmd.hpexpire(SafeEncoder.encode(key), ttl, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)),
@@ -417,7 +425,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIRE, args,
 				(cmd)->cmd.hpexpire(key, ttl, new LettuceExpireArgs(option), fields),
 				(cmd)->cmd.hpexpire(key, ttl, new LettuceExpireArgs(option), fields));
@@ -426,7 +434,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args,
 				(cmd)->cmd.hpexpireat(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields)),
 				(cmd)->cmd.hpexpireat(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields)));
@@ -435,7 +443,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp, fields),
 				(cmd)->cmd.hpexpireat(key, unixTimestamp, fields));
 	}
@@ -444,7 +452,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 	                             final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args,
 				(cmd)->cmd.hpexpireat(SafeEncoder.encode(key), unixTimestamp, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)),
@@ -456,7 +464,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 	                             final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+				.add(Keyword.Hash.FIELDS).add(fields.length).add(fields);
 		return executeCommand(RedisCommand.HPEXPIREAT, args,
 				(cmd)->cmd.hpexpireat(key, unixTimestamp, new LettuceExpireArgs(option), fields),
 				(cmd)->cmd.hpexpireat(key, unixTimestamp, new LettuceExpireArgs(option), fields));
@@ -464,7 +472,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRETIME, args,
 				(cmd)->cmd.hpexpiretime(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hpexpiretime(SafeEncoder.encode(key), SafeEncoder.encode(fields)));
@@ -472,14 +481,16 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPEXPIRETIME, args, (cmd)->cmd.hpexpiretime(key, fields),
 				(cmd)->cmd.hpexpiretime(key, fields));
 	}
 
 	@Override
 	public List<Long> hPTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPTTL, args,
 				(cmd)->cmd.hpttl(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.hpttl(SafeEncoder.encode(key), SafeEncoder.encode(fields)));
@@ -487,7 +498,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hPTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HPTTL, args, (cmd)->cmd.hpttl(key, fields),
 				(cmd)->cmd.hpttl(key, fields));
 	}
@@ -556,41 +568,41 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return hStringScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern);
 		return hBinaryScan(key, cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
 	                                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return hStringScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 	                                                  final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count);
 		return hBinaryScan(key, cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return hStringScan(SafeEncoder.encode(key), cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count);
 		return hBinaryScan(key, cursor, new LettuceScanArgs(count), args);
 	}
 
@@ -614,14 +626,14 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
 				.add("NOVALUES");
 		return hStringScanNoValues(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
 				.add("NOVALUES");
 		return hBinaryScanNoValues(key, cursor, new LettuceScanArgs(pattern), args);
 	}
@@ -629,29 +641,29 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern,
 	                                        final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count).add("NOVALUES");
 		return hStringScanNoValues(SafeEncoder.encode(key), cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern,
 	                                        final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
-				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH).add(pattern)
+				.add(Keyword.Common.COUNT).add(count).add("NOVALUES");
 		return hBinaryScanNoValues(key, cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<String> hScanNoValues(final String key, final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count)
 				.add("NOVALUES");
 		return hStringScanNoValues(SafeEncoder.encode(key), cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT).add(count)
 				.add("NOVALUES");
 		return hBinaryScanNoValues(key, cursor, new LettuceScanArgs(count), args);
 	}
@@ -720,7 +732,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
 	                     final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType).add(expires).add(data);
 		return hStringSetEx(SafeEncoder.encode(key), new LettuceHSetExArgs(fnxFxx, exType, expires), data, args);
 	}
 
@@ -728,7 +740,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
 	                     final KeyValue<byte[], byte[]>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType).add(expires).add(data);
 		return hBinarySetEx(key, new LettuceHSetExArgs(fnxFxx, exType, expires), data, args);
 	}
 
@@ -736,7 +748,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status hSetEx(final String key, final PxExType exType, final long expires,
 	                     final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(data);
 		return hStringSetEx(SafeEncoder.encode(key), new LettuceHSetExArgs(exType, expires), data, args);
 	}
 
@@ -744,13 +756,13 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status hSetEx(final byte[] key, final PxExType exType, final long expires,
 	                     final KeyValue<byte[], byte[]>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires).add(data);
 		return hBinarySetEx(key, new LettuceHSetExArgs(exType, expires), data, args);
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HSETNX, args,
 				(cmd)->cmd.hsetnx(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value)),
 				(cmd)->cmd.hsetnx(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value)),
@@ -759,7 +771,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return executeCommand(RedisCommand.HSETNX, args, (cmd)->cmd.hsetnx(key, field, value),
 				(cmd)->cmd.hsetnx(key, field, value), new BooleanStatusConverter());
 	}
@@ -781,7 +793,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HTTL, args,
 				(cmd)->cmd.httl(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
 				(cmd)->cmd.httl(SafeEncoder.encode(key), SafeEncoder.encode(fields)));
@@ -789,7 +802,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS).add(fields.length)
+				.add(fields);
 		return executeCommand(RedisCommand.HTTL, args, (cmd)->cmd.httl(key, fields),
 				(cmd)->cmd.httl(key, fields));
 	}

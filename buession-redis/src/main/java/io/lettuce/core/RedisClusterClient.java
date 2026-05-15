@@ -124,6 +124,11 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	}
 
 	@Override
+	public Pipeline<K, V> pipelined() {
+		return new Pipeline<>(connectionProvider.getConnection());
+	}
+
+	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return new StatefulRedisClusterCommandsHandler<>(
 				(StatefulRedisClusterConnection<K, V>) connectionProvider.getConnection());

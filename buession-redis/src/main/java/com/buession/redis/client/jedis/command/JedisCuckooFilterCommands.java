@@ -131,7 +131,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERT, args, (cmd)->cmd.cfInsert(key, items),
 				(cmd)->cmd.cfInsert(key, items), (cmd)->cmd.cfInsert(key, items));
 	}
@@ -143,8 +143,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final Long capacity, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return cfInsert(key, new JedisCFInsertParams(capacity), items, args);
 	}
 
@@ -156,8 +156,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsert(final String key, final Long capacity, final boolean noCreate,
 	                              final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return cfInsert(key, new JedisCFInsertParams(capacity, noCreate), items, args);
 	}
 
@@ -170,7 +170,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsert(final String key, final boolean noCreate, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return cfInsert(key, new JedisCFInsertParams(noCreate), items, args);
 	}
 
@@ -181,7 +181,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.CF_INSERTNX, args, (cmd)->cmd.cfInsertNx(key, items),
 				(cmd)->cmd.cfInsertNx(key, items), (cmd)->cmd.cfInsertNx(key, items));
 	}
@@ -193,8 +193,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final Long capacity, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(Keyword.Common.ITEMS).add(items);
 		return cfInsertNx(key, new JedisCFInsertParams(capacity), items, args);
 	}
 
@@ -206,8 +206,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final Long capacity, final boolean noCreate,
 	                                final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
-				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY").add(capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS).add(items);
 		return cfInsertNx(key, new JedisCFInsertParams(capacity, noCreate), items, args);
 	}
 
@@ -220,7 +220,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final boolean noCreate, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
-				.add(Keyword.Common.ITEMS, items);
+				.add(Keyword.Common.ITEMS).add(items);
 		return cfInsertNx(key, new JedisCFInsertParams(noCreate), items, args);
 	}
 
@@ -256,7 +256,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public Status cfReserve(final String key, final long capacity) {
-		final CommandArguments args = CommandArguments.create(key, capacity);
+		final CommandArguments args = CommandArguments.create().add(key).add(capacity);
 		return executeCommand(RedisCommand.CF_RESERVE, args, (cmd)->cmd.cfReserve(key, capacity),
 				(cmd)->cmd.cfReserve(key, capacity), (cmd)->cmd.cfReserve(key, capacity),
 				new OkStatusConverter());

@@ -26,6 +26,7 @@ package com.buession.redis.core.command.args.server;
 
 import com.buession.core.collect.Arrays;
 import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class HotkeysStartArgument {
+public class HotkeysStartArgument implements Argument {
 
 	private Boolean cpu;
 
@@ -55,7 +56,7 @@ public class HotkeysStartArgument {
 	}
 
 	public HotkeysStartArgument(final boolean cpu, final boolean net, final int count, final int duration,
-								final int sample, List<String> slots) {
+	                            final int sample, List<String> slots) {
 		this.cpu = cpu;
 		this.net = net;
 		this.count = count;

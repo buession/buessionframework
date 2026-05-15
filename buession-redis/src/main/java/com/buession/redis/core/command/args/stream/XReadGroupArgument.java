@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.stream;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XReadGroupArgument {
+public class XReadGroupArgument implements Argument {
 
 	/**
 	 * 阻塞时间（单位：毫秒）

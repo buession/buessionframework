@@ -185,10 +185,18 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 			}else if(dataSource instanceof JedisRedisDataSource){
 				connectionFactory = new JedisConnectionFactory((JedisRedisDataSource) dataSource);
 			}else{
-				final String message = "dataSource must be an instance of " + JedisRedisDataSource.class.getName() +
-						" or " + LettuceRedisDataSource.class.getName() + ", but an instance of " +
-						dataSource.getClass().getName() + ".";
-				throw new RedisException(message);
+				if(dataSource == null){
+					final String message = String.format(
+							"dataSource must be an instance of %s or %s, but is null.",
+							JedisRedisDataSource.class.getName(), LettuceRedisDataSource.class.getName());
+					throw new RedisException(message);
+				}else{
+					final String message = String.format(
+							"dataSource must be an instance of %s or %s, but an instance of %s.",
+							JedisRedisDataSource.class.getName(), LettuceRedisDataSource.class.getName(),
+							dataSource.getClass().getName());
+					throw new RedisException(message);
+				}
 			}
 		}
 	}
@@ -227,7 +235,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		try{
 			return callback.execute(client);
 		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection);
+			RedisConnectionUtils.releaseConnection(getConnectionFactory(), connection);
 		}
 	}
 
@@ -241,12 +249,12 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		try{
 			return converter.convert(connection, callback.execute(client));
 		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection);
+			RedisConnectionUtils.releaseConnection(getConnectionFactory(), connection);
 		}
 	}
 
 	@Override
-	public void close() throws Exception {
+	public final void close() throws Exception {
 		// empty
 	}
 
@@ -261,7 +269,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisConnection fetchConnection() {
-		return RedisConnectionUtils.getConnection(connectionFactory, enableTransactionSupport);
+		return RedisConnectionUtils.getConnection(getConnectionFactory(), enableTransactionSupport);
 	}
 
 	protected RedisConnection fetchRequiredConnection() {
@@ -275,7 +283,19 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		}else if(connection instanceof LettuceRedisConnection){
 			return new LettuceRedisClient();
 		}else{
-			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
+			if(connection == null){
+				final String message = String.format(
+						"Cloud not initialize %s, connection must be an instance of %s or %s, but is null.",
+						RedisClient.class.getName(), JedisRedisConnection.class.getName(),
+						LettuceRedisConnection.class.getName());
+				throw new RedisException(message);
+			}else{
+				final String message = String.format(
+						"Cloud not initialize %s, connection must be an instance of %s or %s, but an instance of %s.",
+						RedisClient.class.getName(), JedisRedisConnection.class.getName(),
+						LettuceRedisConnection.class.getName(), connection.getClass().getName());
+				throw new RedisException(message);
+			}
 		}
 	}
 
@@ -290,7 +310,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected final void checkInitialized() {
-		Assert.isNull(connectionFactory, ()->new RedisException(
+		Assert.isNull(getConnectionFactory(), ()->new RedisException(
 				"RedisConnectionFactory is not initialized. You can call the afterPropertiesSet method for initialize."));
 	}
 

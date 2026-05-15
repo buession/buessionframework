@@ -95,7 +95,7 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public Long ftSugAdd(final String key, final String value, final double score, final boolean incr,
 	                     final String payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
-				.add("PAYLOAD", payload);
+				.add("PAYLOAD").add(payload);
 
 		if(incr){
 			return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(key, value, score),
@@ -110,7 +110,7 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr,
 	                     final byte[] payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
-				.add("PAYLOAD", payload);
+				.add("PAYLOAD").add(payload);
 
 		if(incr){
 			return executeCommand(RedisCommand.FT_SUGADD, args,
@@ -124,13 +124,13 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Long ftSugAdd(final String key, final String value, final double score, final String payload) {
-		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD").add(payload);
 		return ftSugAdd(key, value, score, args);
 	}
 
 	@Override
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload) {
-		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD").add(payload);
 		return ftSugAdd(SafeEncoder.encode(key), SafeEncoder.encode(value), score, args);
 	}
 

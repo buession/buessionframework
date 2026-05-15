@@ -126,7 +126,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host, port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args,
 				(cmd)->cmd.clientKill(host + ':' + port), (cmd)->cmd.clientKill(host + ':' + port),
 				new OkStatusConverter());
@@ -145,7 +145,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("TYPE", clientType);
+		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args, (cmd)->switch(clientType){
 			case NORMAL -> cmd.clientList(LettuceClientListArgs.Builder.typeNormal());
 			case MASTER -> cmd.clientList(LettuceClientListArgs.Builder.typeMaster());
@@ -161,7 +161,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<Client> clientList(final long... ids) {
-		final CommandArguments args = CommandArguments.create().add("ID", ids);
+		final CommandArguments args = CommandArguments.create().add("ID").add(ids);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args,
 				(cmd)->cmd.clientList(new LettuceClientListArgs(ids)),
 				(cmd)->cmd.clientList(new LettuceClientListArgs(ids)), new ClientConverter.ClientListConverter());
@@ -320,7 +320,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
-				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME").add(clientName);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 

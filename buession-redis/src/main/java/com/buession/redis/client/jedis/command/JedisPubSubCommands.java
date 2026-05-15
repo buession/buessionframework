@@ -50,7 +50,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.PSUBSCRIBE, args, null, null, (cmd)->{
 			cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
 			return null;
@@ -59,7 +59,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.PSUBSCRIBE, args, null, null, (cmd)->{
 			cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
 			return null;
@@ -184,19 +184,19 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns);
 		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels);
 		executeCommand(RedisCommand.SUBSCRIBE, args, null, null, (cmd)->{
 			cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 			return null;
@@ -205,7 +205,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels);
 		executeCommand(RedisCommand.SUBSCRIBE, args, null, null, (cmd)->{
 			cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 			return null;

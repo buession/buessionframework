@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.list;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class LPosArgument {
+public class LPosArgument implements Argument {
 
 	/**
 	 * 返回第几个匹配的元素

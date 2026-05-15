@@ -79,29 +79,29 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction);
 		return stringBlMPop(SafeEncoder.encode(keys), timeout, lMPopArgs(direction), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction);
 		return binaryBlMPop(keys, timeout, lMPopArgs(direction), args);
 	}
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
 	                                             final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction)
+				.add(Keyword.Common.COUNT).add(count);
 		return stringBlMPop(SafeEncoder.encode(keys), timeout, lMPopArgs(direction, count), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
 	                                             final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction)
+				.add(Keyword.Common.COUNT).add(count);
 		return binaryBlMPop(keys, timeout, lMPopArgs(direction, count), args);
 	}
 
@@ -232,14 +232,14 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return stringLMPop(SafeEncoder.encode(keys), lMPopArgs(direction).count(count), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return binaryLMPop(keys, lMPopArgs(direction).count(count), args);
 	}
 
@@ -258,14 +258,14 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<String> lPop(final String key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(SafeEncoder.encode(key), count),
 				(cmd)->cmd.lpop(SafeEncoder.encode(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> lPop(final byte[] key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(key, count),
 				(cmd)->cmd.lpop(key, count));
 	}
@@ -304,7 +304,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(SafeEncoder.encode(key), SafeEncoder.encode(element), count,
 						new LettuceLPosArgs(argument)),
@@ -315,7 +315,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(key, element, count, new LettuceLPosArgs(argument)),
 				(cmd)->cmd.lpos(key, element, count, new LettuceLPosArgs(argument)));
@@ -323,7 +323,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final int count) {
-		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(SafeEncoder.encode(key), SafeEncoder.encode(element), count),
 				(cmd)->cmd.lpos(SafeEncoder.encode(key), SafeEncoder.encode(element), count));
@@ -331,7 +331,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final int count) {
-		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(key, element, count),
 				(cmd)->cmd.lpos(key, element, count));
 	}
@@ -368,14 +368,14 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(SafeEncoder.encode(key), start, end),
 				(cmd)->cmd.lrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(key, start, end),
 				(cmd)->cmd.lrange(key, start, end));
 	}
@@ -412,14 +412,14 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(SafeEncoder.encode(key), start, end),
 				(cmd)->cmd.ltrim(SafeEncoder.encode(key), start, end), new OkStatusConverter());
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(key, start, end),
 				(cmd)->cmd.ltrim(key, start, end), new OkStatusConverter());
 	}

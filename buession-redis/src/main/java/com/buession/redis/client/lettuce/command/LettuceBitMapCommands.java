@@ -160,28 +160,28 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
 		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(SafeEncoder.encode(key), value, start, end),
 				(cmd)->cmd.bitpos(SafeEncoder.encode(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
 		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(key, value, start, end),
 				(cmd)->cmd.bitpos(key, value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(type);
 		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(SafeEncoder.encode(key), value, start, end),
 				(cmd)->cmd.bitpos(SafeEncoder.encode(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(type);
 		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(key, value, start, end),
 				(cmd)->cmd.bitpos(key, value, start, end));
 	}

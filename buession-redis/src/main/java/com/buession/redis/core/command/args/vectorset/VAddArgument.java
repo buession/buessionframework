@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.vectorset;
 
 import com.buession.redis.core.Quantization;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -34,7 +35,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class VAddArgument {
+public class VAddArgument implements Argument {
 
 	private Integer reduce;
 

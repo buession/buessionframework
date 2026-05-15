@@ -525,14 +525,14 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES").add(samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(SafeEncoder.encode(key)), (cmd)->cmd.memoryUsage(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES").add(samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(key), (cmd)->cmd.memoryUsage(key));
 	}
@@ -667,7 +667,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host, port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		return executeCommand(RedisCommand.SAVE, args, (cmd)->cmd.slaveof(host, port), (cmd)->cmd.slaveof(host, port),
 				new OkStatusConverter());
 	}

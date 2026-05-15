@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.timeseries;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TSMGetAegument {
+public class TSMGetAegument implements Argument {
 
 	private Boolean latest;
 

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.vectorset;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -33,7 +34,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class VSimArgument {
+public class VSimArgument implements Argument {
 
 	private EleFp32Values eleFp32Values;
 

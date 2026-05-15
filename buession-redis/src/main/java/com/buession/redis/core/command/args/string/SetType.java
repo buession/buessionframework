@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args.string;
 
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
@@ -34,7 +35,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class SetType {
+public final class SetType implements Argument {
 
 	private NxXx nxXx;
 

@@ -116,14 +116,14 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	private volatile boolean initialized = false;
 
 	/**
-	 * 事务
-	 */
-	protected volatile Transaction transaction;
-
-	/**
 	 * 管道
 	 */
-	protected volatile Pipeline pipeline;
+	protected Pipeline pipeline;
+
+	/**
+	 * 事务
+	 */
+	protected Transaction transaction;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -276,6 +276,11 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	}
 
 	@Override
+	public Pipeline getPipeline() {
+		return pipeline;
+	}
+
+	@Override
 	public void closePipeline() {
 		if(pipeline != null){
 			pipeline.close();
@@ -291,11 +296,6 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	@Override
 	public Transaction getTransaction() {
 		return transaction;
-	}
-
-	@Override
-	public Pipeline getPipeline() {
-		return pipeline;
 	}
 
 	@Override

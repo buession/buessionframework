@@ -236,7 +236,6 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
-
 	@Override
 	protected void internalInit() {
 		super.internalInit();

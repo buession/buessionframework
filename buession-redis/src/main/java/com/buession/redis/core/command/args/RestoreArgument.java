@@ -33,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class RestoreArgument {
+public class RestoreArgument implements Argument {
 
 	/**
 	 * 是否替换已存在 key

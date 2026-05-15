@@ -112,7 +112,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status delEx(final String key, final CompareCondition type, final String value) {
-		final CommandArguments args = CommandArguments.create(key).add(type, value);
+		final CommandArguments args = CommandArguments.create(key).add(type).add(value);
 
 		if(type == CompareCondition.IFEQ){
 			return delEx(SafeEncoder.encode(key), io.lettuce.core.CompareCondition.valueEq(SafeEncoder.encode(value)),
@@ -131,7 +131,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status delEx(final byte[] key, final CompareCondition type, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(type, value);
+		final CommandArguments args = CommandArguments.create(key).add(type).add(value);
 
 		if(type == CompareCondition.IFEQ){
 			return delEx(key, io.lettuce.core.CompareCondition.valueEq(value), args);
@@ -199,26 +199,26 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String getEx(final String key, final GetExType exType, final long expires) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires);
 		return getStringEx(SafeEncoder.encode(key), new LettuceGetExArgs(exType, expires), args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExType exType, final long expires) {
-		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(exType).add(expires);
 		return getBinaryEx(key, new LettuceGetExArgs(exType, expires), args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(SafeEncoder.encode(key), start, end),
 				(cmd)->cmd.getrange(SafeEncoder.encode(key), start, end), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(key, start, end),
 				(cmd)->cmd.getrange(key, start, end));
 	}
@@ -253,28 +253,28 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long incrBy(final String key, final long value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(SafeEncoder.encode(key), value),
 				(cmd)->cmd.incrby(SafeEncoder.encode(key), value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(key, value),
 				(cmd)->cmd.incrby(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(SafeEncoder.encode(key), value),
 				(cmd)->cmd.incrbyfloat(SafeEncoder.encode(key), value));
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(key, value),
 				(cmd)->cmd.incrbyfloat(key, value));
 	}
@@ -353,14 +353,14 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
 	                     final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(data).add(nxXx).add(exType, expires);
+		final CommandArguments args = CommandArguments.create(data).add(nxXx).add(exType).add(expires);
 		return mSetEx(new LettuceMSetExArgs(nxXx, exType, expires), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(data).add(exType, expires);
+		final CommandArguments args = CommandArguments.create(data).add(exType).add(expires);
 		return mSetEx(new LettuceMSetExArgs(exType, expires), data, args);
 	}
 
@@ -374,7 +374,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 		return executeCommand(RedisCommand.PSETEX, args,
 				(cmd)->cmd.psetex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
 				(cmd)->cmd.psetex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
@@ -383,14 +383,14 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(key, lifetime, value),
 				(cmd)->cmd.psetex(key, lifetime, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.SET, args,
 				(cmd)->cmd.set(SafeEncoder.encode(key), SafeEncoder.encode(value)),
 				(cmd)->cmd.set(SafeEncoder.encode(key), SafeEncoder.encode(value)), new OkStatusConverter());
@@ -398,52 +398,52 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value),
 				(cmd)->cmd.set(key, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType) {
-		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(setType);
 		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(setType), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType) {
-		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(setType);
 		return set(key, value, new LettuceSetArgs(setType), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
-		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(setType).add(pxExType).add(expires);
 		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
-		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(setType).add(pxExType).add(expires);
 		return set(key, value, new LettuceSetArgs(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final PxExType pxExType, final long expires) {
-		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(pxExType).add(expires);
 		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
-		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(pxExType).add(expires);
 		return set(key, value, new LettuceSetArgs(pxExType, expires), args);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 		return executeCommand(RedisCommand.SETEX, args,
 				(cmd)->cmd.setex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
 				(cmd)->cmd.setex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
@@ -452,14 +452,14 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(key, lifetime, value),
 				(cmd)->cmd.setex(key, lifetime, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.SETNX, args,
 				(cmd)->cmd.setnx(SafeEncoder.encode(key), SafeEncoder.encode(value)),
 				(cmd)->cmd.setnx(SafeEncoder.encode(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
@@ -467,7 +467,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key, value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(key, value),
 				(cmd)->cmd.setnx(key, value), new BooleanStatusConverter());
 	}
@@ -510,7 +510,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(key, start, end),
 				(cmd)->cmd.getrange(key, start, end));
 	}

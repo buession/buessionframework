@@ -85,7 +85,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.BLMPOP, args,
 				(cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), keys),
@@ -96,7 +96,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.BLMPOP, args,
 				(cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), keys),
@@ -108,8 +108,8 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
 	                                             final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction)
+				.add(Keyword.Common.COUNT).add(count);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.BLMPOP, args,
 				(cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), count, keys),
@@ -121,8 +121,8 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
 	                                             final int count) {
-		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(direction)
+				.add(Keyword.Common.COUNT).add(count);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.BLMPOP, args,
 				(cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), count, keys),
@@ -276,7 +276,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.LMPOP, args,
 				(cmd)->cmd.lmpop(directionConverter.convert(direction), count, keys),
@@ -288,7 +288,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		return executeCommand(RedisCommand.LMPOP, args,
 				(cmd)->cmd.lmpop(directionConverter.convert(direction), count, keys),
@@ -313,14 +313,14 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<String> lPop(final String key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(key, count),
 				(cmd)->cmd.lpop(key, count), (cmd)->cmd.lpop(key, count));
 	}
 
 	@Override
 	public List<byte[]> lPop(final byte[] key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT).add(count);
 		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(key, count),
 				(cmd)->cmd.lpop(key, count), (cmd)->cmd.lpop(key, count));
 	}
@@ -358,26 +358,26 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return lPos(key, element, new JedisLPosParams(argument), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
-				.add(Keyword.Common.COUNT, count);
+				.add(Keyword.Common.COUNT).add(count);
 		return lPos(key, element, new JedisLPosParams(argument), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final int count) {
-		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT).add(count);
 		return lPos(key, element, new JedisLPosParams(), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final int count) {
-		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT).add(count);
 		return lPos(key, element, new JedisLPosParams(), count, args);
 	}
 
@@ -411,14 +411,14 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(key, start, end),
 				(cmd)->cmd.lrange(key, start, end), (cmd)->cmd.lrange(key, start, end));
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(key, start, end),
 				(cmd)->cmd.lrange(key, start, end), (cmd)->cmd.lrange(key, start, end));
 	}
@@ -455,7 +455,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(key, start, end),
 				(cmd)->cmd.ltrim(key, start, end), (cmd)->cmd.ltrim(key, start, end),
 				new OkStatusConverter());
@@ -463,7 +463,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(key, start, end),
 				(cmd)->cmd.ltrim(key, start, end), (cmd)->cmd.ltrim(key, start, end),
 				new OkStatusConverter());

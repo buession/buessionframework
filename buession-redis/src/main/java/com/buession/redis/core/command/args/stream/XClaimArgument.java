@@ -26,6 +26,7 @@ package com.buession.redis.core.command.args.stream;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.command.args.Argument;
 import com.buession.redis.utils.ArgStringBuilder;
 
 import java.time.Duration;
@@ -41,7 +42,7 @@ import java.util.Date;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XClaimArgument {
+public class XClaimArgument implements Argument {
 
 	private IdleType idleType;
 

@@ -111,25 +111,25 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS).add(items);
 		return executeCommand(RedisCommand.BF_INSERT, args);
 	}
 
@@ -184,14 +184,14 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	@Override
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion);
+				.add("EXPANSION").add(expansion);
 		return executeCommand(RedisCommand.BF_RESERVE, args);
 	}
 
 	@Override
 	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion);
+				.add("EXPANSION").add(expansion);
 		return executeCommand(RedisCommand.BF_RESERVE, args);
 	}
 
@@ -199,7 +199,7 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
 	                        final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion).add("NONSCALING");
+				.add("EXPANSION").add(expansion).add("NONSCALING");
 		return executeCommand(RedisCommand.BF_RESERVE, args);
 	}
 
@@ -207,7 +207,7 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
 	                        final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
-				.add("EXPANSION", expansion).add("NONSCALING");
+				.add("EXPANSION").add(expansion).add("NONSCALING");
 		return executeCommand(RedisCommand.BF_RESERVE, args);
 	}
 

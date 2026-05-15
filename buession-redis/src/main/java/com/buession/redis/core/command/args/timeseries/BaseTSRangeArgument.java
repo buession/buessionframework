@@ -24,13 +24,15 @@
  */
 package com.buession.redis.core.command.args.timeseries;
 
+import com.buession.redis.core.command.args.Argument;
+
 /**
  *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-class BaseTSRangeArgument {
+class BaseTSRangeArgument implements Argument {
 
 	private Boolean latest;
 
