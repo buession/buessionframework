@@ -51,7 +51,7 @@ public interface Converter<SV, TV> {
 
 		private final Function<SV, TV> call;
 
-		public AbstractConverter(final Function<SV, TV> call) {
+		AbstractConverter(final Function<SV, TV> call) {
 			this.call = call;
 		}
 
@@ -67,7 +67,7 @@ public interface Converter<SV, TV> {
 	 ***/
 	abstract class AbstractStringConverter<V> extends AbstractConverter<String, V> {
 
-		public AbstractStringConverter(final Function<String, V> call) {
+		AbstractStringConverter(final Function<String, V> call) {
 			super(call);
 		}
 
@@ -75,7 +75,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractBinaryConverter<V> extends AbstractConverter<byte[], V> {
 
-		public AbstractBinaryConverter(final Function<byte[], V> call) {
+		AbstractBinaryConverter(final Function<byte[], V> call) {
 			super(call);
 		}
 
@@ -83,7 +83,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzStringConverter<V> extends AbstractStringConverter<V> {
 
-		public ClazzStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -91,7 +91,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzBinaryConverter<V> extends AbstractBinaryConverter<V> {
 
-		public ClazzBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -99,7 +99,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeStringConverter<V> extends AbstractStringConverter<V> {
 
-		public TypeStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -107,7 +107,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeBinaryConverter<V> extends AbstractBinaryConverter<V> {
 
-		public TypeBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -119,7 +119,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractListStringConverter<V> extends AbstractConverter<List<String>, List<V>> {
 
-		public AbstractListStringConverter(final Function<String, V> call) {
+		AbstractListStringConverter(final Function<String, V> call) {
 			super((v)->v == null ? null : v.stream().map(call).collect(Collectors.toList()));
 		}
 
@@ -127,7 +127,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractListBinaryConverter<V> extends AbstractConverter<List<byte[]>, List<V>> {
 
-		public AbstractListBinaryConverter(final Function<byte[], V> call) {
+		AbstractListBinaryConverter(final Function<byte[], V> call) {
 			super((v)->v == null ? null : v.stream().map(call).collect(Collectors.toList()));
 		}
 
@@ -135,7 +135,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzListStringConverter<V> extends AbstractListStringConverter<V> {
 
-		public ClazzListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -143,7 +143,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzListBinaryConverter<V> extends AbstractListBinaryConverter<V> {
 
-		public ClazzListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -151,7 +151,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeListStringConverter<V> extends AbstractListStringConverter<V> {
 
-		public TypeListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -159,7 +159,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeListBinaryConverter<V> extends AbstractListBinaryConverter<V> {
 
-		public TypeListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -167,7 +167,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractSetStringConverter<V> extends AbstractConverter<Set<String>, Set<V>> {
 
-		public AbstractSetStringConverter(final Function<String, V> call) {
+		AbstractSetStringConverter(final Function<String, V> call) {
 			super((v)->v == null ? null : v.stream().map(call).collect(Collectors.toSet()));
 		}
 
@@ -175,7 +175,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractSetBinaryConverter<V> extends AbstractConverter<Set<byte[]>, Set<V>> {
 
-		public AbstractSetBinaryConverter(final Function<byte[], V> call) {
+		AbstractSetBinaryConverter(final Function<byte[], V> call) {
 			super((v)->v == null ? null : v.stream().map(call).collect(Collectors.toSet()));
 		}
 
@@ -183,7 +183,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzSetStringConverter<V> extends AbstractSetStringConverter<V> {
 
-		public ClazzSetStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzSetStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -191,7 +191,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzSetBinaryConverter<V> extends AbstractSetBinaryConverter<V> {
 
-		public ClazzSetBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzSetBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -199,7 +199,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeSetStringConverter<V> extends AbstractSetStringConverter<V> {
 
-		public TypeSetStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeSetStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -207,7 +207,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeSetBinaryConverter<V> extends AbstractSetBinaryConverter<V> {
 
-		public TypeSetBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeSetBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -215,7 +215,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractMapStringConverter<V> extends AbstractConverter<Map<String, String>, Map<String, V>> {
 
-		public AbstractMapStringConverter(final Function<String, V> call) {
+		AbstractMapStringConverter(final Function<String, V> call) {
 			super((data)->data == null ? null : Maps.map(data, (key)->key, call));
 		}
 
@@ -223,7 +223,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractMapBinaryConverter<V> extends AbstractConverter<Map<byte[], byte[]>, Map<byte[], V>> {
 
-		public AbstractMapBinaryConverter(final Function<byte[], V> call) {
+		AbstractMapBinaryConverter(final Function<byte[], V> call) {
 			super((data)->data == null ? null : Maps.map(data, (key)->key, call));
 		}
 
@@ -231,7 +231,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzMapStringConverter<V> extends AbstractMapStringConverter<V> {
 
-		public ClazzMapStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzMapStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -239,7 +239,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzMapBinaryConverter<V> extends AbstractMapBinaryConverter<V> {
 
-		public ClazzMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -247,7 +247,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeMapStringConverter<V> extends AbstractMapStringConverter<V> {
 
-		public TypeMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -255,7 +255,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeMapBinaryConverter<V> extends AbstractMapBinaryConverter<V> {
 
-		public TypeMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -263,7 +263,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultConverter<SV, TV> extends AbstractConverter<ScanResult<SV>, ScanResult<TV>> {
 
-		public AbstractScanResultConverter(final Function<SV, TV> call) {
+		AbstractScanResultConverter(final Function<SV, TV> call) {
 			super((scanResult)->new ScanResult<>(scanResult.getCursor(),
 					convertResults(call, scanResult.getResults())));
 		}
@@ -284,7 +284,7 @@ public interface Converter<SV, TV> {
 	abstract class AbstractScanResultMapStringConverter<V>
 			extends AbstractScanResultConverter<KeyValue<String, String>, KeyValue<String, V>> {
 
-		public AbstractScanResultMapStringConverter(final Function<String, V> call) {
+		AbstractScanResultMapStringConverter(final Function<String, V> call) {
 			super((value)->new KeyValue<>(value.getKey(), call.apply(value.getValue())));
 		}
 
@@ -293,7 +293,7 @@ public interface Converter<SV, TV> {
 	abstract class AbstractScanResultMapBinaryConverter<V>
 			extends AbstractScanResultConverter<KeyValue<byte[], byte[]>, KeyValue<byte[], V>> {
 
-		public AbstractScanResultMapBinaryConverter(final Function<byte[], V> call) {
+		AbstractScanResultMapBinaryConverter(final Function<byte[], V> call) {
 			super((value)->new KeyValue<>(value.getKey(), call.apply(value.getValue())));
 		}
 
@@ -301,7 +301,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultListStringConverter<V> extends AbstractScanResultConverter<String, V> {
 
-		public AbstractScanResultListStringConverter(final Function<String, V> call) {
+		AbstractScanResultListStringConverter(final Function<String, V> call) {
 			super(call);
 		}
 
@@ -309,7 +309,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultListBinaryConverter<V> extends AbstractScanResultConverter<byte[], V> {
 
-		public AbstractScanResultListBinaryConverter(final Function<byte[], V> call) {
+		AbstractScanResultListBinaryConverter(final Function<byte[], V> call) {
 			super(call);
 		}
 
@@ -317,7 +317,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzScanResultListStringConverter<V> extends AbstractScanResultListStringConverter<V> {
 
-		public ClazzScanResultListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzScanResultListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -325,7 +325,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzScanResultListBinaryConverter<V> extends AbstractScanResultListBinaryConverter<V> {
 
-		public ClazzScanResultListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzScanResultListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -333,7 +333,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeScanResultListStringConverter<V> extends AbstractScanResultListStringConverter<V> {
 
-		public TypeScanResultListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeScanResultListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -341,7 +341,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeScanResultListBinaryConverter<V> extends AbstractScanResultListBinaryConverter<V> {
 
-		public TypeScanResultListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeScanResultListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -349,7 +349,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzScanResultStringConverter<V> extends AbstractScanResultMapStringConverter<V> {
 
-		public ClazzScanResultStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzScanResultStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserialize(val, clazz));
 		}
 
@@ -357,7 +357,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzScanResultBinaryConverter<V> extends AbstractScanResultMapBinaryConverter<V> {
 
-		public ClazzScanResultBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzScanResultBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super((val)->accessor.serializer.deserializeBytes(val, clazz));
 		}
 
@@ -365,7 +365,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeScanResultStringConverter<V> extends AbstractScanResultMapStringConverter<V> {
 
-		public TypeScanResultStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeScanResultStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserialize(val, typeReference));
 		}
 
@@ -373,7 +373,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeScanResultBinaryConverter<V> extends AbstractScanResultMapBinaryConverter<V> {
 
-		public TypeScanResultBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeScanResultBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
@@ -381,7 +381,7 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractKeyValueConverter<K, SV, TV> extends AbstractConverter<KeyValue<K, SV>, KeyValue<K, TV>> {
 
-		public AbstractKeyValueConverter(final Function<SV, TV> call) {
+		AbstractKeyValueConverter(final Function<SV, TV> call) {
 			super((v)->new KeyValue<>(v.getKey(), call.apply(v.getValue())));
 		}
 
@@ -393,7 +393,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzListKeyValueStringConverter<V> extends AbstractKeyValueConverter<String, List<String>, List<V>> {
 
-		public ClazzListKeyValueStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzListKeyValueStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(initialize((val)->accessor.serializer.deserialize(val, clazz)));
 		}
 
@@ -401,7 +401,7 @@ public interface Converter<SV, TV> {
 
 	final class ClazzListKeyValueBinaryConverter<V> extends AbstractKeyValueConverter<byte[], List<byte[]>, List<V>> {
 
-		public ClazzListKeyValueBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+		ClazzListKeyValueBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(initialize((val)->accessor.serializer.deserializeBytes(val, clazz)));
 		}
 
@@ -409,7 +409,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeListKeyValueStringConverter<V> extends AbstractKeyValueConverter<String, List<String>, List<V>> {
 
-		public TypeListKeyValueStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeListKeyValueStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(initialize((val)->accessor.serializer.deserialize(val, typeReference)));
 		}
 
@@ -417,7 +417,7 @@ public interface Converter<SV, TV> {
 
 	final class TypeListKeyValueBinaryConverter<V> extends AbstractKeyValueConverter<byte[], List<byte[]>, List<V>> {
 
-		public TypeListKeyValueBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+		TypeListKeyValueBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(initialize((val)->accessor.serializer.deserializeBytes(val, typeReference)));
 		}
 

@@ -27,21 +27,17 @@ package com.buession.redis.core.command.args.timeseries;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
+ * 最大最小值
  *
+ * @param min
+ * 		最小值
+ * @param max
+ * 		最大值
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class MinMax {
-
-	private final double min;
-
-	private final double max;
-
-	public MinMax(final double min, final double max) {
-		this.min = min;
-		this.max = max;
-	}
+public record MinMax(double min, double max) {
 
 	public double getMin() {
 		return min;
@@ -53,7 +49,7 @@ public class MinMax {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(getMin()).append(getMax()).build();
+		return ArgStringBuilder.create().append(min()).append(max()).build();
 	}
 
 }

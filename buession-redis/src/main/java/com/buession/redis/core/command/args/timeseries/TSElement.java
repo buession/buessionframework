@@ -29,44 +29,66 @@ import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
- *
+ * @param key
+ * 		The key name for the time series
+ * @param timestamp
+ * 		The unix time (integer, in milliseconds) specifying the sample timestamp or * to set the sample
+ * 		timestamp to the Unix time of the server's clock.
+ * @param value
+ * 		The numeric data value of the sample
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TSElement implements Argument {
+public record TSElement(String key, long timestamp, double value) implements Argument {
 
-	private final String key;
-
-	private final long timestamp;
-
-	private final double value;
-
-	public TSElement(String key, long timestamp, double value) {
-		this.key = key;
-		this.timestamp = timestamp;
-		this.value = value;
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param key
+	 * 		The key name for the time series
+	 * @param timestamp
+	 * 		The unix time (integer, in milliseconds) specifying the sample timestamp or * to set the sample
+	 * 		timestamp to the Unix time of the server's clock.
+	 * @param value
+	 * 		The numeric data value of the sample
+	 */
 	public TSElement(byte[] key, long timestamp, double value) {
 		this(SafeEncoder.encode(key), timestamp, value);
 	}
 
+	/**
+	 * Return the key name for the time series
+	 *
+	 * @return The key name for the time series
+	 */
 	public String getKey() {
 		return key;
 	}
 
+	/**
+	 * Return the unix time (integer, in milliseconds) specifying the sample timestamp or * to set the sample
+	 * timestamp to the Unix time of the server's clock.
+	 *
+	 * @return The unix time (integer, in milliseconds) specifying the sample timestamp or * to set the sample
+	 * timestamp to the Unix time of the server's clock.
+	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
 
+	/**
+	 * Return the numeric data value of the sample
+	 *
+	 * @return The numeric data value of the sample
+	 */
 	public double getValue() {
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(getKey()).append(getTimestamp()).append(getValue()).build();
+		return ArgStringBuilder.create().append(key()).append(timestamp()).append(value()).build();
 	}
 
 }

@@ -71,8 +71,8 @@ public final class JedisTSRangeParams extends TSRangeParams {
 			Optional.ofNullable(tsRangeArgument.getFilterByTimestamps()).ifPresent(this::filterByTS);
 
 			if(tsRangeArgument.getFilterByValues() != null){
-				filterByValues(tsRangeArgument.getFilterByValues().getMin(),
-						tsRangeArgument.getFilterByValues().getMax());
+				filterByValues(tsRangeArgument.getFilterByValues().min(),
+						tsRangeArgument.getFilterByValues().max());
 			}
 
 			if(tsRangeArgument.getAggregation() != null){
@@ -104,7 +104,7 @@ public final class JedisTSRangeParams extends TSRangeParams {
 	 * 		返回数量
 	 */
 	public JedisTSRangeParams(final long fromTimestamp, final long toTimestamp, final TSRangeArgument tsRangeArgument,
-							  final int count) {
+	                          final int count) {
 		this(fromTimestamp, toTimestamp, tsRangeArgument);
 		count(count);
 	}

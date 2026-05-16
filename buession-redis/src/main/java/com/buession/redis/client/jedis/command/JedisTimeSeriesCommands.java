@@ -325,8 +325,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 		final KeyValue<String, redis.clients.jedis.timeseries.TSElement>[] entries = new KeyValue[values.length];
 
 		for(int i = 0; i < values.length; i++){
-			entries[i] = new KeyValue<>(values[i].getKey(),
-					new redis.clients.jedis.timeseries.TSElement(values[i].getTimestamp(), values[i].getValue()));
+			entries[i] = new KeyValue<>(values[i].key(),
+					new redis.clients.jedis.timeseries.TSElement(values[i].timestamp(), values[i].value()));
 		}
 
 		return executeCommand(RedisCommand.TS_MADD, args, (cmd)->cmd.tsMAdd(entries), (cmd)->cmd.tsMAdd(entries),

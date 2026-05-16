@@ -81,7 +81,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 *        {@link TSMRangeArgument}
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final String[] filters,
-							   final TSMRangeArgument tsMRangeArgument) {
+	                           final TSMRangeArgument tsMRangeArgument) {
 		this(fromTimestamp, toTimestamp, filters);
 
 		if(tsMRangeArgument != null){
@@ -92,8 +92,8 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 			Optional.ofNullable(tsMRangeArgument.getFilterByTimestamps()).ifPresent(this::filterByTS);
 
 			if(tsMRangeArgument.getFilterByValues() != null){
-				filterByValues(tsMRangeArgument.getFilterByValues().getMin(),
-						tsMRangeArgument.getFilterByValues().getMax());
+				filterByValues(tsMRangeArgument.getFilterByValues().min(),
+						tsMRangeArgument.getFilterByValues().max());
 			}
 
 			if(tsMRangeArgument.getLabels() instanceof TSMRangeArgument.WithLabels){
@@ -135,7 +135,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 *        {@link TSMRangeArgument}
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final byte[][] filters,
-							   final TSMRangeArgument tsMRangeArgument) {
+	                           final TSMRangeArgument tsMRangeArgument) {
 		this(fromTimestamp, toTimestamp, SafeEncoder.encode(filters), tsMRangeArgument);
 	}
 
@@ -154,7 +154,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 * 		返回数量
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final String[] filters,
-							   final TSMRangeArgument tsMRangeArgument, final int count) {
+	                           final TSMRangeArgument tsMRangeArgument, final int count) {
 		this(fromTimestamp, toTimestamp, filters, tsMRangeArgument);
 		count(count);
 	}
@@ -174,7 +174,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 * 		返回数量
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final byte[][] filters,
-							   final TSMRangeArgument tsMRangeArgument, final int count) {
+	                           final TSMRangeArgument tsMRangeArgument, final int count) {
 		this(fromTimestamp, toTimestamp, filters, tsMRangeArgument);
 		count(count);
 	}
@@ -192,7 +192,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 * 		返回数量
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final String[] filters,
-							   final int count) {
+	                           final int count) {
 		this(fromTimestamp, toTimestamp, filters);
 		count(count);
 	}
@@ -210,7 +210,7 @@ public final class JedisTSMRangeParams extends TSMRangeParams {
 	 * 		返回数量
 	 */
 	public JedisTSMRangeParams(final long fromTimestamp, final long toTimestamp, final byte[][] filters,
-							   final int count) {
+	                           final int count) {
 		this(fromTimestamp, toTimestamp, filters);
 		count(count);
 	}

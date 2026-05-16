@@ -34,24 +34,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class BitFieldRoArgument implements Argument {
-
-	private final BitFieldEncoding encoding;
-
-	private final Integer offset;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param encoding
-	 *        {@link BitFieldEncoding}
-	 * @param offset
-	 * 		偏移
-	 */
-	public BitFieldRoArgument(final BitFieldEncoding encoding, final int offset) {
-		this.encoding = encoding;
-		this.offset = offset;
-	}
+public record BitFieldRoArgument(BitFieldEncoding encoding, Integer offset) implements Argument {
 
 	public BitFieldEncoding getEncoding() {
 		return encoding;
@@ -63,7 +46,7 @@ public class BitFieldRoArgument implements Argument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add(Keyword.Common.GET.name(), getEncoding()).append(getOffset()).build();
+		return ArgStringBuilder.create().add(Keyword.Common.GET.name(), encoding()).append(offset()).build();
 	}
 
 }

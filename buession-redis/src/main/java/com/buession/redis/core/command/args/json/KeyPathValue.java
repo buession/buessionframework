@@ -31,47 +31,17 @@ import com.buession.redis.utils.SafeEncoder;
 /**
  * JSON.MSET 参数
  *
+ * @param key
+ * 		Key
+ * @param path
+ * 		JSONPath 表达式
+ * @param value
+ * 		值
+ *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class KeyPathValue implements Argument {
-
-	/**
-	 * Key
-	 */
-	private String key;
-
-	/**
-	 * JSONPath 表达式
-	 */
-	private String path;
-
-	/**
-	 * 值
-	 */
-	private String value;
-
-	/**
-	 * 构造函数
-	 */
-	public KeyPathValue() {
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param key
-	 * 		Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param value
-	 * 		值
-	 */
-	public KeyPathValue(final String key, final String path, final String value) {
-		this.key = key;
-		this.path = path;
-		this.value = value;
-	}
+public record KeyPathValue(String key, String path, String value) implements Argument {
 
 	/**
 	 * 构造函数
@@ -97,62 +67,12 @@ public class KeyPathValue implements Argument {
 	}
 
 	/**
-	 * 设置 Key
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setKey(String key) {
-		this.key = key;
-		return this;
-	}
-
-	/**
-	 * 设置 Key
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setKey(byte[] key) {
-		return setKey(SafeEncoder.encode(key));
-	}
-
-	/**
 	 * 返回 JSONPath 表达式
 	 *
 	 * @return JSONPath 表达式
 	 */
 	public String getPath() {
 		return path;
-	}
-
-	/**
-	 * 设置 JSONPath 表达式
-	 *
-	 * @param path
-	 * 		JSONPath 表达式
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setPath(String path) {
-		this.path = path;
-		return this;
-	}
-
-	/**
-	 * 设置 JSONPath 表达式
-	 *
-	 * @param path
-	 * 		JSONPath 表达式
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setPath(byte[] path) {
-		return setPath(SafeEncoder.encode(path));
 	}
 
 	/**
@@ -164,37 +84,12 @@ public class KeyPathValue implements Argument {
 		return value;
 	}
 
-	/**
-	 * 设置值
-	 *
-	 * @param value
-	 * 		值
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setValue(String value) {
-		this.value = value;
-		return this;
-	}
-
-	/**
-	 * 设置值
-	 *
-	 * @param value
-	 * 		值
-	 *
-	 * @return {@link KeyPathValue}
-	 */
-	public KeyPathValue setValue(byte[] value) {
-		return setValue(SafeEncoder.encode(value));
-	}
-
 	@Override
 	public String toString() {
 		return ArgStringBuilder.create()
-				.append(getKey())
-				.append(getPath())
-				.append(getValue())
+				.append(key())
+				.append(path())
+				.append(value())
 				.build();
 	}
 
