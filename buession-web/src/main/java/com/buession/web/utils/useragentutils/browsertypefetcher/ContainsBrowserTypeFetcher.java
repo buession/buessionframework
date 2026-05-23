@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.utils.useragentutils.browsertypefetcher;
@@ -39,18 +39,36 @@ public class ContainsBrowserTypeFetcher implements BrowserTypeFetcher {
 
 	private final BrowserType browserType;
 
-	public ContainsBrowserTypeFetcher(final String str, final BrowserType browserType){
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		待匹配字符串
+	 * @param browserType
+	 * 		浏览器类型
+	 */
+	public ContainsBrowserTypeFetcher(final String str, final BrowserType browserType) {
 		this(str, true, browserType);
 	}
 
-	public ContainsBrowserTypeFetcher(final String str, final boolean ignoreCase, final BrowserType browserType){
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		待匹配字符串
+	 * @param ignoreCase
+	 * 		是否忽略大小写
+	 * @param browserType
+	 * 		浏览器类型
+	 */
+	public ContainsBrowserTypeFetcher(final String str, final boolean ignoreCase, final BrowserType browserType) {
 		this.str = str;
 		this.ignoreCase = ignoreCase;
 		this.browserType = browserType;
 	}
 
 	@Override
-	public BrowserType fetch(final String userAgent){
+	public BrowserType fetch(final String userAgent) {
 		if(ignoreCase){
 			return StringUtils.containsIgnoreCase(userAgent, str) ? browserType : null;
 		}else{
