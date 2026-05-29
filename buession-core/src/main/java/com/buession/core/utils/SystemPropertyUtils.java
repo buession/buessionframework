@@ -44,7 +44,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return short 类型字符串值
 	 */
-	public static String setProperty(final String name, final short value) {
+	public static String setProperty(final String name, final Short value) {
 		return setProperty(name, Short.toString(value));
 	}
 
@@ -58,7 +58,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return int 类型字符串值
 	 */
-	public static String setProperty(final String name, final int value) {
+	public static String setProperty(final String name, final Integer value) {
 		return setProperty(name, Integer.toString(value));
 	}
 
@@ -72,7 +72,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return long 类型字符串值
 	 */
-	public static String setProperty(final String name, final long value) {
+	public static String setProperty(final String name, final Long value) {
 		return setProperty(name, Long.toString(value));
 	}
 
@@ -86,7 +86,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return 布尔型字符串值
 	 */
-	public static String setProperty(final String name, final boolean value) {
+	public static String setProperty(final String name, final Boolean value) {
 		return setProperty(name, Boolean.toString(value));
 	}
 
@@ -100,7 +100,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return char 类型字符串值
 	 */
-	public static String setProperty(final String name, final char value) {
+	public static String setProperty(final String name, final Character value) {
 		return setProperty(name, Character.toString(value));
 	}
 
@@ -116,6 +116,76 @@ public class SystemPropertyUtils {
 	 */
 	public static String setProperty(final String name, final String value) {
 		return System.setProperty(name, value);
+	}
+
+	/**
+	 * 设置 short 类型系统属性
+	 *
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @return short 类型字符串值
+	 */
+	public static String setPropertyIfPresent(final String name, final Short value) {
+		return value == null ? null : setProperty(name, Short.toString(value));
+	}
+
+	/**
+	 * 设置 int 类型系统属性
+	 *
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @return int 类型字符串值
+	 */
+	public static String setPropertyIfPresent(final String name, final Integer value) {
+		return value == null ? null : setProperty(name, Integer.toString(value));
+	}
+
+	/**
+	 * 设置 long 类型系统属性
+	 *
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @return long 类型字符串值
+	 */
+	public static String setPropertyIfPresent(final String name, final Long value) {
+		return value == null ? null : setProperty(name, Long.toString(value));
+	}
+
+	/**
+	 * 设置布尔型系统属性
+	 *
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @return 布尔型字符串值
+	 */
+	public static String setPropertyIfPresent(final String name, final Boolean value) {
+		return value == null ? null : setProperty(name, Boolean.toString(value));
+	}
+
+	/**
+	 * 设置 char 类型系统属性
+	 *
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @return char 类型字符串值
+	 */
+	public static String setPropertyIfPresent(final String name, final Character value) {
+		return value == null ? null : setProperty(name, Character.toString(value));
 	}
 
 	/**
