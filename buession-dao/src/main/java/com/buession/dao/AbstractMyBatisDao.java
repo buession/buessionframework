@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.buession.core.builder.MapBuilder;
-import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.dao.mybatis.PageRowBounds;
@@ -46,6 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buession.core.Pagination;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.cglib.beans.BeanMap;
 
 /**
@@ -250,6 +251,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return getSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	protected void updatePrimary(E e, P primary) {
 		final Collection<ResultMap> resultMaps = getSqlSessionTemplate().getConfiguration().getResultMaps();
 
@@ -257,23 +259,26 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			return;
 		}
 
+		BeanWrapper beanWrapper = null;
 		for(ResultMap resultMap : resultMaps){
-			if(e.getClass().equals(resultMap.getType())){
-				List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
+			List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
-				if(Validate.isNotEmpty(resultMappings)){
-					for(ResultMapping resultMapping : resultMappings){
-						try{
-							FieldUtils.writeField(e, resultMapping.getProperty(), primary, true);
-						}catch(IllegalAccessException ex){
-							if(logger.isErrorEnabled()){
-								logger.error("Update resultMap[{}] id field '{}' with value: [{}] failure: {}",
-										resultMap.getId(), resultMapping.getProperty(), primary, ex.getMessage());
-							}
-						}
-					}
+			if(Validate.isEmpty(resultMappings)){
+				continue;
+			}
+
+			if(e instanceof Map){
+				for(ResultMapping resultMapping : resultMappings){
+					((Map<String, Object>) e).put(resultMapping.getProperty(), primary);
 				}
-				break;
+			}else if(e.getClass().equals(resultMap.getType())){
+				if(beanWrapper == null){
+					beanWrapper = new BeanWrapperImpl(e);
+				}
+
+				for(ResultMapping resultMapping : resultMappings){
+					beanWrapper.setPropertyValue(resultMapping.getProperty(), primary);
+				}
 			}
 		}
 	}
