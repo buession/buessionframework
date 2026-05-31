@@ -35,6 +35,7 @@ import com.buession.core.converter.Converter;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 @FunctionalInterface
 public interface BeanPropertyConverter<T> extends Converter<Object, T> {
 

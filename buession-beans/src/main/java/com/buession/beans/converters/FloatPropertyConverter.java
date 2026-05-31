@@ -30,6 +30,7 @@ package com.buession.beans.converters;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class FloatPropertyConverter extends NumberPropertyConverter<Float> {
 
 	@Override

@@ -32,6 +32,7 @@ import com.buession.beans.AbstractPropertyConverter;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class StringPropertyConverter extends AbstractPropertyConverter<String> {
 
 	@Override

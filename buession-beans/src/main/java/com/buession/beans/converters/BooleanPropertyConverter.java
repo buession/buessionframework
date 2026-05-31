@@ -32,6 +32,7 @@ import com.buession.beans.AbstractPropertyConverter;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class BooleanPropertyConverter extends AbstractPropertyConverter<Boolean> {
 
 	private final static String[] DEFAULT_TRUE_STRINGS = {"true", "yes", "y", "on", "1"};

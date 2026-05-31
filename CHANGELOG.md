@@ -25,6 +25,7 @@ Buession Framework Changelog
 - MyBatisDao 使用构造方式注入 SqlSessionTemplate 和 MongoDBDao 使用构造方法注入 MongoTemplate
 - 删除 RedisTemplate 已废弃的方法
 - 优化 RedisTemplate 内部实现
+- 模块 buession-beans 不再推荐使用
 
 ### 🐞 Bug 修复
 

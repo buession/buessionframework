@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public class BeanUtils {
 
 	private final static Map<String, BeanCopier> BEAN_COPIERS = new ConcurrentHashMap<>(32);
@@ -173,6 +174,7 @@ public class BeanUtils {
 		beanCopier.copy(source, target, converter);
 	}
 
+	@Deprecated
 	private final static class HumpBeanUtilsBean extends BeanUtilsBean {
 
 		private final static Logger logger = LoggerFactory.getLogger(HumpBeanUtilsBean.class);

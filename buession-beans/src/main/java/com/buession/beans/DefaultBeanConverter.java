@@ -30,6 +30,7 @@ package com.buession.beans;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public class DefaultBeanConverter extends AbstractBeanConverter {
 
 	/**

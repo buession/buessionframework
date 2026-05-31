@@ -38,6 +38,7 @@ import java.nio.file.Path;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class URLPropertyConverter extends AbstractPropertyConverter<URL> {
 
 	@Override

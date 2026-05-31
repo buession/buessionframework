@@ -34,6 +34,7 @@ import java.util.TimeZone;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public class SqlDatePropertyConverter extends DateTimePropertyConverter<Date> {
 
 	/**
