@@ -19,18 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.convert;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
-import org.apache.http.HttpEntity;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+
+import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface ApacheRequestBodyConverter<S> extends RequestBodyConverter<S, HttpEntity> {
+public class EncodedFormRequestBodyConverter
+		implements JdkHttpClientRequestBodyConverter<EncodedFormRequestBody> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final EncodedFormRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		Charset charset = Optional.ofNullable(source.getContentType().getCharset()).orElse(StandardCharsets.ISO_8859_1);
+		String formBody = source.getContent().stream()
+				.map(entry->URLEncoder.encode(entry.getName(), charset)
+						+ "=" + URLEncoder.encode(entry.getValue(), charset))
+				.collect(Collectors.joining("&"));
+
+		return HttpRequest.BodyPublishers.ofString(formBody);
+	}
 
 }

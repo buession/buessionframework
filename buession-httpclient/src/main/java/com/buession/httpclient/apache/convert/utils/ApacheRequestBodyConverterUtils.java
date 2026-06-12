@@ -33,7 +33,7 @@ import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 

@@ -19,18 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.convert;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
-import org.apache.http.HttpEntity;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.RequestBodyConverters;
+
+import java.net.http.HttpRequest;
 
 /**
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface ApacheRequestBodyConverter<S> extends RequestBodyConverter<S, HttpEntity> {
+public class JsonRawRequestBodyConverter implements JdkHttpClientRequestBodyConverter<JsonRawRequestBody<?>> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final JsonRawRequestBody<?> source) {
+		RequestBodyConverters.JsonRawRequestBodyConverter<HttpRequest.BodyPublisher> jsonRawRequestBodyConverter = new RequestBodyConverters.JsonRawRequestBodyConverter<>(
+				HttpRequest.BodyPublishers::ofString);
+		return jsonRawRequestBodyConverter.convert(source);
+	}
 
 }

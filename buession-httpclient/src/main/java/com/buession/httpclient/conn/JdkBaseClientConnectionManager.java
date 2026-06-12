@@ -19,18 +19,61 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.convert;
+package com.buession.httpclient.conn;
 
-import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
-import org.apache.http.HttpEntity;
+import com.buession.httpclient.core.Configuration;
 
 /**
+ * JDK {@link java.net.http.HttpClient} 连接管理器基类
+ *
+ * @param <CM>
+ * 		原生连接管理器
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface ApacheRequestBodyConverter<S> extends RequestBodyConverter<S, HttpEntity> {
+public abstract class JdkBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
+
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 */
+	public JdkBaseClientConnectionManager() {
+		super();
+	}
+
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 *
+	 * @param configuration
+	 * 		配置
+	 */
+	public JdkBaseClientConnectionManager(Configuration configuration) {
+		super(configuration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param clientConnectionManager
+	 * 		原生连接管理器
+	 */
+	public JdkBaseClientConnectionManager(CM clientConnectionManager) {
+		super(clientConnectionManager);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		配置
+	 * @param clientConnectionManager
+	 * 		原生连接管理器
+	 */
+	public JdkBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager) {
+		super(configuration, clientConnectionManager);
+	}
 
 }

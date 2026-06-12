@@ -19,18 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.convert;
+package com.buession.httpclient.jdk.nio;
 
-import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
-import org.apache.http.HttpEntity;
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.core.concurrent.BaseCallback;
+import com.buession.httpclient.core.concurrent.Callback;
 
 /**
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface ApacheRequestBodyConverter<S> extends RequestBodyConverter<S, HttpEntity> {
+public class DefaultCallback extends BaseCallback {
+
+	public DefaultCallback(final Callback delegate) {
+		super(delegate);
+	}
+
+	public void completed(Response response) {
+		delegate.completed(response);
+	}
+
+	public void failed(Exception ex) {
+		delegate.failed(ex);
+	}
+
+	public void cancelled() {
+		delegate.cancelled();
+	}
 
 }

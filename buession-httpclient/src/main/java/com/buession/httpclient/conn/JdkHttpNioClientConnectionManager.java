@@ -25,20 +25,21 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
-import okhttp3.HttpClientConnectionManager;
+import okhttp3.nio.NioHttpClientConnectionManager;
 
 /**
- * okhttp 连接管理器
+ * JDK {@link java.net.http.HttpClient} 异步连接管理器
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager>
-		implements com.buession.httpclient.okhttp.OkHttpClientConnectionManager {
+public class JdkHttpNioClientConnectionManager extends JdkBaseClientConnectionManager<NioHttpClientConnectionManager>
+		implements com.buession.httpclient.jdk.JdkNioHttpClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public OkHttpClientConnectionManager() {
+	public JdkHttpNioClientConnectionManager() {
 		super();
 	}
 
@@ -48,7 +49,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param configuration
 	 * 		配置
 	 */
-	public OkHttpClientConnectionManager(Configuration configuration) {
+	public JdkHttpNioClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -58,7 +59,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		原生连接管理器
 	 */
-	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
+	public JdkHttpNioClientConnectionManager(NioHttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -70,14 +71,14 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		原生连接管理器
 	 */
-	public OkHttpClientConnectionManager(Configuration configuration,
-	                                     HttpClientConnectionManager clientConnectionManager) {
+	public JdkHttpNioClientConnectionManager(Configuration configuration,
+	                                         NioHttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
 	@Override
-	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
-		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
+	protected NioHttpClientConnectionManager createDefaultClientConnectionManager() {
+		final NioHttpClientConnectionManager connectionManager = new NioHttpClientConnectionManager();
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxRequests);

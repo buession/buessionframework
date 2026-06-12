@@ -19,17 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.InputStreamRequestBody;
+
+import java.net.http.HttpRequest;
 
 /**
+ * 流式请求体转换器基类
+ *
+ * @param <S>
+ * 		请求体
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody>
+		implements JdkHttpClientRequestBodyConverter<S> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final S source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofInputStream(()->source.getContent());
+		return afterConvert(bodyPublisher);
+	}
+
+	protected abstract HttpRequest.BodyPublisher afterConvert(final HttpRequest.BodyPublisher requestBody);
 
 }

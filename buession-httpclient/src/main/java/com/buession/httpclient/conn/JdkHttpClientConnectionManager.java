@@ -25,20 +25,21 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
-import okhttp3.HttpClientConnectionManager;
+import jdk.java.net.http.HttpClientConnectionManager;
 
 /**
- * okhttp 连接管理器
+ * JDK {@link java.net.http.HttpClient} 连接管理器
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager>
-		implements com.buession.httpclient.okhttp.OkHttpClientConnectionManager {
+public class JdkHttpClientConnectionManager extends JdkBaseClientConnectionManager<HttpClientConnectionManager>
+		implements com.buession.httpclient.jdk.JdkHttpClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public OkHttpClientConnectionManager() {
+	public JdkHttpClientConnectionManager() {
 		super();
 	}
 
@@ -48,7 +49,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param configuration
 	 * 		配置
 	 */
-	public OkHttpClientConnectionManager(Configuration configuration) {
+	public JdkHttpClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -58,7 +59,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		原生连接管理器
 	 */
-	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
+	public JdkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -70,8 +71,8 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		原生连接管理器
 	 */
-	public OkHttpClientConnectionManager(Configuration configuration,
-	                                     HttpClientConnectionManager clientConnectionManager) {
+	public JdkHttpClientConnectionManager(Configuration configuration,
+	                                      HttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 

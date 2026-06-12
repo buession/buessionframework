@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
@@ -39,21 +38,12 @@ import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.core.utils.UriUtils;
-import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.HtmlRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.InputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.JavaScriptRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.JsonRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.MultipartFormRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.TextRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
+import com.buession.httpclient.okhttp.convert.*;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import org.slf4j.Logger;
@@ -287,7 +277,7 @@ public class OkHttpRequestBuilder {
 	}
 
 	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder requestBuilder,
-											  final RequestMethod method) {
+	                                          final RequestMethod method) {
 		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
