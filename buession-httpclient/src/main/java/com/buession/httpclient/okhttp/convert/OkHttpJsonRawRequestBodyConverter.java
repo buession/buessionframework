@@ -19,24 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.RequestBodyConverters;
+import com.buession.httpclient.core.internal.convert.JsonRawRequestBodyConverter;
+import okhttp3.MediaType;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
- *
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class OkHttpJsonRawRequestBodyConverter implements OkHttpRequestBodyConverter<JsonRawRequestBody<?>>,
+		JsonRawRequestBodyConverter<okhttp3.RequestBody> {
+
+	@Override
+	public okhttp3.RequestBody convert(final JsonRawRequestBody<?> source) {
+		RequestBodyConverters.JsonRawRequestBodyConverter<okhttp3.RequestBody> jsonRawRequestBodyConverter = new RequestBodyConverters.JsonRawRequestBodyConverter<>(
+				(str)->okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf())));
+		return jsonRawRequestBodyConverter.convert(source);
+	}
 
 }

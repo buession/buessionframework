@@ -37,7 +37,7 @@ import java.net.http.HttpRequest;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
+abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
 		implements JdkHttpClientRequestBodyConverter<S> {
 
 	@Override

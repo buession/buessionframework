@@ -19,24 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.internal.convert.ChunkedInputStreamRequestBodyConverter;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.StreamRequestBody;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * OkHttp Chunked {@link java.io.InputStream} 请求体转换器
  *
  * @author Yong.Teng
+ * @since 1.2.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class OkHttpChunkedInputStreamRequestBodyConverter
+		implements OkHttpRequestBodyConverter<ChunkedInputStreamRequestBody>,
+		ChunkedInputStreamRequestBodyConverter<RequestBody> {
+
+	@Override
+	public okhttp3.RequestBody convert(final ChunkedInputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return StreamRequestBody.create(source.getContent(),
+				MediaType.parse(source.getContentType().getMimeType()));
+	}
 
 }

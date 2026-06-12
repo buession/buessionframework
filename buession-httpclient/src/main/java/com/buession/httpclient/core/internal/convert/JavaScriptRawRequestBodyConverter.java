@@ -24,19 +24,18 @@
  */
 package com.buession.httpclient.core.internal.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.JavaScriptRawRequestBody;
 
 /**
- * 请求体转换器
+ * 原始 JavaScript 请求体转换器
  *
- * @param <S>
- * 		原始类型
  * @param <T>
  * 		转换后类型
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
 @FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public interface JavaScriptRawRequestBodyConverter<T> extends RequestBodyConverter<JavaScriptRawRequestBody, T> {
 
 }

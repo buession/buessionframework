@@ -22,21 +22,34 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.RequestBodyElement;
+import com.buession.httpclient.core.internal.convert.EncodedFormRequestBodyConverter;
+import okhttp3.RequestBody;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * OkHttp application/x-www-form-urlencoded 表单请求体转换器
  *
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class OkHttpEncodedFormRequestBodyConverter implements OkHttpRequestBodyConverter<EncodedFormRequestBody>,
+		EncodedFormRequestBodyConverter<RequestBody> {
+
+	@Override
+	public okhttp3.FormBody convert(final EncodedFormRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		final okhttp3.FormBody.Builder builder = new okhttp3.FormBody.Builder();
+
+		for(RequestBodyElement element : source.getContent()){
+			builder.addEncoded(element.getName(), element.getValue());
+		}
+
+		return builder.build();
+	}
 
 }

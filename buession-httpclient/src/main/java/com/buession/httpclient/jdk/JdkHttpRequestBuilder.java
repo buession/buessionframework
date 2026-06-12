@@ -76,17 +76,17 @@ public class JdkHttpRequestBuilder {
 	private final static Logger logger = LoggerFactory.getLogger(JdkHttpRequestBuilder.class);
 
 	static {
-		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new JdkChunkedInputStreamRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new JdkEncodedFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new JdkHtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new JdkInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JdkJavaScriptRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JdkJsonRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new JdkMultipartFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
-				new RepeatableInputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+				new JdkRepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new JdkTextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new JdkXmlRawRequestBodyConverter());
 	}
 
 	private JdkHttpRequestBuilder() {

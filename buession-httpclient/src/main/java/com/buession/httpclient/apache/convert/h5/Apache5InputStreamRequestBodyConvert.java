@@ -19,24 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.apache.convert.h5;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.InputStreamRequestBody;
+import com.buession.httpclient.core.internal.convert.InputStreamRequestBodyConvert;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
- *
  * @author Yong.Teng
+ * @since 1.2.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class Apache5InputStreamRequestBodyConvert implements Apache5RequestBodyConverter<InputStreamRequestBody>,
+		InputStreamRequestBodyConvert<HttpEntity> {
+
+	@Override
+	public HttpEntity convert(final InputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return new InputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
+	}
 
 }

@@ -22,21 +22,26 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.RequestBodyConverters;
+import com.buession.httpclient.core.internal.convert.JsonRawRequestBodyConverter;
+
+import java.net.http.HttpRequest;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
- *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class JdkJsonRawRequestBodyConverter implements JdkHttpClientRequestBodyConverter<JsonRawRequestBody<?>>,
+		JsonRawRequestBodyConverter<HttpRequest.BodyPublisher> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final JsonRawRequestBody<?> source) {
+		RequestBodyConverters.JsonRawRequestBodyConverter<HttpRequest.BodyPublisher> jsonRawRequestBodyConverter = new RequestBodyConverters.JsonRawRequestBodyConverter<>(
+				HttpRequest.BodyPublishers::ofString);
+		return jsonRawRequestBodyConverter.convert(source);
+	}
 
 }

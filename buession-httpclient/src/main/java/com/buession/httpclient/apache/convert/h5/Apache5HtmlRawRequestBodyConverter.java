@@ -22,21 +22,18 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.apache.convert.h5;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.HtmlRawRequestBody;
+import com.buession.httpclient.core.internal.convert.HtmlRawRequestBodyConverter;
+import org.apache.hc.core5.http.HttpEntity;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * Apache HttpClient 5 原始 HTML 请求体转换器
  *
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class Apache5HtmlRawRequestBodyConverter extends BaseRawRequestBodyConverter<HtmlRawRequestBody> implements
+		HtmlRawRequestBodyConverter<HttpEntity> {
 
 }

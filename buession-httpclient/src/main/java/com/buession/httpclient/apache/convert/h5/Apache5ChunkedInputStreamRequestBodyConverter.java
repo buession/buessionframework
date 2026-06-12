@@ -22,21 +22,32 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.apache.convert.h5;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.internal.convert.ChunkedInputStreamRequestBodyConverter;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.ChunkedInputStreamEntity;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * Apache HttpClient 5 Chunked {@link java.io.InputStream} 请求体转换器
  *
  * @author Yong.Teng
+ * @since 1.2.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class Apache5ChunkedInputStreamRequestBodyConverter
+		implements Apache5RequestBodyConverter<ChunkedInputStreamRequestBody>,
+		ChunkedInputStreamRequestBodyConverter<HttpEntity> {
+
+	@Override
+	public HttpEntity convert(final ChunkedInputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return new ChunkedInputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
+	}
 
 }

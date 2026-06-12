@@ -22,21 +22,28 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
+import com.buession.httpclient.core.internal.convert.RepeatableInputStreamRequestBodyConvert;
+
+import java.net.http.HttpRequest;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
- *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class JdkRepeatableInputStreamRequestBodyConvert
+		implements JdkHttpClientRequestBodyConverter<RepeatableInputStreamRequestBody>,
+		RepeatableInputStreamRequestBodyConvert<HttpRequest.BodyPublisher> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final RepeatableInputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return HttpRequest.BodyPublishers.ofInputStream(()->source.getContent());
+	}
 
 }

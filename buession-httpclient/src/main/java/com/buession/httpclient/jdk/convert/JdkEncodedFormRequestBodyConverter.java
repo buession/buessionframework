@@ -22,21 +22,38 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.jdk.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.internal.convert.EncodedFormRequestBodyConverter;
+
+import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * JDK {@link java.net.http.HttpClient} application/x-www-form-urlencoded 表单请求体转换器
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class JdkEncodedFormRequestBodyConverter implements JdkHttpClientRequestBodyConverter<EncodedFormRequestBody>,
+		EncodedFormRequestBodyConverter<HttpRequest.BodyPublisher> {
+
+	@Override
+	public HttpRequest.BodyPublisher convert(final EncodedFormRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		Charset charset = Optional.ofNullable(source.getContentType().getCharset()).orElse(StandardCharsets.ISO_8859_1);
+		String formBody = source.getContent().stream().map(entry->URLEncoder.encode(entry.getName(), charset) + "=" +
+				URLEncoder.encode(entry.getValue(), charset)).collect(Collectors.joining("&"));
+
+		return HttpRequest.BodyPublishers.ofString(formBody);
+	}
 
 }

@@ -22,21 +22,37 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.apache.convert.h5;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.internal.convert.EncodedFormRequestBodyConverter;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
+ * Apache HttpClient 5 application/x-www-form-urlencoded 表单请求体转换器
  *
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class Apache5EncodedFormRequestBodyConverter implements Apache5RequestBodyConverter<EncodedFormRequestBody>,
+		EncodedFormRequestBodyConverter<HttpEntity> {
+
+	@Override
+	public UrlEncodedFormEntity convert(final EncodedFormRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		List<NameValuePair> data = source.getContent().stream()
+				.map((element)->new BasicNameValuePair(element.getName(), element.getValue()))
+				.collect(Collectors.toList());
+
+		return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
+	}
 
 }

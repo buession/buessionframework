@@ -24,19 +24,19 @@
  */
 package com.buession.httpclient.core.internal.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 
 /**
- * 请求体转换器
+ * 可重复 {@link java.io.InputStream} 请求体转换器
  *
- * @param <S>
- * 		原始类型
  * @param <T>
  * 		转换后类型
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
 @FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public interface RepeatableInputStreamRequestBodyConvert<T>
+		extends RequestBodyConverter<RepeatableInputStreamRequestBody, T> {
 
 }

@@ -19,24 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.internal.convert;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.XmlRawRequestBody;
+import com.buession.httpclient.core.internal.convert.XmlRawRequestBodyConverter;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
- * 请求体转换器
- *
- * @param <S>
- * 		原始类型
- * @param <T>
- * 		转换后类型
- *
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface RequestBodyConverter<S, T> extends Converter<S, T> {
+public class OkHttpXmlRawRequestBodyConverter implements OkHttpRequestBodyConverter<XmlRawRequestBody>,
+		XmlRawRequestBodyConverter<RequestBody> {
+
+	@Override
+	public RequestBody convert(final XmlRawRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return RequestBody.create(source.getContent().asXML(), MediaType.parse(source.getContentType().valueOf()));
+	}
 
 }

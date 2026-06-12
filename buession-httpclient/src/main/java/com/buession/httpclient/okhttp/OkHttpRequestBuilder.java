@@ -74,17 +74,18 @@ public class OkHttpRequestBuilder {
 	private final static Logger logger = LoggerFactory.getLogger(OkHttpRequestBuilder.class);
 
 	static {
-		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class,
+				new OkHttpChunkedInputStreamRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new OkHttpEncodedFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new OkHttpHtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new OkHttpInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new OkHttpJavaScriptRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new OkHttpJsonRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new OkHttpMultipartFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
-				new RepeatableInputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+				new OkHttpRepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new OkHttpTextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new OkHttpXmlRawRequestBodyConverter());
 	}
 
 	private OkHttpRequestBuilder() {
