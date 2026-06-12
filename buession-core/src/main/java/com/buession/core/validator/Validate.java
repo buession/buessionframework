@@ -31,8 +31,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Pattern;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.routines.EmailValidator;
 import com.buession.core.validator.routines.IDCardValidator;
 import com.buession.core.validator.routines.ISBNValidator;
@@ -49,8 +49,6 @@ import com.buession.lang.IpType;
  * @author Yong.Teng
  */
 public class Validate {
-
-	private final static Pattern MIME_TYPE_PATTERN = Pattern.compile("[a-zA-Z\\d]+/[a-zA-Z\\d]+([.-][a-zA-Z\\d]+)*");
 
 	private Validate() {
 
@@ -999,7 +997,43 @@ public class Validate {
 	 * @return Boolean
 	 */
 	public static boolean isMimeType(final CharSequence charSequence) {
-		return MIME_TYPE_PATTERN.matcher(charSequence).matches();
+		if(charSequence == null || charSequence.isEmpty()){
+			return false;
+		}
+
+		String[] sg = StringUtils.split(charSequence.toString().toLowerCase(), '/');
+		if(sg == null || sg.length != 2){
+			return false;
+		}
+
+		if("text".equals(sg[0]) == false && "image".equals(sg[0]) == false && "audio".equals(sg[0]) == false &&
+				"video".equals(sg[0]) == false && "message".equals(sg[0]) == false && "model".equals(sg[0]) == false &&
+				"application".equals(sg[0]) == false){
+			return false;
+		}
+
+		char first = sg[1].charAt(0);
+		char last = sg[1].charAt(sg[1].length() - 1);
+		if(first == '.' || first == '-' || first == '+' || last == '.' || last == '-' || last == '+'){
+			return false;
+		}
+
+		int i = 0;
+		for(char c : sg[1].toCharArray()){
+			if(Character.isLetterOrDigit(c) == false && c != '.' && c != '-' && c != '+'){
+				return false;
+			}
+
+			if(i > 0){
+				char prev = sg[1].charAt(i - 1);
+				if((c == '.' || c == '-' || c == '+') && (prev == '.' || prev == '-' || prev == '+')){
+					return false;
+				}
+			}
+			i++;
+		}
+
+		return true;
 	}
 
 }
