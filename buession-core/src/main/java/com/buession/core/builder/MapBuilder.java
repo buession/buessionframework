@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.builder;
@@ -88,7 +88,7 @@ public class MapBuilder<K, V> {
 	 * @since 2.1.2
 	 */
 	public static <K, V> MapBuilder<K, V> create(final int initialCapacity) {
-		return new MapBuilder<>(new HashMap<>(initialCapacity));
+		return new MapBuilder<>(new HashMap<>((int) Math.max(16F, (initialCapacity / 0.75) + 1F)));
 	}
 
 	/**

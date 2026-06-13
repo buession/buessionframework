@@ -83,9 +83,8 @@ public class DefaultThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	protected static ThreadFactory createDefaultThreadFactory(final ThreadPoolConfiguration configuration) {
-		final DefaultThreadFactory threadFactory = Validate.hasText(
-				configuration.getNamePrefix()) ? new DefaultThreadFactory(
-				configuration.getNamePrefix()) : new DefaultThreadFactory();
+		final DefaultThreadFactory threadFactory = Validate.hasText(configuration.getNamePrefix()) ?
+				new DefaultThreadFactory(configuration.getNamePrefix()) : new DefaultThreadFactory();
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(configuration.getPriority()).to(threadFactory::setPriority);

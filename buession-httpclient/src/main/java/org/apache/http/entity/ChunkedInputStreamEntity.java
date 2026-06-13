@@ -90,7 +90,7 @@ public class ChunkedInputStreamEntity extends AbstractHttpEntity {
 	 */
 	@Override
 	public final void writeTo(final OutputStream outStream) throws IOException {
-		Args.notNull(outStream, "Output stream");
+		org.apache.hc.core5.util.Args.notNull(outStream, "Output stream");
 		try(final InputStream inStream = this.content){
 			final byte[] buffer = new byte[OUTPUT_BUFFER_SIZE];
 			int readLen;

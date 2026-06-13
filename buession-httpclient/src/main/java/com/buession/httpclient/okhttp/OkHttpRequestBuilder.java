@@ -24,8 +24,6 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.ContentType;
 import com.buession.httpclient.core.EncodedFormRequestBody;
@@ -46,11 +44,8 @@ import com.buession.httpclient.core.utils.UriUtils;
 import com.buession.httpclient.okhttp.convert.*;
 import okhttp3.FormBody;
 import okhttp3.Headers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +65,6 @@ public class OkHttpRequestBuilder {
 	protected Map<String, Object> parameters;
 
 	protected OkHttpRequest request;
-
-	private final static Logger logger = LoggerFactory.getLogger(OkHttpRequestBuilder.class);
 
 	static {
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class,
@@ -272,7 +265,8 @@ public class OkHttpRequestBuilder {
 			}
 		}
 
-		request.getRequestBuilder().url(determineRequestUrl(uri, parameters)).headers(headersBuilder.build());
+		request.getRequestBuilder().url(UriUtils.determineRequestUri(uri, parameters).toString())
+				.headers(headersBuilder.build());
 
 		return request;
 	}
@@ -306,32 +300,6 @@ public class OkHttpRequestBuilder {
 		final RequestBodyConverter<RequestBody<?>, okhttp3.RequestBody> convert = REQUEST_BODY_CONVERTS.get(
 				data.getClass());
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
-	}
-
-	private static String determineRequestUrl(final URI uri, final Map<String, Object> parameters) {
-		if(Validate.isEmpty(uri.getRawQuery())){
-			return uri.toString();
-		}
-
-		final StringBuilder newQuery = new StringBuilder(uri.getRawQuery().length());
-
-		newQuery.append(uri.getRawQuery());
-
-		if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
-			newQuery.append('&');
-		}
-
-		newQuery.append(UriUtils.buildQuery(parameters, false));
-
-		try{
-			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(),
-					uri.getPath(), newQuery.toString(), uri.getFragment()).toString();
-		}catch(URISyntaxException e){
-			if(logger.isErrorEnabled()){
-				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());
-			}
-			return uri.toString();
-		}
 	}
 
 }

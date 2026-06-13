@@ -45,7 +45,7 @@ public class JdkChunkedInputStreamRequestBodyConverter implements
 			return null;
 		}
 
-		return HttpRequest.BodyPublishers.ofInputStream(()->source.getContent());
+		return HttpRequest.BodyPublishers.ofInputStream(source::getContent);
 	}
 
 }

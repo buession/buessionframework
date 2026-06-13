@@ -43,7 +43,7 @@ public class JdkRepeatableInputStreamRequestBodyConvert
 			return null;
 		}
 
-		return HttpRequest.BodyPublishers.ofInputStream(()->source.getContent());
+		return HttpRequest.BodyPublishers.ofInputStream(source::getContent);
 	}
 
 }
