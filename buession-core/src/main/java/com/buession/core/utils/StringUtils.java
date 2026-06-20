@@ -21,22 +21,19 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
-import com.buession.core.collect.Arrays;
 import com.buession.lang.Constants;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.Strings;
 
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * 字符串工具
- * More {@link org.apache.commons.lang3.StringUtils}
+ * 字符串工具 {@link org.apache.commons.lang3.StringUtils}
  *
  * @author Yong.Teng
  */
@@ -815,82 +812,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	/**
-	 * 将字符串批量转换为小写字母
-	 *
-	 * @param sources
-	 * 		原始字符串
-	 *
-	 * @return 转换后的字符串
-	 */
-	public static String[] toLowerCase(final String[] sources) {
-		if(sources == null){
-			return null;
-		}else if(sources.length == 0){
-			return sources;
-		}else{
-			return Arrays.map(sources, String.class, String::toLowerCase);
-		}
-	}
-
-	/**
-	 * 将字符串批量转换为小写字母
-	 *
-	 * @param sources
-	 * 		原始字符串
-	 * @param locale
-	 * 		use the case transformation rules for this locale
-	 *
-	 * @return 转换后的字符串
-	 */
-	public static String[] toLowerCase(final String[] sources, final Locale locale) {
-		if(sources == null){
-			return null;
-		}else if(sources.length == 0){
-			return sources;
-		}else{
-			return Arrays.map(sources, String.class, (v)->v.toLowerCase(locale));
-		}
-	}
-
-	/**
-	 * 将字符串批量转换为大写字母
-	 *
-	 * @param sources
-	 * 		原始字符串
-	 *
-	 * @return 转换后的字符串
-	 */
-	public static String[] toUpperCase(final String[] sources) {
-		if(sources == null){
-			return null;
-		}else if(sources.length == 0){
-			return sources;
-		}else{
-			return Arrays.map(sources, String.class, String::toUpperCase);
-		}
-	}
-
-	/**
-	 * 将字符串批量转换为大写字母
-	 *
-	 * @param sources
-	 * 		原始字符串
-	 * @param locale
-	 * 		use the case transformation rules for this locale
-	 *
-	 * @return 转换后的字符串
-	 */
-	public static String[] toUpperCase(final String[] sources, final Locale locale) {
-		if(sources == null){
-			return null;
-		}else if(sources.length == 0){
-			return sources;
-		}else{
-			return Arrays.map(sources, String.class, (v)->v.toUpperCase(locale));
-		}
-	}
-
-	/**
 	 * 取前 N 个字符，如字符总数大于 N，则会在字符末尾添加省略号
 	 *
 	 * @param str
@@ -952,7 +873,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @since 4.0.0
 	 */
 	public static String replace(final String str, final String searchStr, final String replacement,
-								 final int max) {
+	                             final int max) {
 		return Strings.CS.replace(str, searchStr, replacement, max);
 	}
 
@@ -997,7 +918,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @since 4.0.0
 	 */
 	public static String replaceIgnoreCase(final String str, final String searchStr, final String replacement,
-										   final int max) {
+	                                       final int max) {
 		return Strings.CI.replace(str, searchStr, replacement, max);
 	}
 
@@ -1370,7 +1291,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
-										final CharSequence substring, final int start, final int length) {
+	                                    final CharSequence substring, final int start, final int length) {
 		if(cs instanceof String && substring instanceof String){
 			return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
 		}
