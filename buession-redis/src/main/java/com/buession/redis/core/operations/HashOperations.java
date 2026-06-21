@@ -2744,6 +2744,80 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return doExecute((cmd)->cmd.hSet(KeyUtils.rawKey(this, key), data));
 	}
 
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Long hSet(final String key, final String field, final String value) {
+		return hSet(key, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Long hSet(final byte[] key, final byte[] field, final byte[] value) {
+		return hSet(key, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	<V> Long hSet(final String key, final String field, final V value);
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	<V> Long hSet(final byte[] key, final byte[] field, final V value);
+
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final String key, final KeyValue<String, String>... data) {
@@ -2797,6 +2871,356 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	                      final KeyValue<byte[], byte[]>... data) {
 		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), exType, expires, data));
 	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final String key, final String field, final String value) {
+		return hSetEx(key, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final byte[] key, final byte[] field, final byte[] value) {
+		return hSetEx(key, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final String key, final FnxFxx fnxFxx, final String field, final String value) {
+		return hSetEx(key, fnxFxx, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final byte[] field, final byte[] value) {
+		return hSetEx(key, fnxFxx, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                      final String field, final String value) {
+		return hSetEx(key, fnxFxx, exType, expires, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                      final byte[] field, final byte[] value) {
+		return hSetEx(key, fnxFxx, exType, expires, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final String key, final PxExType exType, final long expires, final String field,
+	                      final String value) {
+		return hSetEx(key, exType, expires, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default Status hSetEx(final byte[] key, final PxExType exType, final long expires, final byte[] field,
+	                      final byte[] value) {
+		return hSetEx(key, exType, expires, new KeyValue<>(field, value));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final String field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final byte[] field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final FnxFxx fnxFxx, final String field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final byte[] field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                  final String field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                  final byte[] field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final PxExType exType, final long expires, final String field, final V value);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param field
+	 * 		Field
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final PxExType exType, final long expires, final byte[] field, final V value);
 
 	@Override
 	default Status hSetNx(final String key, final String field, final String value) {

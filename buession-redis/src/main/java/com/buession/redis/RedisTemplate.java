@@ -29,6 +29,7 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.command.args.FnxFxx;
 import com.buession.redis.core.command.args.GetExType;
 import com.buession.redis.core.command.args.PxExType;
 import com.buession.redis.core.command.args.sortedset.Aggregate;
@@ -367,6 +368,60 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	                                                 final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, pattern, count),
 				new Converter.TypeScanResultBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> Long hSet(final String key, final String field, final V value) {
+		return hSet(key, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Long hSet(final byte[] key, final byte[] field, final V value) {
+		return hSet(key, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final String field, final V value) {
+		return hSetEx(key, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final byte[] field, final V value) {
+		return hSetEx(key, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final FnxFxx fnxFxx, final String field, final V value) {
+		return hSetEx(key, fnxFxx, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final byte[] field, final V value) {
+		return hSetEx(key, fnxFxx, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                         final String field, final V value) {
+		return hSetEx(key, fnxFxx, exType, expires, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                         final byte[] field, final V value) {
+		return hSetEx(key, fnxFxx, exType, expires, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final PxExType exType, final long expires, final String field,
+	                         final V value) {
+		return hSetEx(key, exType, expires, field, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final PxExType exType, final long expires, final byte[] field,
+	                         final V value) {
+		return hSetEx(key, exType, expires, field, serializer.serialize(value));
 	}
 
 	@Override
