@@ -28,6 +28,7 @@ import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Jackson JSON 序列化
@@ -50,6 +51,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer<ObjectMapper> 
 
 	@Override
 	public void configure(ObjectMapper objectMapper) {
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 	}
 

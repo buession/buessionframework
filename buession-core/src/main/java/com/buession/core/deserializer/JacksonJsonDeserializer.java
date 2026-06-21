@@ -29,6 +29,7 @@ import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -56,6 +57,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer<ObjectMapp
 
 	@Override
 	public void configure(ObjectMapper object) {
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}

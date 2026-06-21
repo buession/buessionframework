@@ -35,7 +35,8 @@ Buession Framework Changelog
 - 修复 com.buession.httpclient.AbstractHttpAsyncClient#report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
 - 修复 RedisTemplate 中无限递归调用的 BUG
 - 修复 RedisTemplate 中 lMove(final String key, final String destKey, final Direction from, final Direction to) 中原 key 设置成目标 key 了的 BUG；
-- 修复 RedisTemplate 中 blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout) 中原 key 设置成目标 key 了的 BUG；
+- 修复 RedisTemplate 中 blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout) 中原 key 设置成目标 key 了的 BUG
+- 修复 jackson 序列化、反序列化不支持 LocalDate、LocalTime、LocalDateTime 的 BUG
 
 ### 📔 文档
 
