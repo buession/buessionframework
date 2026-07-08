@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.mvc.controller;
@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<P, DTO, VO> {
+public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<VO> {
 
 	@RequestMapping(path = "", method = RequestMethod.POST)
 	public Response<VO> add(HttpServletRequest request, HttpServletResponse response, @RequestBody DTO e) {
@@ -54,19 +54,19 @@ public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRe
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	public Response<VO> edit(HttpServletRequest request, HttpServletResponse response, @PathVariable(name = "id") P id,
-							 @RequestBody DTO e) {
+	                         @RequestBody DTO e) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	public Response<VO> detail(HttpServletRequest request, HttpServletResponse response,
-							   @PathVariable(name = "id") P id) {
+	                           @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	public Response<VO> delete(HttpServletRequest request, HttpServletResponse response,
-							   @PathVariable(name = "id") P id) {
+	                           @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 

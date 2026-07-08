@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.controller;
@@ -29,13 +29,16 @@ import com.buession.web.mvc.Response;
 /**
  * REST 控制器抽象类
  *
+ * @param <VO>
+ * 		数据输出对象模型
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractRestController<P, DTO, VO> extends AbstractController implements RestController {
+public abstract class AbstractRestController<VO> extends AbstractController implements RestController {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	protected Response<VO> pageNotFound(final String uri){
+	protected Response<VO> pageNotFound(final String uri) {
 		return response(false, PAGE_NOT_FOUND_ERROR_CODE, uri);
 	}
 
