@@ -26,7 +26,7 @@
 
 ### Dao 接口
 
-接口定义，可见：[https://javadoc.io/static/com.buession/buession-dao/2.0.2/com/buession/dao/Dao.html](https://javadoc.io/static/com.buession/buession-dao/4.0.0/com/buession/dao/Dao.html)
+接口定义，可见：[https://javadoc.io/static/com.buession/buession-dao/4.0.0/com/buession/dao/Dao.html](https://javadoc.io/static/com.buession/buession-dao/4.0.0/com/buession/dao/Dao.html)
 
 ```java
 public interface Dao<P, E> {
