@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -30,11 +30,10 @@ import com.buession.web.aop.handler.AbstractHttpCacheAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.servlet.http.request.RequestUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringValueResolver;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet 模式注解 {@link HttpCache} 处理器
@@ -48,7 +47,6 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 	/**
 	 * 构造函数
 	 */
-	@Deprecated
 	public ServletHttpCacheAnnotationHandler() {
 		super();
 	}

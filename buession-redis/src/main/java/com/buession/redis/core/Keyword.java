@@ -24,7 +24,9 @@
  */
 package com.buession.redis.core;
 
+import com.buession.lang.Rawable;
 import com.buession.lang.Value;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * 关键字
@@ -32,6 +34,75 @@ import com.buession.lang.Value;
  * @author Yong.Teng
  * @since 3.0.1
  */
-public interface Keyword extends Value<String> {
+public interface Keyword extends Value<String>, Rawable {
+
+	@Override
+	default byte[] getRaw() {
+		return SafeEncoder.encode(getValue());
+	}
+
+	enum Common {
+		ON,
+
+		OFF,
+
+		YES,
+
+		NO,
+
+		COUNT,
+
+		LIMIT,
+
+		WITHSCORE,
+
+		WITHSCORES,
+
+		FORCE,
+
+		REPLACE,
+
+		ALL,
+
+		ANY,
+
+		GET,
+
+		SET,
+
+		ITEMS
+	}
+
+	enum Conn {
+		AUTH,
+
+		AUTH2,
+
+		RESET
+	}
+
+	enum Key {
+		KEYS,
+	}
+
+	enum Database {
+		DB
+	}
+
+	enum Hash {
+		FIELDS,
+
+		WITHVALUES
+	}
+
+	enum Scan {
+		MATCH
+	}
+
+	enum Time {
+		IDLE,
+
+		KEEPTTL,
+	}
 
 }

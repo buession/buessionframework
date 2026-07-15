@@ -19,32 +19,31 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterResetOption;
+import com.buession.redis.core.command.args.cluster.ResetOption;
 import redis.clients.jedis.args.ClusterResetType;
 
 /**
- * {@link ClusterResetOption} 转换为 Jedis {@link ClusterResetType}
+ * {@link ResetOption} 转换为 Jedis {@link ClusterResetType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterResetOptionConverter implements Converter<ClusterResetOption, ClusterResetType> {
+public final class ClusterResetOptionConverter implements Converter<ResetOption, ClusterResetType> {
 
 	@Override
-	public ClusterResetType convert(final ClusterResetOption source) {
-		switch(source){
-			case SOFT:
-				return ClusterResetType.SOFT;
-			case HARD:
-				return ClusterResetType.HARD;
-			default:
-				return null;
+	public ClusterResetType convert(final ResetOption source) {
+		if(source == ResetOption.HARD){
+			return ClusterResetType.HARD;
+		}else if(source == ResetOption.SOFT){
+			return ClusterResetType.SOFT;
+		}else{
+			return null;
 		}
 	}
 

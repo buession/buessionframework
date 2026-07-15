@@ -26,9 +26,14 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientType;
-import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.command.args.connection.ClientInfoOption;
+import com.buession.redis.core.command.args.connection.ClientPauseMode;
+import com.buession.redis.core.command.args.connection.ClientReply;
+import com.buession.redis.core.command.args.connection.ClientType;
+import com.buession.redis.core.command.args.connection.ClientUnblockType;
+import com.buession.redis.core.Hello;
+import com.buession.redis.core.TrackingInfo;
+import com.buession.redis.core.command.args.connection.TrackingArgument;
 
 import java.util.List;
 
@@ -161,6 +166,20 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientKill(final String host, final int port);
 
 	/**
+	 * 关闭地址为 host:port 的客户端
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
+	 *
+	 * @param host
+	 * 		客户端地址
+	 * @param port
+	 * 		客户端端口
+	 *
+	 * @return 当指定的客户端存在，且被成功关闭时，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientKill(final byte[] host, final int port);
+
+	/**
 	 * 获取所有连接到服务器的客户端信息和统计数据
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_list.html" target="_blank">http://redisdoc.com/client_and_server/client_list.html</a></p>
@@ -182,9 +201,45 @@ public interface ConnectionCommands extends RedisCommands {
 	List<Client> clientList(final ClientType clientType);
 
 	/**
+	 * 获取所有连接到服务器的客户端信息和统计数据
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_list.html" target="_blank">http://redisdoc.com/client_and_server/client_list.html</a></p>
+	 *
+	 * @param clientIds
+	 * 		客户端 ID
+	 *
+	 * @return 所有连接到服务器的客户端信息和统计数据
+	 */
+	List<Client> clientList(final long... clientIds);
+
+	/**
+	 * 临时禁止当前客户端连接所使用的内存被驱逐
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-no-evict/" target="_blank">https://redis.io/docs/latest/commands/client-no-evict/</a></p>
+	 *
+	 * @param on
+	 * 		true 为启用“不驱逐”模式；false 为禁用
+	 *
+	 * @return 操作结果
+	 */
+	Status clientNoEvict(final boolean on);
+
+	/**
+	 * 临时禁止当前客户端连接在执行读操作时更新键的 LRU/LFU 访问时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-no-touch/" target="_blank">https://redis.io/docs/latest/commands/client-no-touch/</a></p>
+	 *
+	 * @param on
+	 * 		true 为启用“不触碰”模式；false 为禁用
+	 *
+	 * @return 操作结果
+	 */
+	Status clientNoTouch(final boolean on);
+
+	/**
 	 * 将所有客户端的访问暂停给定的毫秒数
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-pause/" target="_blank">https://redis.io/docs/latest/commands/client-pause/</a></p>
 	 *
 	 * @param timeout
 	 * 		暂停时间（单位：毫秒）
@@ -192,6 +247,20 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status clientPause(final int timeout);
+
+	/**
+	 * 将所有客户端的访问暂停给定的毫秒数
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-pause/" target="_blank">https://redis.io/docs/latest/commands/client-pause/</a></p>
+	 *
+	 * @param timeout
+	 * 		暂停时间（单位：毫秒）
+	 * @param pauseMode
+	 * 		暂停模式
+	 *
+	 * @return 操作结果
+	 */
+	Status clientPause(final int timeout, final ClientPauseMode pauseMode);
 
 	/**
 	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
@@ -204,6 +273,20 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
 	 */
 	Status clientReply(final ClientReply option);
+
+	/**
+	 * 设置当前客户端连接的元信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-setinfo/" target="_blank">https://redis.io/docs/latest/commands/client-setinfo/</a></p>
+	 *
+	 * @param option
+	 * 		集群信息选项
+	 * @param value
+	 * 		值
+	 *
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientSetInfo(final ClientInfoOption option, final String value);
 
 	/**
 	 * 为当前连接分配一个名字
@@ -228,6 +311,30 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	Status clientSetName(final byte[] name);
+
+	/**
+	 * When tracking is enabled Redis remembers the keys that the connection requested,
+	 * in order to send later invalidation messages when such keys are modified.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-tracking/" target="_blank">https://redis.io/docs/latest/commands/client-tracking/</a></p>
+	 *
+	 * @param on
+	 * 		是否启用
+	 * @param argument
+	 * 		CLIENT TRACKING 参数
+	 *
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientTracking(final boolean on, final TrackingArgument argument);
+
+	/**
+	 * Returns information about the current client connection's use of the server assisted client side caching feature.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-trackinginfo/" target="_blank">https://redis.io/docs/latest/commands/client-trackinginfo/</a></p>
+	 *
+	 * @return Information about the current client connection's use of the server assisted client side caching feature
+	 */
+	TrackingInfo clientTrackingInfo();
 
 	/**
 	 * 该命令可以通过其他连接解除客户端的阻塞
@@ -256,6 +363,15 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientUnblock(final int clientId, final ClientUnblockType type);
 
 	/**
+	 * 用于恢复被暂停的客户端命令处理
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-unpause/" target="_blank">https://redis.io/docs/latest/commands/client-unpause/</a></p>
+	 *
+	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
+	 */
+	Status clientUnpause();
+
+	/**
 	 * 打印一个特定的字符串
 	 *
 	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
@@ -278,6 +394,123 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 字符串本身
 	 */
 	byte[] echo(final byte[] str);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello();
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String username, final String password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] username, final byte[] password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 * @param clientName
+	 * 		客户端名称
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String username, final String password, final String clientName);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 * @param clientName
+	 * 		客户端名称
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] username, final byte[] password, final byte[] clientName);
 
 	/**
 	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；

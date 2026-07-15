@@ -32,6 +32,7 @@ import com.buession.core.exception.ConversionException;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class BytePropertyConverter extends NumberPropertyConverter<Byte> {
 
 	@Override

@@ -24,6 +24,7 @@
  */
 package com.buession.core.converter;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.EnumUtils;
 
 /**
@@ -43,6 +44,7 @@ public abstract class AbstractEnumConverter<T, E extends Enum<E>> implements Con
 	 * 		枚举类型
 	 */
 	public AbstractEnumConverter(final Class<E> enumType) {
+		Assert.isNull(enumType, "Enum type can not be null");
 		this.enumType = enumType;
 	}
 

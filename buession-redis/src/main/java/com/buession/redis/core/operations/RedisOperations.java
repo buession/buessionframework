@@ -19,25 +19,25 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.Converter;
 import com.buession.redis.core.SessionCallback;
 import com.buession.redis.exception.RedisException;
 
 /**
  * @author Yong.Teng
  */
-@FunctionalInterface
 public interface RedisOperations {
 
 	/**
 	 * Redis 执行命令
 	 *
 	 * @param callback
-	 * 		会话回调
+	 * 		会话回调 {@link SessionCallback}
 	 * @param <R>
 	 * 		返回值类型
 	 *
@@ -47,5 +47,25 @@ public interface RedisOperations {
 	 * 		异常
 	 */
 	<R> R execute(final SessionCallback<R> callback) throws RedisException;
+
+	/**
+	 * Redis 执行命令
+	 *
+	 * @param callback
+	 * 		会话回调 {@link SessionCallback}
+	 * @param converter
+	 * 		返回值转换器 {@link Converter}
+	 * @param <SR>
+	 * 		返回值原始类型
+	 * @param <TR>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 *
+	 * @throws RedisException
+	 * 		异常
+	 * @since 4.0.0
+	 */
+	<SR, TR> TR execute(final SessionCallback<SR> callback, final Converter<SR, TR> converter);
 
 }

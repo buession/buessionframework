@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -36,11 +36,11 @@ import okhttp3.MediaType;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
+abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
 		implements OkHttpRequestBodyConverter<S> {
 
 	@Override
-	public okhttp3.RequestBody convert(final S source){
+	public okhttp3.RequestBody convert(final S source) {
 		if(source == null || source.getContent() == null){
 			return null;
 		}

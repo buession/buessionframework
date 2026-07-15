@@ -24,14 +24,10 @@
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.jedis.JedisStreamEntryID;
+import com.buession.redis.core.internal.jedis.args.JedisStreamEntryID;
 import redis.clients.jedis.StreamEntryID;
-
-import java.util.Map;
 
 /**
  * {@link StreamEntryId} 转换为 jedis {@link StreamEntryID}
@@ -39,15 +35,11 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-@FunctionalInterface
-public interface StreamEntryIdConverter extends Converter<StreamEntryId, StreamEntryID> {
+public final class StreamEntryIdConverter implements Converter<StreamEntryId, StreamEntryID> {
 
-	static ArrayConverter<StreamEntryId, StreamEntryID> arrayConverter() {
-		return new ArrayConverter<>(JedisStreamEntryID::from, StreamEntryID.class);
-	}
-
-	static <K> MapConverter<K, StreamEntryId, K, StreamEntryID> mapConverter() {
-		return new MapConverter<>((key)->key, JedisStreamEntryID::from);
+	@Override
+	public StreamEntryID convert(final StreamEntryId source) {
+		return source == null ? null : new JedisStreamEntryID(source);
 	}
 
 }

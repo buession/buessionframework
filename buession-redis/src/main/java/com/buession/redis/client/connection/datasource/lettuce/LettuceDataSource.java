@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.core.RedisNode;
 
 /**
@@ -79,18 +78,6 @@ public class LettuceDataSource extends AbstractLettuceDataSource implements Stan
 	@Override
 	public void setDatabase(int database) {
 		this.database = database;
-	}
-
-	@Deprecated
-	@Override
-	public LettuceConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new LettuceConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
-		}else{
-			return new LettuceConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSslConfiguration());
-		}
 	}
 
 }

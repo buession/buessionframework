@@ -26,6 +26,7 @@ package com.buession.redis.lettuce;
 
 import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +46,13 @@ public class LettuceStringTest extends AbstractLettuceRedisTest {
 	public void get() {
 		RedisTemplate redisTemplate = redisTemplate();
 		Assertions.assertEquals(redisTemplate.get("a"), "A");
+	}
+
+	@Test
+	public void getObject() {
+		RedisTemplate redisTemplate = redisTemplate();
+		User user = redisTemplate.get("user", User.class);
+		System.out.println(user);
 	}
 
 }

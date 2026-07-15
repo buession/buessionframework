@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
@@ -29,6 +29,7 @@ import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -42,14 +43,21 @@ import java.util.Arrays;
  */
 public class JacksonJsonDeserializer extends AbstractJsonDeserializer<ObjectMapper> {
 
+	/**
+	 * {@link ObjectMapper} 实例
+	 */
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
+	/**
+	 * 构造函数
+	 */
 	public JacksonJsonDeserializer() {
 		configure(objectMapper);
 	}
 
 	@Override
 	public void configure(ObjectMapper object) {
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}

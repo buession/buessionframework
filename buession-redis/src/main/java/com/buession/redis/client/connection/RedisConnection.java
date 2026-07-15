@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -30,6 +30,7 @@ import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -125,26 +126,72 @@ public interface RedisConnection extends Destroyable, Closeable {
 	void setInfiniteSoTimeout(int infiniteSoTimeout);
 
 	/**
-	 * 返回是否启用 SSL 连接
+	 * 返回是否自动重连
 	 *
-	 * @return 启用 SSL 连接，返回 true; 否则，返回 false
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
 	 */
-	boolean isUseSsl();
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	boolean getAutoReconnect();
+
+	/**
+	 * 设置是否自动重连
+	 *
+	 * @param autoReconnect
+	 * 		是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	void setAutoReconnect(boolean autoReconnect);
+
+	/**
+	 * 返回重连间隔
+	 *
+	 * @return 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	int getReconnectDelay();
+
+	/**
+	 * 设置重连间隔
+	 *
+	 * @param reconnectDelay
+	 * 		重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	void setReconnectDelay(int reconnectDelay);
 
 	/**
 	 * SSL 配置
 	 *
 	 * @return SSL 配置
+	 *
+	 * @since 4.0.0
 	 */
-	SslConfiguration getSslConfiguration();
+	SslOptions getSslOptions();
 
 	/**
 	 * 设置 SSL 配置
 	 *
-	 * @param sslConfiguration
+	 * @param sslOptions
 	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
 	 */
-	void setSslConfiguration(SslConfiguration sslConfiguration);
+	void setSslOptions(SslOptions sslOptions);
 
 	/**
 	 * 连接 Redis
@@ -186,6 +233,13 @@ public interface RedisConnection extends Destroyable, Closeable {
 	Pipeline openPipeline();
 
 	/**
+	 * 返回管道对象
+	 *
+	 * @return 管道对象
+	 */
+	Pipeline getPipeline();
+
+	/**
 	 * 关闭管道
 	 */
 	void closePipeline();
@@ -205,6 +259,13 @@ public interface RedisConnection extends Destroyable, Closeable {
 	Transaction multi();
 
 	/**
+	 * 返回事务对象
+	 *
+	 * @return 事务对象
+	 */
+	Transaction getTransaction();
+
+	/**
 	 * 执行所有事务块内的命令
 	 *
 	 * @return 事务块内所有命令的返回值
@@ -217,10 +278,12 @@ public interface RedisConnection extends Destroyable, Closeable {
 	/**
 	 * 取消事务
 	 *
+	 * @return 操作结果
+	 *
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	void discard() throws RedisException;
+	Status discard() throws RedisException;
 
 	/**
 	 * 检测是否处于连接状态

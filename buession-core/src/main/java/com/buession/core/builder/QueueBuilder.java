@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.builder;
@@ -54,7 +54,7 @@ public class QueueBuilder<V> {
 	 * @param data
 	 * 		Queue 数据
 	 */
-	private QueueBuilder(final Queue<V> data){
+	private QueueBuilder(final Queue<V> data) {
 		this.data = data;
 	}
 
@@ -66,7 +66,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public static <V> QueueBuilder<V> create(){
+	public static <V> QueueBuilder<V> create() {
 		return new QueueBuilder<>(new LinkedList<>());
 	}
 
@@ -82,7 +82,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @since 2.2.0
 	 */
-	public static <V> QueueBuilder<V> create(final Queue<V> queue){
+	public static <V> QueueBuilder<V> create(final Queue<V> queue) {
 		return new QueueBuilder<>(queue);
 	}
 
@@ -98,7 +98,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> QueueBuilder<V> create(final Collection<? extends V> c){
+	public static <V> QueueBuilder<V> create(final Collection<? extends V> c) {
 		return new QueueBuilder<>(new LinkedList<>(c));
 	}
 
@@ -114,12 +114,12 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public static <V, S extends Queue<V>> QueueBuilder<V> create(final Class<S> clazz){
+	public static <V, S extends Queue<V>> QueueBuilder<V> create(final Class<S> clazz) {
 		Assert.isNull(clazz, "java.util.Queue class cloud not be null.");
 
 		Queue<V> data;
 		try{
-			data = clazz.newInstance();
+			data = clazz.getDeclaredConstructor().newInstance();
 		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new LinkedList<>();
@@ -136,7 +136,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public QueueBuilder<V> add(final V value){
+	public QueueBuilder<V> add(final V value) {
 		data.add(value);
 		return this;
 	}
@@ -149,7 +149,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public QueueBuilder<V> addIfPresent(final V value){
+	public QueueBuilder<V> addIfPresent(final V value) {
 		if(value != null){
 			data.add(value);
 		}
@@ -164,7 +164,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public QueueBuilder<V> addAll(final Collection<V> data){
+	public QueueBuilder<V> addAll(final Collection<V> data) {
 		if(Validate.isNotEmpty(data)){
 			this.data.addAll(data);
 		}
@@ -179,7 +179,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public QueueBuilder<V> remove(final V value){
+	public QueueBuilder<V> remove(final V value) {
 		data.remove(value);
 		return this;
 	}
@@ -189,7 +189,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public QueueBuilder<V> clear(){
+	public QueueBuilder<V> clear() {
 		data.clear();
 		return this;
 	}
@@ -199,7 +199,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return Queue 数据
 	 */
-	public Queue<V> build(){
+	public Queue<V> build() {
 		return data;
 	}
 
@@ -211,7 +211,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Queue<V> empty(){
+	public static <V> Queue<V> empty() {
 		return QueueBuilder.<V>create().build();
 	}
 
@@ -223,7 +223,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Queue<V> of(){
+	public static <V> Queue<V> of() {
 		return empty();
 	}
 
@@ -237,7 +237,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return 单一元素 Queue
 	 */
-	public static <V> Queue<V> of(final V value){
+	public static <V> Queue<V> of(final V value) {
 		return QueueBuilder.<V>create().add(value).build();
 	}
 

@@ -39,6 +39,7 @@ import java.lang.reflect.ParameterizedType;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public abstract class AbstractPropertyConverter<T> implements BeanPropertyConverter<T> {
 
 	private final static String PROPERTY_CONVERTER_PACKAGE = "com.buession.beans.converters.";
@@ -64,7 +65,7 @@ public abstract class AbstractPropertyConverter<T> implements BeanPropertyConver
 	protected abstract T convertToType(final Class<?> sourceType, final Object value, final Class<T> targetType);
 
 	protected ConversionException conversionException(final Class<?> sourceTYpe, final Object value,
-													  final Class<T> targetType, final Object... args) {
+	                                                  final Class<T> targetType, final Object... args) {
 		return new ConversionException(
 				String.format("Can't convert value '" + value + "' to type " + targetType, args));
 	}

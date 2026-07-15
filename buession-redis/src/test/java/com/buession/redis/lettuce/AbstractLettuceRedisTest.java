@@ -24,9 +24,17 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.core.builder.SetBuilder;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.RedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
+import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
+
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -36,17 +44,53 @@ public abstract class AbstractLettuceRedisTest {
 	protected LettuceDataSource dataSource() {
 		LettuceDataSource dataSource = new LettuceDataSource();
 
-		dataSource.setHost("192.168.0.231");
-		dataSource.setPort(6379);
+		dataSource.setHost("192.168.0.161");
+		dataSource.setPort(30341);
 		dataSource.setDatabase(1);
+		dataSource.setPassword("abc123456");
+		dataSource.setPoolConfig(new PoolConfig());
+
+		return dataSource;
+	}
+
+	protected LettuceSentinelDataSource sentinelDataSource() {
+		LettuceSentinelDataSource dataSource = new LettuceSentinelDataSource();
+		Set<RedisSentinelNode> redisNodes = SetBuilder.<RedisSentinelNode>create()
+				.add(new RedisSentinelNode("192.168.0.161", 32252))
+				.build();
+
+		dataSource.setSentinels(redisNodes);
+		dataSource.setMasterName("sentinel-master");
+		dataSource.setPassword("abc123456");
+		dataSource.setPoolConfig(new PoolConfig());
+
+		return dataSource;
+	}
+
+	protected LettuceClusterDataSource clusterDataSource() {
+		LettuceClusterDataSource dataSource = new LettuceClusterDataSource();
+		Set<RedisNode> redisNodes = SetBuilder.<RedisNode>create()
+				//.add(new RedisNode("192.168.0.162", 30943))
+				.add(new RedisNode("192.168.0.231", 6371))
+				.add(new RedisNode("192.168.0.231", 6372))
+				.add(new RedisNode("192.168.0.231", 6373))
+				.add(new RedisNode("192.168.0.231", 6374))
+				.add(new RedisNode("192.168.0.231", 6375))
+				.add(new RedisNode("192.168.0.231", 6376))
+				.build();
+
+		dataSource.setNodes(redisNodes);
 		dataSource.setPassword("rds_PWD");
-		//	dataSource.setPoolConfig(new PoolConfig());
+		//dataSource.setPassword("abc123456");
+		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
 	}
 
 	protected RedisTemplate redisTemplate() {
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource());
+		Options options = new Options();
+		options.setPrefix("test:");
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

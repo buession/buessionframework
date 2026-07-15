@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
@@ -27,18 +27,39 @@ package com.buession.redis.utils;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 安全编码
+ *
  * @author Yong.Teng
  */
 public class SafeEncoder {
 
+	/**
+	 * 构造函数
+	 */
 	private SafeEncoder() {
 
 	}
 
+	/**
+	 * 将字符串编码为字节
+	 *
+	 * @param str
+	 * 		待编码字符串
+	 *
+	 * @return 字节
+	 */
 	public static byte[] encode(final String str) {
 		return str == null ? null : str.getBytes(StandardCharsets.UTF_8);
 	}
 
+	/**
+	 * 将字符串数组编码为字节
+	 *
+	 * @param strs
+	 * 		待编码字符串数组
+	 *
+	 * @return 字节数组
+	 */
 	public static byte[][] encode(final String... strs) {
 		if(strs == null){
 			return null;
@@ -53,10 +74,26 @@ public class SafeEncoder {
 		}
 	}
 
+	/**
+	 * 将字节编码为字符串
+	 *
+	 * @param data
+	 * 		待编码字节
+	 *
+	 * @return 字符串
+	 */
 	public static String encode(final byte[] data) {
 		return data == null ? null : new String(data, StandardCharsets.UTF_8);
 	}
 
+	/**
+	 * 将字节数组编码为字符串
+	 *
+	 * @param data
+	 * 		待编码字节数组
+	 *
+	 * @return 字符串数组
+	 */
 	public static String[] encode(final byte[]... data) {
 		if(data == null){
 			return null;

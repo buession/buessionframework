@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<name>Buession Core</name>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>3.0.1</version>
+		<version>4.0.0</version>
 	</parent>
 	<artifactId>buession-core</artifactId>
 	<url>http://www.buession.com/</url>
@@ -111,10 +111,22 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.fastjson2</groupId>
+			<artifactId>fastjson2</artifactId>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>

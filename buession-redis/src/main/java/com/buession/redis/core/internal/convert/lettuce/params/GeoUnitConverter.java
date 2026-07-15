@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.args.geo.GeoUnit;
 import io.lettuce.core.GeoArgs;
 
 /**
@@ -38,17 +38,16 @@ public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> 
 
 	@Override
 	public GeoArgs.Unit convert(final GeoUnit source) {
-		switch(source){
-			case M:
-				return GeoArgs.Unit.m;
-			case KM:
-				return GeoArgs.Unit.km;
-			case MI:
-				return GeoArgs.Unit.mi;
-			case FT:
-				return GeoArgs.Unit.ft;
-			default:
-				return null;
+		if(source == GeoUnit.M){
+			return GeoArgs.Unit.m;
+		}else if(source == GeoUnit.KM){
+			return GeoArgs.Unit.km;
+		}else if(source == GeoUnit.MI){
+			return GeoArgs.Unit.mi;
+		}else if(source == GeoUnit.FT){
+			return GeoArgs.Unit.ft;
+		}else{
+			return null;
 		}
 	}
 

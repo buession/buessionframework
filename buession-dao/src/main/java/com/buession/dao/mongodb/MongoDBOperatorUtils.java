@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao.mongodb;
 
 import com.buession.core.utils.Assert;
 import com.buession.dao.MongoOperation;
+import com.buession.dao.Operator;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.Collection;
@@ -68,8 +69,8 @@ public class MongoDBOperatorUtils {
 	 * @param value
 	 * 		运算值
 	 */
-	public static void operator(final Criteria criteria, final String field, final MongoOperation.Operator operator,
-								final Object value) {
+	public static void operator(final Criteria criteria, final String field, final Operator operator,
+	                            final Object value) {
 		Assert.isNull(criteria, "Criteria cloud not be null.");
 		Assert.isBlank(field, "Field cloud not be null or empty.");
 		Assert.isNull(operator, "MongoOperation Operator cloud not be null.");
@@ -126,6 +127,35 @@ public class MongoDBOperatorUtils {
 			/* 正则 */
 			case LIKE:
 				criteria.and(field).regex(value.toString());
+				break;
+			/* ALL */
+			case ALL:
+				if(value instanceof Collection){
+					criteria.and(field).all((Collection<?>) value);
+				}else if(value.getClass().isArray()){
+					criteria.and(field).all((Object[]) value);
+				}else{
+					criteria.and(field).all(value);
+				}
+				break;
+			/* SIZE */
+			case SIZE:
+				if(value instanceof Long){
+					criteria.and(field).size(((Long) value).intValue());
+				}else if(value instanceof Integer){
+					criteria.and(field).size((Integer) value);
+				}else if(value instanceof Short){
+					criteria.and(field).size(((Short) value).intValue());
+				}
+				break;
+			/* EXISTS */
+			case EXISTS:
+				if(value instanceof Boolean){
+					criteria.and(field).exists((Boolean) value);
+				}
+				break;
+			/* NOT */
+			case NOT:
 				break;
 			default:
 				break;

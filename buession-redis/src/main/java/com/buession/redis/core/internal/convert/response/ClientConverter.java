@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -29,8 +29,11 @@ import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.net.HostAndPort;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.Event;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -63,11 +66,9 @@ public final class ClientConverter implements Converter<String, Client> {
 			if("id".equals(keyValueParser.getKey())){
 				client.setId(keyValueParser.getIntValue());
 			}else if("addr".equals(keyValueParser.getKey())){
-				int ci = keyValueParser.getValue().indexOf(':');
-
-				client.setAddr(keyValueParser.getValue());
-				client.setHost(keyValueParser.getValue().substring(0, ci));
-				client.setPort(Integer.parseInt(keyValueParser.getValue().substring(ci + 1)));
+				client.setAddr(HostAndPort.create(keyValueParser.getValue()));
+			}else if("laddr".equals(keyValueParser.getKey())){
+				client.setLaddr(HostAndPort.create(keyValueParser.getValue()));
 			}else if("name".equals(keyValueParser.getKey())){
 				client.setName(keyValueParser.getValue());
 			}else if("fd".equals(keyValueParser.getKey())){
@@ -77,8 +78,7 @@ public final class ClientConverter implements Converter<String, Client> {
 			}else if("idle".equals(keyValueParser.getKey())){
 				client.setIdle(keyValueParser.getIntValue());
 			}else if("flags".equals(keyValueParser.getKey())){
-				String[] flagsArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(),
-						",");
+				String[] flagsArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(), ",");
 
 				if(flagsArr != null){
 					Set<Client.Flag> flags = new LinkedHashSet<>(flagsArr.length);
@@ -97,6 +97,8 @@ public final class ClientConverter implements Converter<String, Client> {
 				client.setDb(keyValueParser.getIntValue());
 			}else if("sub".equals(keyValueParser.getKey())){
 				client.setSub(keyValueParser.getIntValue());
+			}else if("ssub".equals(keyValueParser.getKey())){
+				client.setSsub(keyValueParser.getIntValue());
 			}else if("psub".equals(keyValueParser.getKey())){
 				client.setPsub(keyValueParser.getIntValue());
 			}else if("multi".equals(keyValueParser.getKey())){
@@ -111,10 +113,45 @@ public final class ClientConverter implements Converter<String, Client> {
 				client.setOll(keyValueParser.getIntValue());
 			}else if("omem".equals(keyValueParser.getKey())){
 				client.setOmem(keyValueParser.getIntValue());
+			}else if("watch".equals(keyValueParser.getKey())){
+				client.setWatch(keyValueParser.getIntValue());
+			}else if("rbs".equals(keyValueParser.getKey())){
+				client.setRbs(keyValueParser.getIntValue());
+			}else if("rbp".equals(keyValueParser.getKey())){
+				client.setRbp(keyValueParser.getIntValue());
+			}else if("multi-mem".equals(keyValueParser.getKey())){
+				client.setMultiMem(keyValueParser.getIntValue());
+			}else if("argv-mem".equals(keyValueParser.getKey())){
+				client.setArgvMem(keyValueParser.getIntValue());
+			}else if("tot-mem".equals(keyValueParser.getKey())){
+				client.setTotMem(keyValueParser.getIntValue());
+			}else if("redir".equals(keyValueParser.getKey())){
+				client.setRedir(keyValueParser.getIntValue());
+			}else if("resp".equals(keyValueParser.getKey())){
+				client.setResp(keyValueParser.getIntValue());
+			}else if("io-thread".equals(keyValueParser.getKey())){
+				client.setIoThread(keyValueParser.getIntValue());
+			}else if("tot-net-in".equals(keyValueParser.getKey())){
+				client.setTotNetIn(keyValueParser.getIntValue());
+			}else if("tot-net-out".equals(keyValueParser.getKey())){
+				client.setTotNetOut(keyValueParser.getIntValue());
+			}else if("tot-cmds".equals(keyValueParser.getKey())){
+				client.setTotCmds(keyValueParser.getIntValue());
+			}else if("user".equals(keyValueParser.getKey())){
+				client.setUser(keyValueParser.getValue());
+			}else if("lib-name".equals(keyValueParser.getKey())){
+				client.setLibName(keyValueParser.getValue());
+			}else if("lib-ver".equals(keyValueParser.getKey())){
+				client.setLibVer(keyValueParser.getValue());
 			}else if("events".equals(keyValueParser.getKey())){
-				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
+				client.setEvents(keyValueParser.getEnumValue(Event.class));
 			}else if("cmd".equals(keyValueParser.getKey())){
-				client.setCmd(keyValueParser.getEnumValue(ProtocolCommand.class));
+				int ci = keyValueParser.getValue().indexOf(':');
+				client.setCmd(EnumUtils.valueOf(RedisCommand.class, keyValueParser.getValue().substring(0, ci)));
+				if(ci != -1){
+					client.setSubCmd(EnumUtils.valueOf(
+							RedisSubCommand.class, keyValueParser.getValue().substring(ci + 1)));
+				}
 			}
 		}
 
@@ -129,12 +166,11 @@ public final class ClientConverter implements Converter<String, Client> {
 	 */
 	public final static class ClientListConverter implements Converter<String, List<Client>> {
 
-		private final ClientConverter clientConverter = new ClientConverter();
-
 		@Override
 		public List<Client> convert(final String source) {
-			return Arrays.stream(StringUtils.split(source, "\r\n")).map(clientConverter::convert).collect(
-					Collectors.toList());
+			final ClientConverter clientConverter = new ClientConverter();
+			return Arrays.stream(StringUtils.split(source, "\r\n")).map(clientConverter::convert)
+					.collect(Collectors.toList());
 		}
 	}
 

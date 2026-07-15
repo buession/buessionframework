@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http;
 
 /**
- * SameSite 是HTTP响应头 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite" target="_blank"></a>Set-Cookie 的属性之一，它允许您声明该 Cookie 是否仅限于第一方或者同一站点上下文
+ * SameSite 是HTTP响应头
+ * <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite</a> Set-Cookie 的属性之一，它允许您声明该 Cookie 是否仅限于第一方或者同一站点上下文
  *
  * @author Yong.Teng
  * @since 2.0.0

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,56 +27,65 @@ package com.buession.redis.core;
 import com.buession.lang.Geo;
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
 /**
+ * 地理位置半径
+ *
+ * @param member
+ * 		成员名
+ * @param distance
+ * 		搜索半径
+ * @param geo
+ * 		经纬度
+ *
  * @author Yong.Teng
  */
-public class GeoRadius implements Serializable {
+public record GeoRadius(byte[] member, Double distance, Geo geo) {
 
-	private final static long serialVersionUID = 8391863034011700419L;
-
-	private final byte[] member;
-
-	private final Double distance;
-
-	private final Geo geo;
-
+	/**
+	 * 构造函数
+	 *
+	 * @param member
+	 * 		成员名
+	 */
 	public GeoRadius(final byte[] member) {
 		this(member, null, null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param member
+	 * 		成员名
+	 * @param distance
+	 * 		搜索半径
+	 */
 	public GeoRadius(final byte[] member, final Double distance) {
 		this(member, distance, null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param member
+	 * 		成员名
+	 * @param geo
+	 * 		经纬度
+	 */
 	public GeoRadius(final byte[] member, final Geo geo) {
 		this(member, null, geo);
 	}
 
-	public GeoRadius(final byte[] member, final Double distance, final Geo geo) {
-		this.member = member;
-		this.distance = distance;
-		this.geo = geo;
-	}
-
-	public byte[] getMember() {
-		return member;
-	}
-
+	/**
+	 * 返回字符串形式的成员名
+	 *
+	 * @return 字符串形式的成员名
+	 */
 	public String getMemberAsString() {
 		return new String(member, StandardCharsets.UTF_8);
-	}
-
-	public Double getDistance() {
-		return distance;
-	}
-
-	public Geo getGeo() {
-		return geo;
 	}
 
 	@Override
@@ -92,8 +101,7 @@ public class GeoRadius implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof GeoRadius){
-			GeoRadius geoRadius = (GeoRadius) obj;
+		if(obj instanceof GeoRadius geoRadius){
 			return Double.compare(geoRadius.distance, distance) == 0 && Arrays.equals(member, geoRadius.member) &&
 					Objects.equals(geo, geoRadius.geo);
 		}
@@ -105,8 +113,8 @@ public class GeoRadius implements Serializable {
 	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("member", member)
-				.addIfAbsent("distance", distance)
-				.addIfAbsent("geo", geo)
+				.add("distance", distance)
+				.add("geo", geo)
 				.build();
 	}
 

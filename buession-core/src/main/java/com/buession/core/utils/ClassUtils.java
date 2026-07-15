@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -163,9 +163,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 				Class<?>[] ctorTypes = new Class[args.length];
 
 				for(int i = 0; i < args.length; i++){
-					if(args[i] == null){
-						//
-					}else{
+					if(args[i] != null){
 						ctorTypes[i] = args[i].getClass();
 					}
 				}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -29,6 +29,7 @@ import com.buession.redis.serializer.ByteArraySerializer;
 import com.buession.redis.serializer.FastJsonJsonSerializer;
 import com.buession.redis.serializer.GsonJsonSerializer;
 import com.buession.redis.serializer.JacksonJsonSerializer;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ public class Options {
 	 * Key 前缀
 	 */
 	private String prefix;
+
+	private byte[] prefixRaw;
 
 	/**
 	 * 序列化实例
@@ -61,6 +64,110 @@ public class Options {
 	private boolean enableTransactionSupport;
 
 	/**
+	 * 构造函数
+	 */
+	public Options() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(String prefix) {
+		setPrefix(prefix);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param serializer
+	 * 		序列化实例 {@link Serializer}
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(Serializer serializer) {
+		this.serializer = serializer;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param enableTransactionSupport
+	 * 		是否开启事务支持
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(boolean enableTransactionSupport) {
+		this.enableTransactionSupport = enableTransactionSupport;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 * @param serializer
+	 * 		序列化实例 {@link Serializer}
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(String prefix, Serializer serializer) {
+		setPrefix(prefix);
+		this.serializer = serializer;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 * @param enableTransactionSupport
+	 * 		是否开启事务支持
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(String prefix, boolean enableTransactionSupport) {
+		setPrefix(prefix);
+		this.enableTransactionSupport = enableTransactionSupport;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 * @param serializer
+	 * 		序列化实例 {@link Serializer}
+	 * @param enableTransactionSupport
+	 * 		是否开启事务支持
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(String prefix, Serializer serializer, boolean enableTransactionSupport) {
+		this(prefix, serializer);
+		this.enableTransactionSupport = enableTransactionSupport;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param serializer
+	 * 		序列化实例 {@link Serializer}
+	 * @param enableTransactionSupport
+	 * 		是否开启事务支持
+	 *
+	 * @since 4.0.0
+	 */
+	public Options(Serializer serializer, boolean enableTransactionSupport) {
+		this.serializer = serializer;
+		this.enableTransactionSupport = enableTransactionSupport;
+	}
+
+	/**
 	 * 返回 Key 前缀
 	 *
 	 * @return Key 前缀
@@ -77,6 +184,11 @@ public class Options {
 	 */
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+		this.prefixRaw = SafeEncoder.encode(prefix);
+	}
+
+	public byte[] getPrefixRaw() {
+		return prefixRaw;
 	}
 
 	/**

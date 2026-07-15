@@ -19,19 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.TransactionCommands;
-import com.buession.redis.transaction.Transaction;
+import com.buession.redis.utils.KeyUtils;
 
 /**
  * 事务运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=transactions" target="_blank">https://redis.io/docs/latest/commands/?group=transactions</a></p>
  *
  * @author Yong.Teng
  */
@@ -39,19 +40,26 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	@Override
 	default Status multi() {
-		return execute((client)->{
-			try{
-				final Transaction transaction = client.getConnection().multi();
-				return transaction != null ? Status.SUCCESS : Status.FAILURE;
-			}catch(Exception e){
-				return Status.FAILURE;
-			}
-		});
+		return doExecute((cmd)->cmd.multi());
 	}
 
 	@Override
 	default Status unwatch() {
-		return execute((client)->client.transactionOperations().unwatch());
+		return doExecute((cmd)->cmd.unwatch());
+	}
+
+	@Override
+	default Status watch(final String... keys) {
+		return doExecute((cmd)->cmd.watch(KeyUtils.rawKeys(this, keys)));
+	}
+
+	@Override
+	default Status watch(final byte[]... keys) {
+		return doExecute((cmd)->cmd.watch(KeyUtils.rawKeys(this, keys)));
+	}
+
+	private <R> R doExecute(final Command.Executor<TransactionCommands, R> executor) {
+		return execute((client)->executor.execute(client.transactionCommands()));
 	}
 
 }

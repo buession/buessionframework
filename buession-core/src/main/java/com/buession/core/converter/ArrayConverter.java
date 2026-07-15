@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
@@ -38,12 +38,7 @@ import com.buession.core.utils.Assert;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ArrayConverter<S, T> implements Converter<S[], T[]> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ArrayConverter<S, T> extends BaseItemConverter<S, T, S[], T[]> implements Converter<S[], T[]> {
 
 	private final Class<T> clazz;
 
@@ -51,19 +46,18 @@ public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 	 * 构造函数
 	 *
 	 * @param itemConverter
-	 * 		List item 转换器
+	 * 		数组 item 转换器
 	 * @param clazz
 	 * 		目标数组类型
 	 */
-	public ArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz){
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
+	public ArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
+		super(itemConverter);
 		Assert.isNull(clazz, "Target clazz cloud not be null.");
-		this.itemConverter = itemConverter;
 		this.clazz = clazz;
 	}
 
 	@Override
-	public T[] convert(final S[] source){
+	public T[] convert(final S[] source) {
 		return Arrays.map(source, clazz, itemConverter::convert);
 	}
 

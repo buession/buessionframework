@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -48,63 +48,63 @@ public class HttpURI extends AbstractUserInfoURI {
 
 	protected String fragment;
 
-	public String getPath(){
+	public String getPath() {
 		return path;
 	}
 
-	public void setPath(String path){
+	public void setPath(String path) {
 		this.path = path;
 	}
 
-	public String getQueryString(){
+	public String getQueryString() {
 		return queryString;
 	}
 
-	public void setQueryString(String queryString){
+	public void setQueryString(String queryString) {
 		this.queryString = queryString;
 	}
 
-	public Map<String, String> getParameters(){
+	public Map<String, String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(Map<String, String> parameters){
+	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
 
-	public String getFragment(){
+	public String getFragment() {
 		return fragment;
 	}
 
-	public void setFragment(String fragment){
+	public void setFragment(String fragment) {
 		this.fragment = fragment;
 	}
 
 	@Override
-	public boolean isSsl(){
+	public boolean isSsl() {
 		return HTTPS.equalsIgnoreCase(scheme);
 	}
 
 	@Override
-	public URI toURI(){
+	public URI toURI() {
 		return URI.create(toString());
 	}
 
-	public static String buildQuery(final Map<String, Object> data){
+	public static String buildQuery(final Map<String, Object> data) {
 		return buildQuery(data, false);
 	}
 
-	public static String buildQuery(final Map<String, Object> data, final boolean urlEncode){
+	public static String buildQuery(final Map<String, Object> data, final boolean urlEncode) {
 		if(data == null){
 			return null;
-		}else if(data.size() == 0){
+		}else if(data.isEmpty()){
 			return Constants.EMPTY_STRING;
 		}
 
 		final StringBuilder sb = new StringBuilder();
 
 		data.forEach((name, value)->{
-			if(sb.length() > 0){
+			if(!sb.isEmpty()){
 				sb.append('&');
 			}
 
@@ -114,16 +114,16 @@ public class HttpURI extends AbstractUserInfoURI {
 		return sb.toString();
 	}
 
-	public static String toQueryString(final Map<String, Object> data){
+	public static String toQueryString(final Map<String, Object> data) {
 		return buildQuery(data);
 	}
 
-	public static String toQueryString(final Map<String, Object> data, final boolean urlEncode){
+	public static String toQueryString(final Map<String, Object> data, final boolean urlEncode) {
 		return buildQuery(data, urlEncode);
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 
 		sb.append(scheme).append("://");
@@ -177,31 +177,31 @@ public class HttpURI extends AbstractUserInfoURI {
 
 		private String fragment;
 
-		private Builder(){
+		private Builder() {
 			super();
 		}
 
-		public static Builder getInstance(){
+		public static Builder getInstance() {
 			return new Builder();
 		}
 
-		public Builder path(final String path){
+		public Builder path(final String path) {
 			this.path = path;
 			return this;
 		}
 
-		public Builder queryString(final String queryString){
+		public Builder queryString(final String queryString) {
 			this.queryString = queryString;
 			return this;
 		}
 
-		public Builder fragment(final String fragment){
+		public Builder fragment(final String fragment) {
 			this.fragment = fragment;
 			return this;
 		}
 
 		@Override
-		public HttpURI build(){
+		public HttpURI build() {
 			HttpURI httpURI = new HttpURI();
 
 			httpURI.setScheme(scheme);

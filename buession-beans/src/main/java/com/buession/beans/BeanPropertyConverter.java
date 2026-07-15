@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
+
+import com.buession.core.converter.Converter;
 
 /**
  * Bean 属性转换器
@@ -33,17 +35,8 @@ package com.buession.beans;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 @FunctionalInterface
-public interface BeanPropertyConverter<T> {
-
-	/**
-	 * 将原类型对象 source 转换成目标类型对象
-	 *
-	 * @param value
-	 * 		类型对象
-	 *
-	 * @return 目标类型对象
-	 */
-	T convert(Object value);
+public interface BeanPropertyConverter<T> extends Converter<Object, T> {
 
 }

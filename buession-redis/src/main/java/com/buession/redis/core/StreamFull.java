@@ -19,156 +19,84 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Stream 完整元数据
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ * @param length
+ * 		Stream 中消息的总条数
+ * @param groups
+ * 		关联的消费者组数量
+ * @param radixTreeKeys
+ * 		Stream 内部 Radix Tree 结构信息
+ * @param radixTreeNodes
+ * 		Stream 内部 Radix Tree 结构信息
+ * @param lastGeneratedId
+ * 		-
+ * @param maxDeletedEntryId
+ * 		-
+ * @param recordedFirstEntryId
+ * 		-
+ * @param entriesAdded
+ * 		-
+ * @param idmpDuration
+ * 		-
+ * @param idmpMaxsize
+ * 		-
+ * @param pidsTracked
+ * 		-
+ * @param iidsTracked
+ * 		-
+ * @param iidsAdded
+ * 		-
+ * @param iidsDuplicates
+ * 		-
+ * @param entries
+ * 		-
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamFull implements Serializable {
-
-	private final static long serialVersionUID = -4336316668706617743L;
-
-	private final long length;
-
-	private final long radixTreeKeys;
-
-	private final long radixTreeNodes;
-
-	private final List<Group> groups;
-
-	private final StreamEntryId lastGeneratedId;
-
-	private final List<StreamEntry> entries;
-
-	private final Map<String, Object> infos;
-
-	public StreamFull(final long length, final long radixTreeKeys, final long radixTreeNodes,
-					  final List<Group> groups, final StreamEntryId lastGeneratedId,
-					  final List<StreamEntry> entries, final Map<String, Object> infos){
-		this.length = length;
-		this.radixTreeKeys = radixTreeKeys;
-		this.radixTreeNodes = radixTreeNodes;
-		this.groups = groups;
-		this.lastGeneratedId = lastGeneratedId;
-		this.entries = entries;
-		this.infos = infos;
-	}
-
-	public long getLength(){
-		return length;
-	}
-
-	public long getRadixTreeKeys(){
-		return radixTreeKeys;
-	}
-
-	public long getRadixTreeNodes(){
-		return radixTreeNodes;
-	}
-
-	public List<Group> getGroups(){
-		return groups;
-	}
-
-	public StreamEntryId getLastGeneratedId(){
-		return lastGeneratedId;
-	}
-
-	public List<StreamEntry> getEntries(){
-		return entries;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
+public record StreamFull<K, V>(Long length, List<StreamFull.Group> groups, Long radixTreeKeys, Long radixTreeNodes,
+                               StreamEntryId lastGeneratedId, StreamEntryId maxDeletedEntryId,
+                               StreamEntryId recordedFirstEntryId, Long entriesAdded, Long idmpDuration,
+                               Long idmpMaxsize, Long pidsTracked, Long iidsTracked,
+                               Long iidsAdded, Long iidsDuplicates, List<StreamEntry<K, V>> entries) {
 
 	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("length", length)
-				.add("radixTreeKeys", radixTreeKeys)
-				.add("radixTreeNodes", radixTreeNodes)
-				.add("groups", groups)
-				.add("lastGeneratedId", lastGeneratedId)
-				.add("entries", entries)
-				.add("infos", infos)
-				.build();
+	public String toString() {
+		return ObjectStringBuilder.create().add("length", length).add("groups", groups)
+				.add("radix-tree-keys", radixTreeKeys).add("radix-tree-nodes", radixTreeNodes)
+				.add("last-generated-id", lastGeneratedId).add("max-deleted-entry-id", maxDeletedEntryId)
+				.add("recorded-first-entry-id", recordedFirstEntryId).add("entries-added", entriesAdded)
+				.add("idmp-duration", idmpDuration).add("idmp-maxsize", idmpMaxsize).add("pids-tracked", pidsTracked)
+				.add("iids-tracked", iidsTracked).add("iids-added", iidsAdded).add("iids-duplicates", iidsDuplicates)
+				.add("entries", entries).build();
 	}
 
 	/**
 	 * @since 2.0.1
 	 */
-	public final static class Group implements Serializable {
-
-		private static final long serialVersionUID = 560117056010590768L;
-
-		private final String name;
-
-		private final List<StreamConsumerFull> consumers;
-
-		private final List<List<Object>> pending;
-
-		private final Long pelCount;
-
-		private final StreamEntryId lastDeliveredId;
-
-		private final Map<String, Object> infos;
-
-		public Group(final String name, final List<StreamConsumerFull> consumers, final List<List<Object>> pending,
-					 final Long pelCount, final StreamEntryId lastDeliveredId,
-					 final Map<String, Object> infos){
-			this.name = name;
-			this.consumers = consumers;
-			this.pending = pending;
-			this.pelCount = pelCount;
-			this.lastDeliveredId = lastDeliveredId;
-			this.infos = infos;
-		}
-
-		public String getName(){
-			return name;
-		}
-
-		public List<StreamConsumerFull> getConsumers(){
-			return consumers;
-		}
-
-		public List<List<Object>> getPending(){
-			return pending;
-		}
-
-		public Long getPelCount(){
-			return pelCount;
-		}
-
-		public StreamEntryId getLastDeliveredId(){
-			return lastDeliveredId;
-		}
-
-		public Map<String, Object> getInfos(){
-			return infos;
-		}
+	public record Group(String name, List<StreamConsumerFull> consumers, List<List<Object>> pending, Long pelCount,
+	                    StreamEntryId lastDeliveredId, Map<String, Object> infos) {
 
 		@Override
-		public String toString(){
-			return ObjectStringBuilder.create()
-					.add("name", name)
-					.add("consumers", consumers)
-					.add("pending", pending)
-					.add("pelCount", pelCount)
-					.add("lastDeliveredId", lastDeliveredId)
-					.add("infos", infos)
-					.build();
+		public String toString() {
+			return ObjectStringBuilder.create().add("name", name).add("consumers", consumers).add("pending", pending)
+					.add("pel count", pelCount).add("last delivered id", lastDeliveredId).add("infos", infos).build();
 		}
 
 	}

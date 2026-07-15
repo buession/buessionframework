@@ -19,65 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 模块信息
+ *
+ * @param name
+ * 		模块名称
+ * @param version
+ * 		模块版本号
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class Module implements Serializable {
-
-	private final static long serialVersionUID = 8584149197825340590L;
-
-	private final String name;
-
-	private final int version;
-
-	public Module(final String name, final int version){
-		this.name = name;
-		this.version = version;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public int getVersion(){
-		return version;
-	}
+public record Module(String name, Integer version) {
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(name, version);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(obj == this){
 			return true;
 		}
 
-		if(obj instanceof Module){
-			Module that = (Module) obj;
-			return Objects.equals(name, that.name) && version == that.version;
+		if(obj instanceof Module that){
+			return Objects.equals(name, that.name) && Objects.equals(version, that.version);
 		}
 
 		return false;
 	}
 
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("version", version)
+				.add("name", name())
+				.add("version", version())
 				.build();
 	}
 

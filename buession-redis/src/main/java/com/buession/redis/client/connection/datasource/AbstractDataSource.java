@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
+
+import java.util.function.Consumer;
 
 /**
  * Redis 数据源抽象类
@@ -75,11 +77,25 @@ public abstract class AbstractDataSource implements DataSource {
 	private PoolConfig poolConfig;
 
 	/**
+	 * 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	private boolean autoReconnect = true;
+
+	/**
+	 * 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	private int reconnectDelay;
+
+	/**
 	 * SSL 配置
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	private SslConfiguration sslConfiguration;
+	private SslOptions sslOptions;
 
 	/**
 	 * 返回用户名
@@ -185,13 +201,40 @@ public abstract class AbstractDataSource implements DataSource {
 	}
 
 	@Override
-	public SslConfiguration getSslConfiguration() {
-		return sslConfiguration;
+	public boolean getAutoReconnect() {
+		return autoReconnect;
 	}
 
 	@Override
-	public void setSslConfiguration(SslConfiguration sslConfiguration) {
-		this.sslConfiguration = sslConfiguration;
+	public void setAutoReconnect(boolean autoReconnect) {
+		this.autoReconnect = autoReconnect;
+	}
+
+	@Override
+	public int getReconnectDelay() {
+		return reconnectDelay;
+	}
+
+	@Override
+	public void setReconnectDelay(int reconnectDelay) {
+		this.reconnectDelay = reconnectDelay;
+	}
+
+	@Override
+	public SslOptions getSslOptions() {
+		return sslOptions;
+	}
+
+	@Override
+	public void setSslOptions(SslOptions sslOptions) {
+		this.sslOptions = sslOptions;
+	}
+
+	@Override
+	public void apply(Consumer<DataSource> consumer) {
+		if(consumer != null){
+			consumer.accept(this);
+		}
 	}
 
 }

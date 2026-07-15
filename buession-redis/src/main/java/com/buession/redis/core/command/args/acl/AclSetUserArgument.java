@@ -1,0 +1,1008 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * =========================================================================================================
+ *
+ * This software consists of voluntary contributions made by many individuals on behalf of the
+ * Apache Software Foundation. For more information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * +-------------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | Author: Yong.Teng <webmaster@buession.com> 													       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * +-------------------------------------------------------------------------------------------------------+
+ */
+package com.buession.redis.core.command.args.acl;
+
+import com.buession.core.utils.StringUtils;
+import com.buession.redis.core.AclCategory;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.RedisSubCommand;
+import com.buession.redis.core.command.args.ArrayArgument;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * {@code ACL SETUSER} 命令参数
+ *
+ * @author Yong.Teng
+ * @since 3.0.0
+ */
+public class AclSetUserArgument implements ArrayArgument<String> {
+
+	/**
+	 * 参数列表
+	 */
+	private final List<Argument> arguments = new ArrayList<>();
+
+	/**
+	 * 构造函数
+	 */
+	public AclSetUserArgument() {
+	}
+
+	/**
+	 * Set user active.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument on() {
+		return state(State.ON);
+	}
+
+	/**
+	 * Set user inactive.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument off() {
+		return state(State.OFF);
+	}
+
+	/**
+	 * Set user active or inactive.
+	 *
+	 * @param state
+	 *        {@link State}
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument state(State state) {
+		if(state != null){
+			this.arguments.add(state);
+		}
+
+		return this;
+	}
+
+	/**
+	 * Adds accessible key pattern.
+	 *
+	 * @param keyPattern
+	 * 		accessible key pattern
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument keyPattern(String keyPattern) {
+		if(keyPattern != null){
+			this.arguments.add(new KeyPattern(keyPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds accessible key pattern.
+	 *
+	 * @param keyPattern
+	 * 		accessible key pattern
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument keyPattern(byte[] keyPattern) {
+		if(keyPattern != null){
+			this.arguments.add(new KeyPattern(keyPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Allows the user to access all the keys.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument allKeys() {
+		this.arguments.add(new AllKeys());
+		return this;
+	}
+
+	/**
+	 * Removes all the key patterns from the list of key patterns the user can access.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument resetKeys() {
+		this.arguments.add(new ResetKeys());
+		return this;
+	}
+
+	/**
+	 * Adds accessible channel pattern.
+	 *
+	 * @param channelPattern
+	 * 		accessible channel pattern
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument channelPattern(String channelPattern) {
+		if(channelPattern != null){
+			this.arguments.add(new ChannelPattern(channelPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds accessible channel pattern.
+	 *
+	 * @param channelPattern
+	 * 		accessible channel pattern
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument channelPattern(byte[] channelPattern) {
+		if(channelPattern != null){
+			this.arguments.add(new ChannelPattern(channelPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Allows the user to access all the Pub/Sub channels.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument allChannels() {
+		this.arguments.add(new AllChannels());
+		return this;
+	}
+
+	/**
+	 * Removes all channel patterns from the list of Pub/Sub channel patterns the user can access.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument resetChannels() {
+		this.arguments.add(new ResetChannels());
+		return this;
+	}
+
+	/**
+	 * Adds this command to the list of the commands the user can call.
+	 *
+	 * @param command
+	 * 		accessible command
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addCommand(RedisCommand command) {
+		if(command != null){
+			this.arguments.add(new AddCommand(command));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds this command to the list of the commands the user can call.
+	 *
+	 * @param command
+	 * 		accessible command
+	 * @param subCommand
+	 * 		accessible subcommand
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addCommand(RedisCommand command, RedisSubCommand subCommand) {
+		if(command != null){
+			this.arguments.add(new AddCommand(command, subCommand));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds all the commands there are in the server.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument allCommands() {
+		this.arguments.add(new AllCommands());
+		return this;
+	}
+
+	/**
+	 * Removes this command to the list of the commands the user can call.
+	 *
+	 * @param command
+	 * 		inaccessible command
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removeCommand(RedisCommand command) {
+		if(command != null){
+			this.arguments.add(new RemoveCommand(command));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified command to the list of the commands the user can execute.
+	 *
+	 * @param command
+	 * 		inaccessible command
+	 * @param subCommand
+	 * 		inaccessible subcommand
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removeCommand(RedisCommand command, RedisSubCommand subCommand) {
+		if(command != null){
+			this.arguments.add(new RemoveCommand(command, subCommand));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes all the commands the user can execute.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument noCommands() {
+		this.arguments.add(new NoCommands());
+		return this;
+	}
+
+	/**
+	 * Adds all the commands in the specified category to the list of commands the user is able to execute.
+	 *
+	 * @param category
+	 * 		specified category
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addCategory(AclCategory category) {
+		if(category != null){
+			this.arguments.add(new AddCategory(category));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes all the commands in the specified category to the list of commands the user is able to execute.
+	 *
+	 * @param category
+	 * 		specified category
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removeCategory(AclCategory category) {
+		if(category != null){
+			this.arguments.add(new RemoveCategory(category));
+		}
+		return this;
+	}
+
+	/**
+	 * Sets the user as a "no password".
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument noPass() {
+		this.arguments.add(new NoPass());
+		return this;
+	}
+
+	/**
+	 * Flushes the list of allowed passwords and removes the "no password" status. After resetting the password there is no way
+	 * to authenticate as the user without adding some password (or setting it as {@link #noPass()} later).
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument resetPass() {
+		this.arguments.add(new ResetPass());
+		return this;
+	}
+
+	/**
+	 * Adds the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addPassword(String password) {
+		if(password != null){
+			this.arguments.add(new AddPassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addPassword(byte[] password) {
+		if(password != null){
+			this.arguments.add(new AddPassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removePassword(String password) {
+		if(password != null){
+			this.arguments.add(new RemovePassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removePassword(byte[] password) {
+		if(password != null){
+			this.arguments.add(new RemovePassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addHashedPassword(String hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new AddHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument addHashedPassword(byte[] hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new AddHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removeHashedPassword(String hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new RemoveHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument removeHashedPassword(byte[] hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new RemoveHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes any capability from the user.
+	 *
+	 * @return {@link AclSetUserArgument}
+	 */
+	public AclSetUserArgument reset() {
+		this.arguments.add(new Reset());
+		return this;
+	}
+
+	public List<Argument> getArguments() {
+		return arguments;
+	}
+
+	@Override
+	public String[] toArray() {
+		return arguments.stream().map((v)->v instanceof State ? ((State) v).name() : v.toString())
+				.toArray(String[]::new);
+	}
+
+	@Override
+	public byte[][] toBinaryArray() {
+		return arguments.stream().map((v)->SafeEncoder.encode(v instanceof State ? ((State) v).name() : v.toString()))
+				.toArray(byte[][]::new);
+	}
+
+	@Override
+	public String toString() {
+		return StringUtils.join(arguments, " ");
+	}
+
+	public interface Argument {
+
+	}
+
+	public enum State implements Argument {
+		ON,
+
+		OFF
+	}
+
+	private static abstract class StringArgument implements Argument {
+
+		private final String value;
+
+		public StringArgument(final String value) {
+			this.value = value;
+		}
+
+		public StringArgument(final byte[] value) {
+			this.value = value == null ? null : SafeEncoder.encode(value);
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
+
+	}
+
+	private static abstract class ProtocolCommandArgument implements Argument {
+
+		private final ProtocolCommand command;
+
+		public ProtocolCommandArgument(final ProtocolCommand command) {
+			this.command = command;
+		}
+
+		public ProtocolCommand getCommand() {
+			return command;
+		}
+
+		@Override
+		public String toString() {
+			return getCommand().getName();
+		}
+
+	}
+
+	private static abstract class CommandArgument implements Argument {
+
+		private final RedisCommand command;
+
+		private final RedisSubCommand subCommand;
+
+		public CommandArgument(final RedisCommand command) {
+			this(command, null);
+		}
+
+		public CommandArgument(final RedisCommand command, final RedisSubCommand subCommand) {
+			this.command = command;
+			this.subCommand = subCommand;
+		}
+
+		public RedisCommand getCommand() {
+			return command;
+		}
+
+		public RedisSubCommand getSubCommand() {
+			return subCommand;
+		}
+
+		@Override
+		public String toString() {
+			return subCommand == null ? command.getName() : command.getName() + "|" + subCommand;
+		}
+
+	}
+
+	private static abstract class AclCategoryArgument implements Argument {
+
+		private final AclCategory aclCategory;
+
+		public AclCategoryArgument(final AclCategory aclCategory) {
+			this.aclCategory = aclCategory;
+		}
+
+		public AclCategory getAclCategory() {
+			return aclCategory;
+		}
+
+		@Override
+		public String toString() {
+			return aclCategory.name();
+		}
+
+	}
+
+	/**
+	 * 允许用户访问匹配指定模式的键
+	 */
+	public final static class KeyPattern extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param keyPattern
+		 * 		Key 模式
+		 */
+		public KeyPattern(final String keyPattern) {
+			super(keyPattern);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param keyPattern
+		 * 		Key 模式
+		 */
+		public KeyPattern(final byte[] keyPattern) {
+			super(keyPattern);
+		}
+
+		@Override
+		public String toString() {
+			return "~" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 重置键权限
+	 */
+	public final static class ResetKeys extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public ResetKeys() {
+			super("resetkeys");
+		}
+
+	}
+
+	/**
+	 * 允许用户访问所有键
+	 */
+	public final static class AllKeys extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public AllKeys() {
+			super("allkeys");
+		}
+
+	}
+
+	/**
+	 * 允许订阅特定通道
+	 */
+	public final static class ChannelPattern extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param channelPattern
+		 * 		通道模式
+		 */
+		public ChannelPattern(final String channelPattern) {
+			super(channelPattern);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param channelPattern
+		 * 		通道模式
+		 */
+		public ChannelPattern(final byte[] channelPattern) {
+			super(channelPattern);
+		}
+
+		@Override
+		public String toString() {
+			return "&" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 允许用户访问所有 Pub/Sub 频道
+	 */
+	public final static class AllChannels extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public AllChannels() {
+			super("allchannels");
+		}
+
+	}
+
+	/**
+	 * 清除所有通道限制
+	 */
+	public final static class ResetChannels extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public ResetChannels() {
+			super("resetchannels");
+		}
+
+	}
+
+	/**
+	 * 允许执行某命令
+	 */
+	public final static class AddCommand extends CommandArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 */
+		public AddCommand(final RedisCommand command) {
+			super(command);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 * @param subCommand
+		 * 		子命令
+		 */
+		public AddCommand(final RedisCommand command, final RedisSubCommand subCommand) {
+			super(command, subCommand);
+		}
+
+		@Override
+		public String toString() {
+			return "+" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 允许用户执行所有命令
+	 */
+	public final static class AllCommands extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public AllCommands() {
+			super("allcommands");
+		}
+
+	}
+
+	/**
+	 * 禁止某命令
+	 */
+	public final static class RemoveCommand extends CommandArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 */
+		public RemoveCommand(final RedisCommand command) {
+			super(command);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 * @param subCommand
+		 * 		子命令
+		 */
+		public RemoveCommand(final RedisCommand command, final RedisSubCommand subCommand) {
+			super(command, subCommand);
+		}
+
+		@Override
+		public String toString() {
+			return "-" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 禁止用户执行所有命令
+	 */
+	public final static class NoCommands extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public NoCommands() {
+			super("nocommands");
+		}
+
+	}
+
+	/**
+	 * 允许某类命令
+	 */
+	public final static class AddCategory extends AclCategoryArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param category
+		 * 		类命令
+		 */
+		public AddCategory(final AclCategory category) {
+			super(category);
+		}
+
+		@Override
+		public String toString() {
+			return "+@" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 删除某类命令
+	 */
+	public final static class RemoveCategory extends AclCategoryArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param category
+		 * 		类命令
+		 */
+		public RemoveCategory(final AclCategory category) {
+			super(category);
+		}
+
+		@Override
+		public String toString() {
+			return "-@" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 允许无密码登录
+	 */
+	public final static class NoPass extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public NoPass() {
+			super("nopass");
+		}
+
+	}
+
+	/**
+	 * 重置密码
+	 */
+	public final static class ResetPass extends StringArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public ResetPass() {
+			super("resetpass");
+		}
+
+	}
+
+	/**
+	 * 设置明文密码
+	 */
+	public final static class AddPassword extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
+		public AddPassword(final String password) {
+			super(password);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
+		public AddPassword(final byte[] password) {
+			super(password);
+		}
+
+		@Override
+		public String toString() {
+			return ">" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 删除明文密码
+	 */
+	public final static class RemovePassword extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
+		public RemovePassword(final String password) {
+			super(password);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
+		public RemovePassword(final byte[] password) {
+			super(password);
+		}
+
+		@Override
+		public String toString() {
+			return "<" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 设置 Hashed 密码
+	 */
+	public final static class AddHashedPassword extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
+		public AddHashedPassword(final String password) {
+			super(password);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
+		public AddHashedPassword(final byte[] password) {
+			super(password);
+		}
+
+		@Override
+		public String toString() {
+			return "#" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 删除 Hashed 密码
+	 */
+	public final static class RemoveHashedPassword extends StringArgument {
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
+		public RemoveHashedPassword(final String password) {
+			super(password);
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
+		public RemoveHashedPassword(final byte[] password) {
+			super(password);
+		}
+
+		@Override
+		public String toString() {
+			return "!" + super.toString();
+		}
+
+	}
+
+	/**
+	 * 重置用户为默认状态
+	 */
+	public final static class Reset extends ProtocolCommandArgument {
+
+		/**
+		 * 构造函数
+		 */
+		public Reset() {
+			super(RedisCommand.RESET);
+		}
+
+	}
+
+}

@@ -19,59 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Tuple;
 import io.lettuce.core.ScoredValue;
-import org.springframework.lang.Nullable;
 
 /**
- * Lettuce {@link ScoredValue} 转换为 {@link  Tuple}
+ * Lettuce {@link ScoredValue} 转换为 {@link Tuple}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ScoredValueTupleConverter<V> extends Converter<ScoredValue<V>, Tuple> {
+public final class ScoredValueTupleConverter implements Converter<ScoredValue<byte[]>, Tuple> {
 
-	final class StringScoredValueTupleConverter implements ScoredValueTupleConverter<String> {
-
-		@Nullable
-		@Override
-		public Tuple convert(final ScoredValue<String> source) {
-			if(source == null){
-				return null;
-			}else{
-				return new Tuple(source.getValue(), source.getScore());
-			}
-		}
-
-		public static ListConverter<ScoredValue<String>, Tuple> listConverter() {
-			return new ListConverter<>(new StringScoredValueTupleConverter());
-		}
-
-	}
-
-	final class BinaryScoredValueTupleConverter implements ScoredValueTupleConverter<byte[]> {
-
-		@Nullable
-		@Override
-		public Tuple convert(final ScoredValue<byte[]> source) {
-			if(source == null){
-				return null;
-			}else{
-				return new Tuple(source.getValue(), source.getScore());
-			}
-		}
-
-		public static ListConverter<ScoredValue<byte[]>, Tuple> listConverter() {
-			return new ListConverter<>(new BinaryScoredValueTupleConverter());
-		}
-
+	@Override
+	public Tuple convert(final ScoredValue<byte[]> source) {
+		return source == null ? null : new Tuple(source.getValue(), source.getScore());
 	}
 
 }

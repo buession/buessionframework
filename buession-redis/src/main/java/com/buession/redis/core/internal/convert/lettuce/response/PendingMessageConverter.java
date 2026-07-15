@@ -19,17 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamPending;
 import io.lettuce.core.models.stream.PendingMessage;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce {@link PendingMessage} 转换为 {@link  StreamPending}
@@ -37,21 +35,12 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class PendingMessageConverter implements Converter<PendingMessage, StreamPending> {
+public final class PendingMessageConverter implements Converter<PendingMessage, StreamPending> {
 
-	@Nullable
 	@Override
 	public StreamPending convert(final PendingMessage source) {
-		if(source == null){
-			return null;
-		}else{
-			return new StreamPending(new StreamEntryId(source.getId()), source.getConsumer(),
-					source.getMsSinceLastDelivery(), source.getRedeliveryCount());
-		}
-	}
-
-	public static ListConverter<PendingMessage, StreamPending> listConverter() {
-		return new ListConverter<>(new PendingMessageConverter());
+		return source == null ? null : new StreamPending(new StreamEntryId(source.getId()), source.getConsumer(),
+				source.getMsSinceLastDelivery(), source.getRedeliveryCount());
 	}
 
 }

@@ -26,6 +26,8 @@ package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.DataSource;
 
+import java.time.Duration;
+
 /**
  * Lettuce 数据源
  *
@@ -33,5 +35,81 @@ import com.buession.redis.client.connection.datasource.DataSource;
  * @since 3.0.0
  */
 public interface LettuceRedisDataSource extends DataSource {
+
+	/**
+	 * 返回计算线程池大小
+	 *
+	 * @return 计算线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	int getComputationThreadPoolSize();
+
+	/**
+	 * 设置计算线程池大小
+	 *
+	 * @param computationThreadPoolSize
+	 * 		计算线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	void setComputationThreadPoolSize(int computationThreadPoolSize);
+
+	/**
+	 * 获取 I/O 线程池大小
+	 *
+	 * @return I/O 线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	int getIoThreadPoolSize();
+
+	/**
+	 * 设置 I/O 线程池大小
+	 *
+	 * @param ioThreadPoolSize
+	 * 		I/O 线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	void setIoThreadPoolSize(int ioThreadPoolSize);
+
+	/**
+	 * 返回请求队列大小
+	 *
+	 * @return 请求队列大小
+	 *
+	 * @since 4.0.0
+	 */
+	int getRequestQueueSize();
+
+	/**
+	 * 设置请求队列大小
+	 *
+	 * @param requestQueueSize
+	 * 		请求队列大小
+	 *
+	 * @since 4.0.0
+	 */
+	void setRequestQueueSize(int requestQueueSize);
+
+	/**
+	 * 返回关闭超时时间
+	 *
+	 * @return 关闭超时时间（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	int getShutdownTimeout();
+
+	/**
+	 * 设置关闭超时时间
+	 *
+	 * @param shutdownTimeout
+	 * 		关闭超时时间（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	void setShutdownTimeout(int shutdownTimeout);
 
 }

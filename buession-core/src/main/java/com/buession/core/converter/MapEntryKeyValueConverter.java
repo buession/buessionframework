@@ -35,17 +35,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class MapEntryKeyValueConverter<SK, SV, TK, TV> implements Converter<Map.Entry<SK, SV>, KeyValue<TK, TV>> {
-
-	/**
-	 * Map key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * Map value 转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public class MapEntryKeyValueConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, Map.Entry<SK, SV>, KeyValue<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -56,8 +47,7 @@ public class MapEntryKeyValueConverter<SK, SV, TK, TV> implements Converter<Map.
 	 * 		Map value 转换器
 	 */
 	public MapEntryKeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Nullable

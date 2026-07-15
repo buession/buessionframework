@@ -24,11 +24,15 @@
  */
 package com.buession.httpclient.core.utils;
 
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.UrlParameter;
 import com.buession.lang.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 /**
@@ -41,6 +45,34 @@ public class UriUtils {
 
 	protected UriUtils() {
 
+	}
+
+	public static URI determineRequestUri(final URI uri, final Map<String, Object> parameters) {
+		if(Validate.isEmpty(parameters)){
+			return uri;
+		}
+
+		final StringBuilder newQuery = new StringBuilder();
+
+		if(uri.getRawQuery() != null){
+			newQuery.append(uri.getRawQuery());
+
+			if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
+				newQuery.append('&');
+			}
+		}
+
+		newQuery.append(buildQuery(parameters, false));
+
+		try{
+			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(), uri.getPath(),
+					newQuery.toString(), uri.getFragment());
+		}catch(URISyntaxException e){
+			if(logger.isErrorEnabled()){
+				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());
+			}
+			return uri;
+		}
 	}
 
 	public static String buildQuery(final Map<String, Object> data, final boolean urlEncode) {

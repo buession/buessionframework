@@ -26,9 +26,6 @@ package io.lettuce.core;
 
 import com.buession.redis.core.RedisNode;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
 import java.time.Duration;
 
 /**
@@ -46,6 +43,33 @@ public interface LettuceClientConfig {
 	 */
 	default Duration getConnectionTimeout() {
 		return RedisURI.DEFAULT_TIMEOUT_DURATION;
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 */
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 */
+	default boolean getAutoReconnect() {
+		return ClientOptions.DEFAULT_AUTO_RECONNECT;
+	}
+
+	/**
+	 * 获取重连间隔
+	 *
+	 * @return 重连间隔
+	 */
+	default Duration getReconnectDelay() {
+		return null;
 	}
 
 	/**
@@ -75,6 +99,10 @@ public interface LettuceClientConfig {
 		return null;
 	}
 
+	default RedisCredentialsProvider getCredentialsProvider() {
+		return new StaticCredentialsProvider(RedisCredentials.just(getUser(), getPassword()));
+	}
+
 	/**
 	 * 返回数据库
 	 *
@@ -94,6 +122,27 @@ public interface LettuceClientConfig {
 	}
 
 	/**
+	 * 返回计算线程池大小
+	 *
+	 * @return 计算线程池大小
+	 */
+	Integer getComputationThreadPoolSize();
+
+	/**
+	 * 获取 I/O 线程池大小
+	 *
+	 * @return I/O 线程池大小
+	 */
+	Integer getIoThreadPoolSize();
+
+	/**
+	 * 返回请求队列大小
+	 *
+	 * @return 请求队列大小
+	 */
+	Integer getRequestQueueSize();
+
+	/**
 	 * 返回是否为 TLS 连接
 	 *
 	 * @return <code>true</code> - to create a TLS connection. <code>false</code> - otherwise.
@@ -103,30 +152,16 @@ public interface LettuceClientConfig {
 	}
 
 	/**
-	 * 返回 {@link SSLSocketFactory}
+	 * 获取 {@link SslOptions}
 	 *
-	 * @return {@link SSLSocketFactory}
+	 * @return {@link SslOptions}
 	 */
-	default SSLSocketFactory getSslSocketFactory() {
-		return null;
+	default SslOptions getSslOptions() {
+		return SslOptions.create();
 	}
 
-	/**
-	 * 返回 {@link SSLParameters}
-	 *
-	 * @return {@link SSLParameters}
-	 */
-	default SSLParameters getSslParameters() {
-		return null;
-	}
-
-	/**
-	 * 返回 {@link HostnameVerifier}
-	 *
-	 * @return {@link HostnameVerifier}
-	 */
-	default HostnameVerifier getHostnameVerifier() {
-		return null;
+	default boolean isReadOnlyForRedisClusterReplicas() {
+		return false;
 	}
 
 }

@@ -19,32 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.core.command.GenericCommand;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.GenericCommands;
 
 /**
- * 一般运算
+ * 常规命令运算
  *
  * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=generic" target="_blank">https://redis.io/docs/latest/commands/?group=generic</a></p>
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface GenericOperations extends GenericCommand, RedisOperations {
+public interface GenericOperations extends GenericCommands, RedisOperations {
 
 	@Override
 	default Long wait(final int replicas, final int timeout) {
-		return execute((client)->client.genericOperations().wait(replicas, timeout));
+		return doExecute((cmd)->cmd.wait(replicas, timeout));
 	}
 
 	@Override
 	default KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		return execute((client)->client.genericOperations().waitOf(locals, replicas, timeout));
+		return doExecute((cmd)->cmd.waitOf(locals, replicas, timeout));
+	}
+
+	private <R> R doExecute(final Command.Executor<GenericCommands, R> executor) {
+		return execute((client)->executor.execute(client.genericCommands()));
 	}
 
 }

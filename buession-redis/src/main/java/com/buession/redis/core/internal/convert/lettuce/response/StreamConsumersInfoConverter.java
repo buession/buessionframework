@@ -25,9 +25,8 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumer;
-import org.springframework.lang.Nullable;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -39,14 +38,44 @@ import java.util.List;
  */
 public final class StreamConsumersInfoConverter implements Converter<Object, StreamConsumer> {
 
-	@Nullable
+	@SuppressWarnings("unchecked")
 	@Override
 	public StreamConsumer convert(final Object source) {
-		return null;
-	}
+		if(source == null){
+			return null;
+		}else{
+			final List<Object> tmp = (List<Object>) source;
+			String key;
+			Object value;
+			String name = null;
+			Long idle = null;
+			Long pending = null;
+			Long inactive = null;
 
-	public static ListConverter<Object, StreamConsumer> listConverter() {
-		return new ListConverter<>(new StreamConsumersInfoConverter());
+			for(int i = 0, j = tmp.size(); i < j; i += 2){
+				key = SafeEncoder.encode((byte[]) tmp.get(i));
+				value = tmp.get(i + 1);
+
+				switch(key){
+					case "name":
+						name = SafeEncoder.encode((byte[]) value);
+						break;
+					case "idle":
+						idle = (Long) value;
+						break;
+					case "pending":
+						pending = (Long) value;
+						break;
+					case "inactive":
+						inactive = (Long) value;
+						break;
+					default:
+						break;
+				}
+			}
+
+			return new StreamConsumer(name, idle, pending, inactive);
+		}
 	}
 
 }

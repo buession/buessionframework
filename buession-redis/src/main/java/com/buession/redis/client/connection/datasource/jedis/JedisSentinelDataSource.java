@@ -19,18 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.core.builder.SetBuilder;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
-import redis.clients.jedis.JedisSentinelPool;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Jedis 哨兵模式数据源
@@ -44,6 +44,20 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
+
+	/**
+	 * 哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	private String sentinelUsername;
+
+	/**
+	 * 哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	private String sentinelPassword;
 
 	/**
 	 * 哨兵节点连接超时（单位：毫秒）
@@ -63,19 +77,13 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	/**
 	 * Master 名称
 	 */
-	private String masterName;
+	private String masterName = RedisSentinelNode.DEFAULT_MASTER_NAME;
 
 	/**
 	 * 哨兵节点
 	 */
-	private List<RedisNode> sentinels;
-
-	/**
-	 * 连接池
-	 *
-	 * @since 3.0.1
-	 */
-	private JedisSentinelPool pool;
+	private Set<RedisSentinelNode> sentinels = SetBuilder.of(new RedisSentinelNode(RedisSentinelNode.DEFAULT_HOST,
+			RedisSentinelNode.DEFAULT_SENTINEL_PORT));
 
 	@Override
 	public int getDatabase() {
@@ -85,6 +93,26 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setDatabase(int database) {
 		this.database = database;
+	}
+
+	@Override
+	public String getSentinelUsername() {
+		return sentinelUsername;
+	}
+
+	@Override
+	public void setSentinelUsername(String sentinelUsername) {
+		this.sentinelUsername = sentinelUsername;
+	}
+
+	@Override
+	public String getSentinelPassword() {
+		return sentinelPassword;
+	}
+
+	@Override
+	public void setSentinelPassword(String sentinelPassword) {
+		this.sentinelPassword = sentinelPassword;
 	}
 
 	@Override
@@ -128,33 +156,13 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	}
 
 	@Override
-	public List<RedisNode> getSentinels() {
+	public Set<RedisSentinelNode> getSentinels() {
 		return sentinels;
 	}
 
 	@Override
-	public void setSentinels(List<RedisNode> sentinels) {
+	public void setSentinels(Set<RedisSentinelNode> sentinels) {
 		this.sentinels = sentinels;
-	}
-
-	public JedisSentinelPool getPool() {
-		return pool;
-	}
-
-	public void setPool(JedisSentinelPool pool) {
-		this.pool = pool;
-	}
-
-	@Deprecated
-	@Override
-	public JedisSentinelConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new JedisSentinelConnection(this, getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-		}else{
-			return new JedisSentinelConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-		}
 	}
 
 }

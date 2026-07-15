@@ -19,18 +19,283 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
 
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.AbstractRedisClient;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.command.*;
+import com.buession.redis.core.command.*;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Jedis Redis 客户端
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public interface JedisRedisClient extends RedisClient {
+public class JedisRedisClient extends AbstractRedisClient {
+
+	/**
+	 * 构造函数
+	 */
+	public JedisRedisClient() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
+	 */
+	public JedisRedisClient(final JedisRedisConnection<? extends UnifiedJedis> connection) {
+		super(connection);
+	}
+
+	@Override
+	public AutoSuggestCommands autoSuggestCommands() {
+		if(autoSuggestCommands == null){
+			autoSuggestCommands = new JedisAutoSuggestCommands(this);
+		}
+
+		return autoSuggestCommands;
+	}
+
+	@Override
+	public BitMapCommands bitMapCommands() {
+		if(bitMapCommands == null){
+			bitMapCommands = new JedisBitMapCommands(this);
+		}
+
+		return bitMapCommands;
+	}
+
+	@Override
+	public BloomFilterCommands bloomFilterCommands() {
+		if(bloomFilterCommands == null){
+			bloomFilterCommands = new JedisBloomFilterCommands(this);
+		}
+
+		return bloomFilterCommands;
+	}
+
+	@Override
+	public CuckooFilterCommands cuckooFilterCommands() {
+		if(cuckooFilterCommands == null){
+			cuckooFilterCommands = new JedisCuckooFilterCommands(this);
+		}
+
+		return cuckooFilterCommands;
+	}
+
+	@Override
+	public ClusterCommands clusterCommands() {
+		if(clusterCommands == null){
+			clusterCommands = new JedisClusterCommands(this);
+		}
+
+		return clusterCommands;
+	}
+
+	@Override
+	public CountMinSketchCommands countMinSketchCommands() {
+		if(countMinSketchCommands == null){
+			countMinSketchCommands = new JedisCountMinSketchCommands(this);
+		}
+
+		return countMinSketchCommands;
+	}
+
+	@Override
+	public ConnectionCommands connectionCommands() {
+		if(connectionCommands == null){
+			connectionCommands = new JedisConnectionCommands(this);
+		}
+
+		return connectionCommands;
+	}
+
+	@Override
+	public GenericCommands genericCommands() {
+		if(genericCommands == null){
+			genericCommands = new JedisGenericCommands(this);
+		}
+
+		return genericCommands;
+	}
+
+	@Override
+	public GeoCommands geoCommands() {
+		if(geoCommands == null){
+			geoCommands = new JedisGeoCommands(this);
+		}
+
+		return geoCommands;
+	}
+
+	@Override
+	public HashCommands hashCommands() {
+		if(hashCommands == null){
+			hashCommands = new JedisHashCommands(this);
+		}
+
+		return hashCommands;
+	}
+
+	@Override
+	public HyperLogLogCommands hyperLogLogCommands() {
+		if(hyperLogLogCommands == null){
+			hyperLogLogCommands = new JedisHyperLogLogCommands(this);
+		}
+
+		return hyperLogLogCommands;
+	}
+
+	@Override
+	public JsonCommands jsonCommands() {
+		if(jsonCommands == null){
+			jsonCommands = new JedisJsonCommands(this);
+		}
+
+		return jsonCommands;
+	}
+
+	@Override
+	public KeyCommands keyCommands() {
+		if(keyCommands == null){
+			keyCommands = new JedisKeyCommands(this);
+		}
+
+		return keyCommands;
+	}
+
+	@Override
+	public ListCommands listCommands() {
+		if(listCommands == null){
+			listCommands = new JedisListCommands(this);
+		}
+
+		return listCommands;
+	}
+
+	@Override
+	public PubSubCommands pubSubCommands() {
+		if(pubSubCommands == null){
+			pubSubCommands = new JedisPubSubCommands(this);
+		}
+
+		return pubSubCommands;
+	}
+
+	@Override
+	public ScriptingCommands scriptingCommands() {
+		if(scriptingCommands == null){
+			scriptingCommands = new JedisScriptingCommands(this);
+		}
+
+		return scriptingCommands;
+	}
+
+	@Override
+	public SearchCommands searchCommands() {
+		if(searchCommands == null){
+			searchCommands = new JedisSearchCommands(this);
+		}
+
+		return searchCommands;
+	}
+
+	@Override
+	public ServerCommands serverCommands() {
+		if(serverCommands == null){
+			serverCommands = new JedisServerCommands(this);
+		}
+
+		return serverCommands;
+	}
+
+	@Override
+	public SetCommands setCommands() {
+		if(setCommands == null){
+			setCommands = new JedisSetCommands(this);
+		}
+
+		return setCommands;
+	}
+
+	@Override
+	public SortedSetCommands sortedSetCommands() {
+		if(sortedSetCommands == null){
+			sortedSetCommands = new JedisSortedSetCommands(this);
+		}
+
+		return sortedSetCommands;
+	}
+
+	@Override
+	public StreamCommands streamCommands() {
+		if(streamCommands == null){
+			streamCommands = new JedisStreamCommands(this);
+		}
+
+		return streamCommands;
+	}
+
+	@Override
+	public StringCommands stringCommands() {
+		if(stringCommands == null){
+			stringCommands = new JedisStringCommands(this);
+		}
+
+		return stringCommands;
+	}
+
+	@Override
+	public TDigestCommands tDigestCommands() {
+		if(tDigestCommands == null){
+			tDigestCommands = new JedisTDigestCommands(this);
+		}
+
+		return tDigestCommands;
+	}
+
+	@Override
+	public TimeSeriesCommands timeSeriesCommands() {
+		if(timeSeriesCommands == null){
+			timeSeriesCommands = new JedisTimeSeriesCommands(this);
+		}
+
+		return timeSeriesCommands;
+	}
+
+	@Override
+	public TopKCommands topKCommands() {
+		if(topKCommands == null){
+			topKCommands = new JedisTopKCommands(this);
+		}
+
+		return topKCommands;
+	}
+
+	@Override
+	public TransactionCommands transactionCommands() {
+		if(transactionCommands == null){
+			transactionCommands = new JedisTransactionCommands(this);
+		}
+
+		return transactionCommands;
+	}
+
+	@Override
+	public VectorSetCommands vectorSetCommands() {
+		if(vectorSetCommands == null){
+			vectorSetCommands = new JedisVectorSetCommands(this);
+		}
+
+		return vectorSetCommands;
+	}
 
 }

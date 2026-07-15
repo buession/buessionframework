@@ -32,6 +32,7 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 @FunctionalInterface
 public interface BeanConverter {
 

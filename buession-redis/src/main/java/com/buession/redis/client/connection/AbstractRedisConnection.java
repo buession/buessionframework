@@ -24,23 +24,37 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.lang.Status;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Redis 连接对象抽象类
  *
+ * @param <C>
+ * 		原生客户端
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection implements RedisConnection {
+public abstract class AbstractRedisConnection<C> implements RedisConnection {
+
+	protected final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 
 	/**
 	 * Redis 数据源
@@ -72,16 +86,44 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	private int infiniteSoTimeout = Constants.DEFAULT_INFINITE_SO_TIMEOUT;
 
 	/**
-	 * SSL 配置
+	 * 是否自动重连
+	 *
+	 * @since 4.0.0
 	 */
-	private SslConfiguration sslConfiguration;
+	private boolean autoReconnect = true;
 
 	/**
-	 * 是否使用连接池
+	 * 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
 	 */
-	private boolean usePool = false;
+	private int reconnectDelay;
+
+	/**
+	 * SSL 配置
+	 *
+	 * @since 4.0.0
+	 */
+	private SslOptions sslOptions;
+
+	/**
+	 * 原生客户端
+	 *
+	 * @since 4.0.0
+	 */
+	protected C client;
 
 	private volatile boolean initialized = false;
+
+	/**
+	 * 管道
+	 */
+	protected Pipeline pipeline;
+
+	/**
+	 * 事务
+	 */
+	protected Transaction transaction;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -99,95 +141,12 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 */
 	public AbstractRedisConnection(DataSource dataSource) {
 		this.dataSource = dataSource;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout) {
-		this.dataSource = dataSource;
-		this.connectTimeout = connectTimeout;
-		this.soTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout) {
-		this(dataSource, connectTimeout, soTimeout);
-		this.infiniteSoTimeout = infiniteSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration) {
-		this.dataSource = dataSource;
-		this.sslConfiguration = sslConfiguration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout（单位：毫秒）
-	 * 		连接超时
-	 * @param soTimeout（单位：毫秒）
-	 * 		读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration) {
-		this(dataSource, connectTimeout, soTimeout);
-		this.sslConfiguration = sslConfiguration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout（单位：毫秒）
-	 * 		Infinite 读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.infiniteSoTimeout = infiniteSoTimeout;
+		setConnectTimeout(dataSource.getConnectTimeout());
+		setSoTimeout(dataSource.getSoTimeout());
+		setInfiniteSoTimeout(dataSource.getInfiniteSoTimeout());
+		setAutoReconnect(dataSource.getAutoReconnect());
+		setReconnectDelay(dataSource.getReconnectDelay());
+		setSslOptions(dataSource.getSslOptions());
 	}
 
 	/**
@@ -202,110 +161,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 */
 	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig) {
 		this(dataSource);
-		this.poolConfig = poolConfig;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
-		this(dataSource, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout) {
-		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
-		this(dataSource, sslConfiguration);
-		this.poolConfig = poolConfig;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout（单位：毫秒）
-	 * 		连接超时
-	 * @param soTimeout（单位：毫秒）
-	 * 		读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration) {
-		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.poolConfig = poolConfig;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout（单位：毫秒）
-	 * 		Infinite 读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.poolConfig = poolConfig;
 	}
 
@@ -360,18 +215,37 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public boolean isUseSsl() {
-		return sslConfiguration != null;
+	public boolean getAutoReconnect() {
+		return autoReconnect;
 	}
 
 	@Override
-	public SslConfiguration getSslConfiguration() {
-		return sslConfiguration;
+	public void setAutoReconnect(boolean autoReconnect) {
+		this.autoReconnect = autoReconnect;
 	}
 
 	@Override
-	public void setSslConfiguration(SslConfiguration sslConfiguration) {
-		this.sslConfiguration = sslConfiguration;
+	public int getReconnectDelay() {
+		return reconnectDelay;
+	}
+
+	@Override
+	public void setReconnectDelay(int reconnectDelay) {
+		this.reconnectDelay = reconnectDelay;
+	}
+
+	@Override
+	public SslOptions getSslOptions() {
+		return sslOptions;
+	}
+
+	@Override
+	public void setSslOptions(SslOptions sslOptions) {
+		this.sslOptions = sslOptions;
+	}
+
+	public C getClient() {
+		return client;
 	}
 
 	@Override
@@ -384,6 +258,76 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		}catch(Exception e){
 			logger.error("Connection redis server error: {}.", e.getMessage());
 			throw new RedisConnectionFailureException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			throw executeException(e);
+		}
+	}
+
+	@Override
+	public boolean isPipeline() {
+		return pipeline != null;
+	}
+
+	@Override
+	public Pipeline getPipeline() {
+		return pipeline;
+	}
+
+	@Override
+	public void closePipeline() {
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
+	}
+
+	@Override
+	public boolean isTransaction() {
+		return transaction != null;
+	}
+
+	@Override
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	@Override
+	public List<Object> exec() throws RedisException {
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new NotMultiRedisException(RedisCommand.EXEC);
+		}
+	}
+
+	@Override
+	public Status discard() throws RedisException {
+		if(transaction != null){
+			final OkStatusConverter okStatusConverter = new OkStatusConverter();
+			String result = transaction.discard();
+			transaction = null;
+			return okStatusConverter.convert(result);
+		}else{
+			throw new NotMultiRedisException(RedisCommand.DISCARD);
 		}
 	}
 
@@ -410,17 +354,11 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		}
 	}
 
-	protected boolean isUsePool() {
-		return usePool;
-	}
-
-	protected void setUsePool(boolean usePool) {
-		this.usePool = usePool;
-	}
-
 	protected abstract void internalInit();
 
 	protected abstract Status doConnect() throws RedisConnectionFailureException;
+
+	protected abstract RedisException executeException(final Exception e);
 
 	protected abstract void doDestroy() throws IOException;
 

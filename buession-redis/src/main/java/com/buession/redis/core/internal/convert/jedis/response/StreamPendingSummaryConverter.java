@@ -19,31 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.StreamPendingSummary;
 
 /**
- * jedis {@link redis.clients.jedis.resps.StreamPendingSummary} 转换为 {@link StreamPendingSummary}
+ * jedis {@link redis.clients.jedis.resps.StreamPendingSummary} 转换为 {@link com.buession.redis.core.StreamPendingSummary}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamPendingSummaryConverter
-		implements Converter<redis.clients.jedis.resps.StreamPendingSummary, StreamPendingSummary> {
-
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+public final class StreamPendingSummaryConverter implements
+		Converter<redis.clients.jedis.resps.StreamPendingSummary, com.buession.redis.core.StreamPendingSummary> {
 
 	@Override
-	public StreamPendingSummary convert(final redis.clients.jedis.resps.StreamPendingSummary source) {
+	public com.buession.redis.core.StreamPendingSummary convert(
+			final redis.clients.jedis.resps.StreamPendingSummary source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final StreamEntryId minId = streamEntryIDConverter.convert(source.getMinId());
 		final StreamEntryId maxId = streamEntryIDConverter.convert(source.getMaxId());
-		return new StreamPendingSummary(source.getTotal(), minId, maxId, source.getConsumerMessageCount());
+		return new com.buession.redis.core.StreamPendingSummary(source.getTotal(), minId, maxId,
+				source.getConsumerMessageCount());
 	}
 
 }

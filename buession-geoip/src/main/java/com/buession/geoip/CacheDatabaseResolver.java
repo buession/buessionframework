@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -33,7 +33,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
- * 缓存 Maxmind Geoip 解析器
+ * 缓存 Maxmind GeoIP 解析器
  *
  * @author Yong.Teng
  */
@@ -48,7 +48,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final String database) throws IOException{
+	public CacheDatabaseResolver(final String database) throws IOException {
 		super(database, new CHMCache());
 	}
 
@@ -63,7 +63,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException{
+	public CacheDatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException {
 		super(database, fileMode, new CHMCache());
 	}
 
@@ -76,7 +76,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final File database) throws IOException{
+	public CacheDatabaseResolver(final File database) throws IOException {
 		super(database, new CHMCache());
 	}
 
@@ -91,7 +91,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
+	public CacheDatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException {
 		super(database, fileMode, new CHMCache());
 	}
 
@@ -104,7 +104,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final Path database) throws IOException{
+	public CacheDatabaseResolver(final Path database) throws IOException {
 		super(database, new CHMCache());
 	}
 
@@ -119,7 +119,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException{
+	public CacheDatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException {
 		super(database, fileMode, new CHMCache());
 	}
 
@@ -132,7 +132,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final InputStream source) throws IOException{
+	public CacheDatabaseResolver(final InputStream source) throws IOException {
 		super(source, new CHMCache());
 	}
 
@@ -147,7 +147,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @throws IOException
 	 * 		IO 错误
 	 */
-	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
+	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException {
 		super(source, fileMode, new CHMCache());
 	}
 
@@ -163,7 +163,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * 		IO 错误
 	 * @since 2.2.0
 	 */
-	public CacheDatabaseResolver(final String database, final String asnDatabase) throws IOException{
+	public CacheDatabaseResolver(final String database, final String asnDatabase) throws IOException {
 		super(database, asnDatabase, new CHMCache());
 	}
 
@@ -182,7 +182,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @since 2.2.0
 	 */
 	public CacheDatabaseResolver(final String database, final String asnDatabase, final Reader.FileMode fileMode)
-			throws IOException{
+			throws IOException {
 		super(database, asnDatabase, fileMode, new CHMCache());
 	}
 
@@ -198,7 +198,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * 		IO 错误
 	 * @since 2.2.0
 	 */
-	public CacheDatabaseResolver(final File database, final File asnDatabase) throws IOException{
+	public CacheDatabaseResolver(final File database, final File asnDatabase) throws IOException {
 		super(database, asnDatabase, new CHMCache());
 	}
 
@@ -217,7 +217,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @since 2.2.0
 	 */
 	public CacheDatabaseResolver(final File database, final File asnDatabase, final Reader.FileMode fileMode)
-			throws IOException{
+			throws IOException {
 		super(database, asnDatabase, fileMode, new CHMCache());
 	}
 
@@ -233,7 +233,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * 		IO 错误
 	 * @since 2.2.0
 	 */
-	public CacheDatabaseResolver(final Path database, final Path asnDatabase) throws IOException{
+	public CacheDatabaseResolver(final Path database, final Path asnDatabase) throws IOException {
 		super(database, asnDatabase, new CHMCache());
 	}
 
@@ -252,7 +252,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @since 2.2.0
 	 */
 	public CacheDatabaseResolver(final Path database, final Path asnDatabase, final Reader.FileMode fileMode)
-			throws IOException{
+			throws IOException {
 		super(database, asnDatabase, fileMode, new CHMCache());
 	}
 
@@ -268,7 +268,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * 		IO 错误
 	 * @since 2.2.0
 	 */
-	public CacheDatabaseResolver(final InputStream source, final InputStream asnSource) throws IOException{
+	public CacheDatabaseResolver(final InputStream source, final InputStream asnSource) throws IOException {
 		super(source, asnSource, new CHMCache());
 	}
 
@@ -287,7 +287,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 * @since 2.2.0
 	 */
 	public CacheDatabaseResolver(final InputStream source, final InputStream asnSource, final Reader.FileMode fileMode)
-			throws IOException{
+			throws IOException {
 		super(source, asnSource, fileMode, new CHMCache());
 	}
 

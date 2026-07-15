@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
@@ -36,11 +36,10 @@ import com.google.gson.Gson;
  */
 public class GsonJsonDeserializer extends AbstractJsonDeserializer<Gson> {
 
+	/**
+	 * {@link Gson} 实例
+	 */
 	private final Gson gson = new Gson();
-
-	public GsonJsonDeserializer() {
-		configure(gson);
-	}
 
 	@Override
 	public <V> V deserialize(final String str) throws DeserializerException {
@@ -52,14 +51,12 @@ public class GsonJsonDeserializer extends AbstractJsonDeserializer<Gson> {
 	@Override
 	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
-
 		return gson.fromJson(str, clazz);
 	}
 
 	@Override
 	public <V> V deserialize(String str, TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
-
 		return gson.fromJson(str, type.getType());
 	}
 

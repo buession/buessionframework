@@ -19,16 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.SetListConverter;
 import com.buession.redis.core.GeoRadius;
-
-import java.util.List;
 
 /**
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
@@ -40,11 +37,7 @@ public final class GeoRadiusGeneralResultConverter implements Converter<byte[], 
 
 	@Override
 	public GeoRadius convert(final byte[] source) {
-		return new GeoRadius(source);
-	}
-
-	public static SetListConverter<byte[], GeoRadius> setListConverter() {
-		return new SetListConverter<>(new GeoRadiusGeneralResultConverter());
+		return source == null ? null : new GeoRadius(source);
 	}
 
 }

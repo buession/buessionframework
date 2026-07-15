@@ -36,7 +36,7 @@ import com.buession.lang.Order;
  * Data Access Object 接口
  *
  * @param <P>
- * 		注解类型
+ * 		主键类型
  * @param <E>
  * 		实体类
  *

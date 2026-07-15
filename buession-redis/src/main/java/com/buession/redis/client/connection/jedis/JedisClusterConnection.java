@@ -19,39 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.lang.Status;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
+import com.buession.redis.core.RedisMode;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.jedis.JedisClusterPipeline;
-import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
-import com.buession.redis.transaction.jedis.JedisTransactionProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisClientConfig;
+import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.providers.ClusterConnectionProvider;
+import redis.clients.jedis.RedisClusterClient;
+import redis.clients.jedis.builders.ClusterClientBuilder;
 
-import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Jedis 集群模式连接器
@@ -59,31 +48,25 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisClusterConnection extends AbstractJedisRedisConnection implements RedisClusterConnection {
+public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisClusterClient>
+		implements RedisClusterConnection {
 
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects;
+	private int maxRedirects = JedisCluster.DEFAULT_MAX_ATTEMPTS;
 
 	/**
 	 * 最大重数时长（单位：毫秒）
 	 */
-	private int maxTotalRetriesDuration;
+	private int maxTotalRetries;
 
 	/**
-	 * 连接提供者
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
-	 * @since 3.0.0
+	 * @since 4.0.0
 	 */
-	private ClusterConnectionProvider connectionProvider;
-
-	/**
-	 * JedisCluster 对象
-	 */
-	private JedisCluster cluster;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisClusterConnection.class);
+	private int topologyRefreshPeriod;
 
 	/**
 	 * 构造函数
@@ -100,460 +83,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource) {
 		super(dataSource);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects);
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster) {
-		super(dataSource);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.cluster = cluster;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int maxRedirects) {
-		super(dataSource);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int maxRedirects,
-								  SslConfiguration sslConfiguration) {
-		this(dataSource, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int maxRedirects) {
-		this(dataSource, cluster);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int maxRedirects,
-								  SslConfiguration sslConfiguration) {
-		this(dataSource, cluster, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数（单位：毫秒）
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		this(dataSource, cluster, connectTimeout, soTimeout);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		this(dataSource, cluster, connectTimeout, soTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		this(dataSource, cluster, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param cluster
-	 *        {@link JedisCluster}
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	@Deprecated
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		this(dataSource, cluster, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+		setMaxRedirects(dataSource.getMaxRedirects());
 	}
 
 	/**
@@ -568,254 +98,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int maxRedirects) {
-		super(dataSource, poolConfig);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param maxRedirects
-	 * 		最大重试次数
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int maxRedirects,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数（单位：毫秒）
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param maxRedirects
-	 * 		最大重定向次数
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+		setMaxRedirects(dataSource.getMaxRedirects());
 	}
 
 	@Override
@@ -828,83 +111,71 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 		this.maxRedirects = maxRedirects;
 	}
 
-	@Override
-	public int getMaxTotalRetriesDuration() {
-		return maxTotalRetriesDuration;
+	/**
+	 * 获取最大重试持续时长
+	 *
+	 * @return 最大重试持续时长（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	public int getMaxTotalRetries() {
+		return maxTotalRetries;
+	}
+
+	/**
+	 * 设置最大重试持续时长
+	 *
+	 * @param maxTotalRetries
+	 * 		最大重试持续时长（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	public void setMaxTotalRetries(int maxTotalRetries) {
+		this.maxTotalRetries = maxTotalRetries;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	public JedisCluster getCluster() {
-		return cluster;
+	public int getTopologyRefreshPeriod() {
+		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final redis.clients.jedis.ClusterPipeline pipelineObject = cluster.pipelined();
-			pipeline = new JedisPipelineProxy<>(new JedisClusterPipeline(pipelineObject), pipelineObject);
-		}
-
-		return pipeline;
+	public void setTopologyRefreshPeriod(int topologyRefreshPeriod) {
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	@Override
 	public Transaction multi() {
-		if(transaction == null){
-			final redis.clients.jedis.Transaction tran = cluster.multi();
-			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
-		}
-
-		return transaction;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public boolean isConnected() {
-		return cluster != null;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return cluster == null;
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
 	@Override
 	protected void internalInit() {
-		if(cluster == null){
-			connectionProvider = createConnectionProvider();
-		}
-	}
+		if(client == null){
+			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
+			final DefaultJedisClientConfig.Builder clientConfigBuilder = DefaultJedisClientConfig.builder();
 
-	protected boolean isUsePool() {
-		return getPoolConfig() != null;
+			commonClientConfigBuilder(clientConfigBuilder);
+
+			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
+					.nodes(createNodes(dataSource.getNodes(), RedisNode.DEFAULT_PORT))
+					.clientConfig(clientConfigBuilder.build());
+
+			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
+			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
+
+			if(getMaxRedirects() > 0){
+				builder.maxAttempts(getMaxRedirects());
+			}
+			if(getMaxTotalRetries() > 0){
+				builder.maxTotalRetriesDuration(Duration.ofMillis(getMaxTotalRetries()));
+			}
+			if(getTopologyRefreshPeriod() > 0){
+				builder.topologyRefreshPeriod(Duration.ofMillis(getTopologyRefreshPeriod()));
+			}
+
+			client = builder.build();
+		}
 	}
 
 	@Override
@@ -913,55 +184,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 			return Status.SUCCESS;
 		}
 
-		if(cluster != null){
-			cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
-					Duration.ofMillis(getMaxTotalRetriesDuration()));
-		}
-
-		return cluster == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	protected ClusterConnectionProvider createConnectionProvider() {
-		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.build();
-		final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
-
-		if(isUsePool()){
-			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-
-			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
-
-			return new ClusterConnectionProvider(nodes, clientConfig, connectionPoolConfig);
-		}else{
-			return new ClusterConnectionProvider(nodes, clientConfig);
-		}
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-		logger.debug("Jedis cluster destroy.");
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Jedis cluster close.");
-		if(cluster != null){
-			cluster.close();
-		}
-	}
-
-	private static Set<HostAndPort> createHostAndPorts(final JedisClusterDataSource clusterDataSource) {
-		return clusterDataSource.getNodes().stream().map((node)->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 }

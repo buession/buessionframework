@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.utils.useragentutils.devicetypefetcher;
@@ -39,18 +39,36 @@ public class ContainsDeviceTypeFetcher implements DeviceTypeFetcher {
 
 	private final DeviceType deviceType;
 
-	public ContainsDeviceTypeFetcher(final String str, final DeviceType deviceType){
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		待匹配字符串
+	 * @param deviceType
+	 * 		设备类型
+	 */
+	public ContainsDeviceTypeFetcher(final String str, final DeviceType deviceType) {
 		this(str, true, deviceType);
 	}
 
-	public ContainsDeviceTypeFetcher(final String str, final boolean ignoreCase, final DeviceType deviceType){
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		待匹配字符串
+	 * @param ignoreCase
+	 * 		是否忽略大小写
+	 * @param deviceType
+	 * 		设备类型
+	 */
+	public ContainsDeviceTypeFetcher(final String str, final boolean ignoreCase, final DeviceType deviceType) {
 		this.str = str;
 		this.ignoreCase = ignoreCase;
 		this.deviceType = deviceType;
 	}
 
 	@Override
-	public DeviceType fetch(final String userAgent){
+	public DeviceType fetch(final String userAgent) {
 		if(ignoreCase){
 			return StringUtils.containsIgnoreCase(userAgent, str) ? deviceType : null;
 		}else{

@@ -24,11 +24,12 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
+import io.lettuce.core.utils.LettuceURIHelper;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
+import java.net.URI;
 import java.time.Duration;
 
 /**
@@ -39,50 +40,49 @@ import java.time.Duration;
  */
 public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
-	private Duration connectionTimeout = Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT);
+	private Duration connectionTimeout = RedisURI.DEFAULT_TIMEOUT_DURATION;
+
+	private boolean autoReconnect = ClientOptions.DEFAULT_AUTO_RECONNECT;
+
+	private Duration reconnectDelay = RedisURI.DEFAULT_TIMEOUT_DURATION;
 
 	private Duration socketTimeout = connectionTimeout;
 
-	private String user;
-
-	private String password;
+	private RedisCredentialsProvider.ImmediateRedisCredentialsProvider credentialsProvider;
 
 	private int database = RedisNode.DEFAULT_DATABASE;
 
 	private String clientName;
 
+	private Integer computationThreadPoolSize;
+
+	private Integer ioThreadPoolSize;
+
+	private Integer requestQueueSize;
+
 	private boolean isSsl;
 
-	private SSLSocketFactory sslSocketFactory;
+	private SslOptions sslOptions = SslOptions.create();
 
-	private SSLParameters sslParameters;
-
-	private HostnameVerifier hostnameVerifier;
+	private boolean readOnlyForRedisClusterReplicas = false;
 
 	private DefaultLettuceClientConfig() {
 
 	}
 
-	private DefaultLettuceClientConfig(final Duration connectionTimeout, final Duration socketTimeout,
-									   final String user, final String password, final int database,
-									   final String clientName, final boolean isSsl,
-									   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-									   final HostnameVerifier hostnameVerifier) {
-		this.connectionTimeout = connectionTimeout;
-		this.socketTimeout = socketTimeout;
-		this.user = user;
-		this.password = password;
-		this.database = database;
-		this.clientName = clientName;
-		this.isSsl = isSsl;
-		this.sslSocketFactory = sslSocketFactory;
-		this.sslParameters = sslParameters;
-		this.hostnameVerifier = hostnameVerifier;
-	}
-
 	@Override
 	public Duration getConnectionTimeout() {
 		return connectionTimeout;
+	}
+
+	@Override
+	public boolean isAutoReconnect() {
+		return autoReconnect;
+	}
+
+	@Override
+	public Duration getReconnectDelay() {
+		return reconnectDelay;
 	}
 
 	@Override
@@ -92,12 +92,17 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	@Override
 	public String getUser() {
-		return user;
+		return credentialsProvider == null ? null : credentialsProvider.resolveCredentialsNow().getUsername();
 	}
 
 	@Override
 	public String getPassword() {
-		return password;
+		return credentialsProvider == null ? null : new String(
+				credentialsProvider.resolveCredentialsNow().getPassword());
+	}
+
+	public RedisCredentialsProvider getCredentialsProvider() {
+		return credentialsProvider;
 	}
 
 	@Override
@@ -111,32 +116,90 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	}
 
 	@Override
+	public Integer getComputationThreadPoolSize() {
+		return computationThreadPoolSize;
+	}
+
+	@Override
+	public Integer getIoThreadPoolSize() {
+		return ioThreadPoolSize;
+	}
+
+	@Override
+	public Integer getRequestQueueSize() {
+		return requestQueueSize;
+	}
+
+	@Override
 	public boolean isSsl() {
 		return isSsl;
 	}
 
 	@Override
-	public SSLSocketFactory getSslSocketFactory() {
-		return sslSocketFactory;
+	public SslOptions getSslOptions() {
+		return sslOptions;
 	}
 
 	@Override
-	public SSLParameters getSslParameters() {
-		return sslParameters;
-	}
-
-	@Override
-	public HostnameVerifier getHostnameVerifier() {
-		return hostnameVerifier;
+	public boolean isReadOnlyForRedisClusterReplicas() {
+		return readOnlyForRedisClusterReplicas;
 	}
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
+	/**
+	 * Creates a new Builder pre-initialized with settings from the provided Redis URI.
+	 * <p>
+	 * The URI format is:
+	 * {@code redis[s]://[username:password@]host:port[/database][?protocol=version]}
+	 * </p>
+	 * <p>
+	 * Settings extracted from URI:
+	 * <ul>
+	 * <li>Credentials (username/password) if present in URI</li>
+	 * <li>Database index if specified in path</li>
+	 * <li>SSL enabled if scheme is "rediss"</li>
+	 * <li>Protocol version if specified in query parameters</li>
+	 * </ul>
+	 *
+	 * @param redisUri
+	 * 		the Redis URI to extract settings from
+	 *
+	 * @return a new Builder pre-initialized from the URI
+	 */
+	public static Builder builder(URI redisUri) {
+		Assert.isNull(redisUri, "Redis URI must not be null");
+		Assert.isFalse(LettuceURIHelper.isValid(redisUri), "Invalid Redis URI");
+
+		Builder builder = new Builder();
+
+		String user = LettuceURIHelper.getUser(redisUri);
+		String password = LettuceURIHelper.getPassword(redisUri);
+
+		if(user != null || password != null){
+			builder.credentials(user, password);
+		}
+
+		if(LettuceURIHelper.hasDbIndex(redisUri)){
+			builder.database(LettuceURIHelper.getDBIndex(redisUri));
+		}
+
+		if(LettuceURIHelper.isRedisSSLScheme(redisUri)){
+			builder.ssl(true);
+		}
+
+		return builder;
+	}
+
 	public final static class Builder {
 
 		private final DefaultLettuceClientConfig lettuceClientConfig = new DefaultLettuceClientConfig();
+
+		private String user;
+
+		private String password;
 
 		private Builder() {
 		}
@@ -160,28 +223,53 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 			return connectionTimeout(Duration.ofMillis(timeoutMillis));
 		}
 
+		public Builder autoReconnect(final boolean autoReconnect) {
+			lettuceClientConfig.autoReconnect = autoReconnect;
+			return this;
+		}
+
+		public Builder reconnectDelay(final Duration reconnectDelay) {
+			lettuceClientConfig.reconnectDelay = reconnectDelay;
+			return this;
+		}
+
+		public Builder reconnectDelayMillis(final long reconnectDelayMillis) {
+			return reconnectDelay(Duration.ofMillis(reconnectDelayMillis));
+		}
+
 		public Builder socketTimeout(final Duration timeout) {
 			lettuceClientConfig.socketTimeout = timeout;
 			return this;
 		}
 
 		public Builder socketTimeoutMillis(final long timeoutMillis) {
-			return connectionTimeout(Duration.ofMillis(timeoutMillis));
+			return socketTimeout(Duration.ofMillis(timeoutMillis));
 		}
 
 		public Builder user(final String user) {
-			lettuceClientConfig.user = user;
+			this.user = user;
 			return this;
 		}
 
 		public Builder password(final String password) {
-			lettuceClientConfig.password = password;
+			this.password = password;
 			return this;
 		}
 
 		public Builder credentials(final String user, final String password) {
-			lettuceClientConfig.user = user;
-			lettuceClientConfig.password = password;
+			this.user = user;
+			this.password = password;
+			return this;
+		}
+
+		public Builder credentials(final RedisCredentials redisCredentials) {
+			lettuceClientConfig.credentialsProvider = new StaticCredentialsProvider(redisCredentials);
+			return this;
+		}
+
+		public Builder credentials(
+				final RedisCredentialsProvider.ImmediateRedisCredentialsProvider credentialsProvider) {
+			lettuceClientConfig.credentialsProvider = credentialsProvider;
 			return this;
 		}
 
@@ -195,49 +283,49 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 			return this;
 		}
 
+		public Builder computationThreadPoolSize(int computationThreadPoolSize) {
+			lettuceClientConfig.computationThreadPoolSize = computationThreadPoolSize;
+			return this;
+		}
+
+		public Builder ioThreadPoolSize(int ioThreadPoolSize) {
+			lettuceClientConfig.ioThreadPoolSize = ioThreadPoolSize;
+			return this;
+		}
+
+		public Builder requestQueueSize(int requestQueueSize) {
+			lettuceClientConfig.requestQueueSize = requestQueueSize;
+			return this;
+		}
+
 		public Builder ssl(boolean isSsl) {
 			lettuceClientConfig.isSsl = isSsl;
 			return this;
 		}
 
-		public Builder sslSocketFactory(SSLSocketFactory sslSocketFactory) {
-			lettuceClientConfig.sslSocketFactory = sslSocketFactory;
+		public Builder sslOptions(SslOptions sslOptions) {
+			lettuceClientConfig.sslOptions = sslOptions;
 			return this;
 		}
 
-		public Builder sslParameters(SSLParameters sslParameters) {
-			lettuceClientConfig.sslParameters = sslParameters;
+		public Builder readOnlyForRedisClusterReplicas(boolean readOnlyForRedisClusterReplicas) {
+			lettuceClientConfig.readOnlyForRedisClusterReplicas = readOnlyForRedisClusterReplicas;
 			return this;
 		}
 
-		public Builder hostnameVerifier(HostnameVerifier hostnameVerifier) {
-			lettuceClientConfig.hostnameVerifier = hostnameVerifier;
-			return this;
+		public Builder readOnlyForRedisClusterReplicas() {
+			return readOnlyForRedisClusterReplicas(true);
 		}
 
 		public DefaultLettuceClientConfig build() {
+			if(lettuceClientConfig.credentialsProvider == null){
+				if(Validate.hasText(password)){
+					lettuceClientConfig.credentialsProvider =
+							new StaticCredentialsProvider(RedisCredentials.just(user, password));
+				}
+			}
+
 			return lettuceClientConfig;
-		}
-
-		public static LettuceClientConfig create(final int connectionTimeoutMillis, final int soTimeoutMillis,
-												 final String user, final String password, final int database,
-												 final String clientName, final boolean isSsl,
-												 final SSLSocketFactory sslSocketFactory,
-												 final SSLParameters sslParameters,
-												 final HostnameVerifier hostnameVerifier) {
-			return new DefaultLettuceClientConfig(Duration.ofMillis(connectionTimeoutMillis),
-					Duration.ofMillis(soTimeoutMillis), user, password, database, clientName, isSsl, sslSocketFactory
-					, sslParameters, hostnameVerifier);
-		}
-
-		public static LettuceClientConfig create(final Duration connectionTimeout, final Duration soTimeoutMillis,
-												 final String user, final String password, final int database,
-												 final String clientName, final boolean isSsl,
-												 final SSLSocketFactory sslSocketFactory,
-												 final SSLParameters sslParameters,
-												 final HostnameVerifier hostnameVerifier) {
-			return new DefaultLettuceClientConfig(connectionTimeout, soTimeoutMillis, user, password, database,
-					clientName, isSsl, sslSocketFactory, sslParameters, hostnameVerifier);
 		}
 
 	}

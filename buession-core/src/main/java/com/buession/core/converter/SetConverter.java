@@ -19,16 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
 import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Modifier;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Set 转换器
@@ -41,12 +42,7 @@ import java.util.stream.Stream;
  * @author Yong.Teng
  * @since 1.3.0
  */
-public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
-
-	/**
-	 * Set item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class SetConverter<S, T> extends AbstractCollectionConverter<S, T, Set<S>, Set<T>> {
 
 	/**
 	 * 构造函数
@@ -55,24 +51,22 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 	 * 		Set item 转换器
 	 */
 	public SetConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
+
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Set<T> convert(final Set<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			Stream<T> stream = source.stream().map(itemConverter::convert);
-
+	protected Collector<T, ?, Set<T>> collect(final Set<S> source) {
+		if(Modifier.isPublic(source.getClass().getModifiers())){
 			try{
-				return stream.collect(
-						Collectors.toCollection(()->(Set<T>) BeanUtils.instantiateClass(source.getClass())));
+				return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
 			}catch(Exception e){
-				return stream.collect(Collectors.toSet());
+				//
 			}
 		}
+
+		return Collectors.toSet();
 	}
 
 }

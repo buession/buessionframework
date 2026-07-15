@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -27,11 +27,11 @@ package com.buession.net;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
+import com.buession.lang.NameValue;
 
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -40,22 +40,15 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 1.3.0
  */
-public class UrlParameter {
+public class UrlParameter extends NameValue<String, String> {
 
-	/**
-	 * 参数名称
-	 */
-	private String name;
-
-	/**
-	 * 参数值
-	 */
-	private String value;
+	private final static long serialVersionUID = 2759434143557141504L;
 
 	/**
 	 * 构造函数
 	 */
 	public UrlParameter() {
+		super();
 	}
 
 	/**
@@ -94,7 +87,7 @@ public class UrlParameter {
 	 */
 	public void setName(@NotNull final String name) {
 		Assert.isBlank(name, "Parameter name cloud not be null or empty.");
-		this.name = name;
+		super.setName(name);
 	}
 
 	/**
@@ -117,38 +110,15 @@ public class UrlParameter {
 	 */
 	public void setValue(final String value, final boolean encode) {
 		if(encode){
-			try{
-				this.value = value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, "UTF-8");
-			}catch(UnsupportedEncodingException e){
-				throw new RuntimeException("UTF-8 encoding does not support.");
-			}
+			super.setValue(value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, StandardCharsets.UTF_8));
 		}else{
-			this.value = Optional.ofNullable(value).orElse(Constants.EMPTY_STRING);
+			super.setValue(Optional.ofNullable(value).orElse(Constants.EMPTY_STRING));
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, value);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj){
-			return true;
-		}
-
-		if(obj instanceof UrlParameter){
-			UrlParameter that = (UrlParameter) obj;
-			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
-		}
-
-		return false;
 	}
 
 	@Override
 	public String toString() {
-		return Validate.hasText(name) ? name + '=' + value : Constants.EMPTY_STRING;
+		return Validate.hasText(getName()) ? getName() + '=' + getValue() : Constants.EMPTY_STRING;
 	}
 
 }

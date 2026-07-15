@@ -19,14 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.SafeEncoder;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 迭代结果
@@ -36,7 +38,9 @@ import java.util.Arrays;
  *
  * @author Yong.Teng
  */
-public class ScanResult<V> {
+public class ScanResult<V> implements Serializable {
+
+	private final static long serialVersionUID = -5280416513393735130L;
 
 	/**
 	 * 游标
@@ -51,7 +55,7 @@ public class ScanResult<V> {
 	/**
 	 * 结果集
 	 */
-	private final V results;
+	private final List<V> results;
 
 	/**
 	 * 构造函数
@@ -61,7 +65,7 @@ public class ScanResult<V> {
 	 * @param results
 	 * 		结果集
 	 */
-	public ScanResult(final byte[] cursor, final V results){
+	public ScanResult(final byte[] cursor, final List<V> results) {
 		this.cursor = cursor;
 		this.results = results;
 	}
@@ -74,7 +78,7 @@ public class ScanResult<V> {
 	 * @param results
 	 * 		结果集
 	 */
-	public ScanResult(final String cursor, final V results){
+	public ScanResult(final String cursor, final List<V> results) {
 		this(SafeEncoder.encode(cursor), results);
 		this.cursorAsString = cursor;
 	}
@@ -84,7 +88,7 @@ public class ScanResult<V> {
 	 *
 	 * @return 游标
 	 */
-	public byte[] getCursor(){
+	public byte[] getCursor() {
 		return cursor;
 	}
 
@@ -93,7 +97,7 @@ public class ScanResult<V> {
 	 *
 	 * @return 游标字符串形式
 	 */
-	public String getCursorAsString(){
+	public String getCursorAsString() {
 		if(cursorAsString == null){
 			cursorAsString = SafeEncoder.encode(cursor);
 		}
@@ -106,7 +110,7 @@ public class ScanResult<V> {
 	 *
 	 * @return 结果集
 	 */
-	public V getResults(){
+	public List<V> getResults() {
 		return results;
 	}
 
@@ -115,7 +119,7 @@ public class ScanResult<V> {
 	 *
 	 * @return 完成迭代返回 true；否则，返回 false
 	 */
-	public boolean isCompleteIteration(){
+	public boolean isCompleteIteration() {
 		return Arrays.equals(Constants.SCAN_POINTER_START_BINARY, getCursor());
 	}
 

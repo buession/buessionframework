@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -34,13 +34,13 @@ import redis.clients.jedis.Response;
  *
  * @author Yong.Teng
  */
-public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
+public class JedisResult<SV, TV> extends FutureResult<SV, Response<SV>> {
 
 	public JedisResult(final Response<SV> resultHolder) {
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
+	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter) {
 		super(resultHolder, converter);
 	}
 
@@ -49,15 +49,11 @@ public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
 		return getHolder().get();
 	}
 
-	public final static class Builder<SV, TV> {
-
-		private final Response<SV> response;
-
-		private Converter<SV, TV> converter;
+	public final static class Builder<SV, TV>
+			extends BaseBuilder<SV, TV, Response<SV>, Response<SV>, JedisResult<SV, TV>> {
 
 		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
-			this.response = response;
-			this.converter = converter;
+			super(response, converter);
 		}
 
 		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
@@ -69,6 +65,7 @@ public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
 			return this;
 		}
 
+		@Override
 		public JedisResult<SV, TV> build() {
 			return new JedisResult<>(response, converter);
 		}

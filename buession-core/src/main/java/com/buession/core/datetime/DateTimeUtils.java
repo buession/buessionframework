@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.datetime;
@@ -84,14 +84,14 @@ public class DateTimeUtils {
 		try{
 			result = LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 		}catch(Exception e){
-			result = null;
+			//
 		}
 
 		if(result == null){
 			try{
 				result = LocalDateTime.parse(value, DateTimeFormatter.ISO_ZONED_DATE_TIME);
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -99,7 +99,7 @@ public class DateTimeUtils {
 			try{
 				result = LocalDateTime.parse(value);
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -107,7 +107,7 @@ public class DateTimeUtils {
 			try{
 				result = LocalDateTime.parse(value.toUpperCase(), DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"));
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -115,7 +115,7 @@ public class DateTimeUtils {
 			try{
 				result = LocalDateTime.parse(value.toUpperCase(), DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a"));
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -123,7 +123,7 @@ public class DateTimeUtils {
 			try{
 				result = LocalDateTime.parse(value, DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"));
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -133,7 +133,7 @@ public class DateTimeUtils {
 				ld = LocalDate.parse(value, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 				result = LocalDateTime.of(ld, LocalTime.now(zoneId));
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -142,7 +142,7 @@ public class DateTimeUtils {
 				ld = LocalDate.parse(value);
 				result = LocalDateTime.of(ld, LocalTime.now(zoneId));
 			}catch(Exception e){
-				result = null;
+				//
 			}
 		}
 
@@ -492,24 +492,16 @@ public class DateTimeUtils {
 		if(chronoUnit == null){
 			return null;
 		}else{
-			switch(chronoUnit){
-				case DAYS:
-					return TimeUnit.DAYS;
-				case HOURS:
-					return TimeUnit.HOURS;
-				case MINUTES:
-					return TimeUnit.MINUTES;
-				case SECONDS:
-					return TimeUnit.SECONDS;
-				case MICROS:
-					return TimeUnit.MICROSECONDS;
-				case MILLIS:
-					return TimeUnit.MILLISECONDS;
-				case NANOS:
-					return TimeUnit.NANOSECONDS;
-				default:
-					throw new UnsupportedOperationException("Temporal unit is not supported");
-			}
+			return switch(chronoUnit){
+				case DAYS -> TimeUnit.DAYS;
+				case HOURS -> TimeUnit.HOURS;
+				case MINUTES -> TimeUnit.MINUTES;
+				case SECONDS -> TimeUnit.SECONDS;
+				case MICROS -> TimeUnit.MICROSECONDS;
+				case MILLIS -> TimeUnit.MILLISECONDS;
+				case NANOS -> TimeUnit.NANOSECONDS;
+				default -> throw new UnsupportedOperationException("Temporal unit is not supported");
+			};
 		}
 	}
 
@@ -525,24 +517,16 @@ public class DateTimeUtils {
 		if(timeUnit == null){
 			return null;
 		}else{
-			switch(timeUnit){
-				case DAYS:
-					return ChronoUnit.DAYS;
-				case HOURS:
-					return ChronoUnit.HOURS;
-				case MINUTES:
-					return ChronoUnit.MINUTES;
-				case MICROSECONDS:
-					return ChronoUnit.MICROS;
-				case MILLISECONDS:
-					return ChronoUnit.MILLIS;
-				case NANOSECONDS:
-					return ChronoUnit.NANOS;
-				case SECONDS:
-					return ChronoUnit.SECONDS;
-				default:
-					return ChronoUnit.SECONDS;
-			}
+			return switch(timeUnit){
+				case DAYS -> ChronoUnit.DAYS;
+				case HOURS -> ChronoUnit.HOURS;
+				case MINUTES -> ChronoUnit.MINUTES;
+				case MICROSECONDS -> ChronoUnit.MICROS;
+				case MILLISECONDS -> ChronoUnit.MILLIS;
+				case NANOSECONDS -> ChronoUnit.NANOS;
+				case SECONDS -> ChronoUnit.SECONDS;
+				default -> ChronoUnit.SECONDS;
+			};
 		}
 	}
 

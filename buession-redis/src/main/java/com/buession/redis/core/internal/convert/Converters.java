@@ -19,19 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.SetConverter;
-import com.buession.core.converter.SetListConverter;
+import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -39,51 +39,31 @@ import com.buession.redis.utils.SafeEncoder;
  */
 public interface Converters {
 
-	static ArrayConverter<Object, String> objectArrayToStringArrayConverter() {
-		return new ArrayConverter<>((o)->o == null ? null : o.toString(), String.class);
-	}
-
-	static ArrayConverter<Object, byte[]> objectArrayToBinaryArrayConverter() {
-		return new ArrayConverter<>((o)->o == null ? null : SafeEncoder.encode(o.toString()), byte[].class);
-	}
-
-	static ListConverter<String, byte[]> listStringToBinary() {
+	static ListConverter<byte[], String> binaryListStringListConverter() {
 		return new ListConverter<>(SafeEncoder::encode);
 	}
 
-	static ListConverter<byte[], String> listBinaryToString() {
+	static ListConverter<String, byte[]> stringListBinaryListConverter() {
 		return new ListConverter<>(SafeEncoder::encode);
 	}
 
-	static SetConverter<String, byte[]> setStringToBinary() {
+	static <T> Converter<List<T>, T> list0Converter() {
+		return (value)->Validate.isEmpty(value) ? null : value.get(0);
+	}
+
+	static SetConverter<byte[], String> binarySetStringSetConverter() {
 		return new SetConverter<>(SafeEncoder::encode);
 	}
 
-	static SetConverter<byte[], String> setBinaryToString() {
+	static SetConverter<String, byte[]> stringSetBinarySetConverter() {
 		return new SetConverter<>(SafeEncoder::encode);
 	}
 
-	static ListSetConverter<String, byte[]> listSetStringToBinary() {
-		return new ListSetConverter<>(SafeEncoder::encode);
-	}
-
-	static ListSetConverter<byte[], String> listSetBinaryToString() {
-		return new ListSetConverter<>(SafeEncoder::encode);
-	}
-
-	static SetListConverter<String, byte[]> setListStringToBinary() {
-		return new SetListConverter<>(SafeEncoder::encode);
-	}
-
-	static SetListConverter<byte[], String> setListBinaryToString() {
-		return new SetListConverter<>(SafeEncoder::encode);
-	}
-
-	static MapConverter<String, String, byte[], byte[]> mapStringToBinary() {
+	static MapConverter<byte[], byte[], String, String> binaryMapStringMapConverter() {
 		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
-	static MapConverter<byte[], byte[], String, String> mapBinaryToString() {
+	static MapConverter<String, String, byte[], byte[]> stringMapBinaryMapConverter() {
 		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
 	}
 

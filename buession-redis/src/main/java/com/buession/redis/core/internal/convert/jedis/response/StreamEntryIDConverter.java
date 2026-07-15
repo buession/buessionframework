@@ -19,18 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
-
-import java.util.List;
 
 /**
  * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
@@ -42,30 +38,7 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 
 	@Override
 	public StreamEntryId convert(final StreamEntryID source) {
-		return new StreamEntryId(source.getTime(), source.getSequence());
-	}
-
-	public static ListConverter<StreamEntryID, StreamEntryId> listConverter() {
-		return new ListConverter<>(new StreamEntryIDConverter());
-	}
-
-	public static MapEntryMapConverter<StreamEntryID, List<StreamEntryID>, StreamEntryId, List<StreamEntryId>> mapEntryMapConverter() {
-		return new MapEntryMapConverter<>(new StreamEntryIDConverter(), listConverter());
-	}
-
-	/**
-	 * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	public final static class BinaryStreamEntryIdConverter implements Converter<byte[], StreamEntryId> {
-
-		@Override
-		public StreamEntryId convert(final byte[] source) {
-			return new StreamEntryId(source);
-		}
-
+		return source == null ? null : new StreamEntryId(source.getTime(), source.getSequence());
 	}
 
 }

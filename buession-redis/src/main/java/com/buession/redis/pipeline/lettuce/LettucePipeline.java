@@ -19,157 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.lettuce;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.core.internal.lettuce.LettuceResult;
-import com.buession.redis.exception.RedisPipelineException;
 import com.buession.redis.pipeline.Pipeline;
-import io.lettuce.core.LettuceFutures;
-import io.lettuce.core.RedisFuture;
-import io.lettuce.core.api.PipeliningFlushState;
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.output.CommandOutput;
-import io.lettuce.core.protocol.RedisCommand;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.TimeUnit;
 
 /**
+ * Lettuce 管道
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettucePipeline implements Pipeline {
+public final class LettucePipeline<K, V> implements Pipeline {
 
-	private final PipeliningFlushState flushState;
+	private final io.lettuce.core.Pipeline<K, V> delegate;
 
-	private final StatefulConnection<byte[], byte[]> connection;
-
-	private Queue<LettuceResult<?, ?>> ppline;
-
-	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState) {
-		Assert.isNull(flushState, "Redis Pipeline cloud not be null.");
-		this.connection = connection;
-		this.flushState = flushState;
-		this.flushState.onOpen(connection);
-	}
-
-	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState
-			, final Queue<LettuceResult<?, ?>> ppline) {
-		this(connection, flushState);
-		this.ppline = Optional.ofNullable(ppline).orElse(new LinkedList<>());
+	public LettucePipeline(final io.lettuce.core.Pipeline<K, V> pipeline) {
+		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
+		this.delegate = pipeline;
 	}
 
 	@Override
 	public void sync() {
-		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
-
-		for(LettuceResult<?, ?> result : ppline){
-			futures.add(result.getHolder());
-		}
-
-		try{
-			boolean done = LettuceFutures.awaitAll(connection.getTimeout().toMillis(), TimeUnit.MILLISECONDS,
-					futures.toArray(new RedisFuture[futures.size()]));
-
-			Exception problem = null;
-
-			if(done){
-				CommandOutput<?, ?, ?> output;
-
-				for(LettuceResult<?, ?> result : ppline){
-					output = result.getHolder().getOutput();
-					if(output.hasError()){
-						Exception err = new RedisPipelineException(output.getError());
-						if(problem == null){
-							problem = err;
-						}
-					}else{
-						result.get();
-					}
-				}
-			}
-
-			if(problem != null){
-				throw new RedisPipelineException(problem.getMessage(), problem);
-			}
-
-			if(done){
-				return;
-			}
-
-			throw new RedisPipelineException("Redis command timed out");
-		}catch(Exception e){
-			throw new RedisPipelineException(e);
-		}
+		delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll() {
-		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
-
-		for(LettuceResult<?, ?> result : ppline){
-			futures.add(result.getHolder());
-		}
-
-		try{
-			boolean done = LettuceFutures.awaitAll(connection.getTimeout().toMillis(), TimeUnit.MILLISECONDS,
-					futures.toArray(new RedisFuture[futures.size()]));
-
-			List<Object> results = new ArrayList<>(futures.size());
-
-			Exception problem = null;
-
-			if(done){
-				CommandOutput<?, ?, ?> output;
-
-				for(LettuceResult<?, ?> result : ppline){
-					output = result.getHolder().getOutput();
-					if(output.hasError()){
-						Exception err = new RedisPipelineException(output.getError());
-						if(problem == null){
-							problem = err;
-						}
-						results.add(err);
-					}else{
-						try{
-							results.add(result.get());
-						}catch(Exception e){
-							if(problem == null){
-								problem = e;
-							}
-							results.add(e);
-						}
-					}
-				}
-			}
-
-			if(problem != null){
-				throw new RedisPipelineException(problem.getMessage(), problem);
-			}
-
-			if(done){
-				return results;
-			}
-
-			throw new RedisPipelineException("Redis command timed out");
-		}catch(Exception e){
-			throw new RedisPipelineException(e);
-		}
+		return delegate.syncAndReturnAll();
 	}
 
 	@Override
 	public void close() {
-		flushState.onClose(connection);
-		if(ppline != null){
-			ppline.clear();
+		if(delegate != null){
+			delegate.close();
 		}
 	}
 

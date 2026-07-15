@@ -33,6 +33,7 @@ import org.apache.commons.beanutils.converters.ClassConverter;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class ClassPropertyConverter extends AbstractPropertyConverter<Class<?>> {
 
 	@Override

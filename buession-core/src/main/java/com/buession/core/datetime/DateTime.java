@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.datetime;
@@ -33,7 +33,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,25 +108,12 @@ public class DateTime {
 			return -1;
 		}
 
-		switch(month){
-			case 1:
-			case 3:
-			case 5:
-			case 7:
-			case 8:
-			case 10:
-			case 12:
-				return 31;
-			case 4:
-			case 6:
-			case 9:
-			case 11:
-				return 30;
-			case 2:
-				return isLeapYear(year) ? 29 : 28;
-			default:
-				return -1;
-		}
+		return switch(month){
+			case 1, 3, 5, 7, 8, 10, 12 -> 31;
+			case 4, 6, 9, 11 -> 30;
+			case 2 -> isLeapYear(year) ? 29 : 28;
+			default -> -1;
+		};
 	}
 
 	/**

@@ -19,59 +19,51 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.StreamMessage;
-import org.springframework.lang.Nullable;
+
+import java.util.Map;
 
 /**
  * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
  *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamMessageConverter implements Converter<StreamMessage<byte[], byte[]>, StreamEntry> {
+public final class StreamMessageConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, StreamMessage<SK, SV>, StreamEntry<TK, TV>> {
 
-	private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
-			Converters.mapBinaryToString();
+	public StreamMessageConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		super(keyConverter, valueConverter);
+	}
 
-	@Nullable
 	@Override
-	public StreamEntry convert(final StreamMessage<byte[], byte[]> source) {
-		return new StreamEntry(new StreamEntryId(source.getId()), binaryToStringMapConverter.convert(source.getBody()));
-	}
-
-	public static ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listConverter() {
-		return new ListConverter<>(new StreamMessageConverter());
-	}
-
-	/**
-	 * Lettuce  {@link StreamMessage} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class StreamMessageStreamEntryIdConverter implements Converter<StreamMessage<byte[], byte[]>,
-			StreamEntryId> {
-
-		@Override
-		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
-			return new StreamEntryId(source.getId());
+	public StreamEntry<TK, TV> convert(final StreamMessage<SK, SV> source) {
+		if(source == null){
+			return null;
 		}
 
-		public static ListConverter<StreamMessage<byte[], byte[]>, StreamEntryId> listConverter() {
-			return new ListConverter<>(new StreamMessageStreamEntryIdConverter());
-		}
-
+		final MapConverter<SK, SV, TK, TV> mapConverter = new MapConverter<>(keyConverter, valueConverter);
+		final Map<TK, TV> fields = mapConverter.convert(source.getBody());
+		return new StreamEntry<>(new StreamEntryId(source.getId()), fields);
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -28,7 +28,6 @@ import com.buession.core.utils.StringUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderParse<T> {
 
 	@Override
-	public List<Header> parse(final T headers){
+	public List<Header> parse(final T headers) {
 		if(headers == null){
 			return null;
 		}
@@ -53,9 +52,8 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 
 		doParse(headers, headersMap);
 
-		return Collections.unmodifiableList(
-				headersMap.keySet().stream().map((name)->new Header(name, StringUtils.join(headersMap.get(name), ", ")))
-						.collect(Collectors.toList()));
+		return headersMap.keySet().stream().map((name)->new Header(name, StringUtils.join(headersMap.get(name), ", ")))
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	protected abstract void doParse(final T headers, final Multimap<String, String> headersMap);

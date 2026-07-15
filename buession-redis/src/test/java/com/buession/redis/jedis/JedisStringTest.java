@@ -26,6 +26,7 @@ package com.buession.redis.jedis;
 
 import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.ScanResult;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +43,8 @@ public class JedisStringTest extends AbstractJedisRedisTest {
 	@Test
 	public void set() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertTrue(redisTemplate.set("jedis", new Options()) == Status.SUCCESS);
+		User user = new User(1000, "buession");
+		Assertions.assertTrue(redisTemplate.set("user", user) == Status.SUCCESS);
 	}
 
 	@Test
@@ -55,8 +57,8 @@ public class JedisStringTest extends AbstractJedisRedisTest {
 	@Test
 	public void getObject() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Options result = redisTemplate.getObject("jedis", Options.class);
-		System.out.println(result);
+		User user = redisTemplate.get("user", User.class);
+		System.out.println(user);
 	}
 
 }

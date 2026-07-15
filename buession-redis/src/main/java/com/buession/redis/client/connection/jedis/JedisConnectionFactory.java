@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -32,7 +32,6 @@ import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSou
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
-import com.buession.redis.exception.RedisConnectionFailureException;
 
 /**
  * Jedis Redis 连接工厂
@@ -49,45 +48,40 @@ public final class JedisConnectionFactory extends AbstractConnectionFactory<Jedi
 	@Override
 	public RedisStandaloneConnection getStandaloneConnection() {
 		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new JedisConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}
+		return new JedisConnection(dataSource, dataSource.getPoolConfig());
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
+		final JedisSentinelConnection connection = new JedisSentinelConnection(dataSource, dataSource.getPoolConfig());
 
-		if(dataSource.getPoolConfig() == null){
-			return new JedisSentinelConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSentinelConnectTimeout(),
-					dataSource.getSentinelSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-					dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
-					dataSource.getSslConfiguration());
+		if(dataSource.getSentinelConnectTimeout() > 0){
+			connection.setSentinelConnectTimeout(dataSource.getSentinelConnectTimeout());
 		}
+		if(dataSource.getSentinelSoTimeout() > 0){
+			connection.setSentinelSoTimeout(dataSource.getSentinelSoTimeout());
+		}
+
+		return connection;
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
+		final JedisClusterConnection connection = new JedisClusterConnection(dataSource, dataSource.getPoolConfig());
 
-		if(dataSource.getPoolConfig() == null){
-			return new JedisClusterConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisClusterConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
+		if(dataSource.getMaxRedirects() > 0){
+			connection.setMaxRedirects(dataSource.getMaxRedirects());
 		}
+		if(dataSource.getMaxTotalRetries() > 0){
+			connection.setMaxTotalRetries(dataSource.getMaxTotalRetries());
+		}
+		if(dataSource.getTopologyRefreshPeriod() > 0){
+			connection.setTopologyRefreshPeriod(dataSource.getTopologyRefreshPeriod());
+		}
+
+		return connection;
 	}
 
 }

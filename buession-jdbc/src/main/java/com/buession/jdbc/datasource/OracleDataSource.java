@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -589,11 +589,7 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 					Method method = dataSource.getClass().getMethod("setPdbRoles", Properties.class);
 					MethodUtils.setAccessible(method);
 					method.invoke(dataSource, this.getPdbRoles());
-				}catch(NoSuchMethodException e){
-					//
-				}catch(InvocationTargetException e){
-					//
-				}catch(IllegalAccessException e){
+				}catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e){
 					//
 				}
 			}

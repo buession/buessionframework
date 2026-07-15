@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
@@ -37,7 +37,19 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractAnnotationResolver implements AnnotationResolver {
 
-	protected <A extends Annotation> Method preGetAnnotation(final MethodInvocation mi, final Class<A> clazz){
+	/**
+	 * 获取方法注解前置调用
+	 *
+	 * @param mi
+	 * 		方法调用的描述
+	 * @param clazz
+	 * 		当前类
+	 * @param <A>
+	 * 		注解类型
+	 *
+	 * @return 当前方法
+	 */
+	protected <A extends Annotation> Method preGetAnnotation(final MethodInvocation mi, final Class<A> clazz) {
 		Assert.isNull(mi, "method argument cloud not be null");
 		Method method = mi.getMethod();
 		Assert.isNull(method,

@@ -19,15 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.Client;
+import com.buession.net.HostAndPort;
 import com.buession.redis.core.SlowLog;
 
 import java.util.List;
@@ -48,27 +46,16 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 			final List<Object> tmp = (List<Object>) source;
 
 			if(tmp.size() == 6){
-				final Client client = parseHostAndPort(tmp.get(4));
-				final String clientName = parseClientName(tmp.get(5));
-
 				return new SlowLog((long) tmp.get(0), (long) tmp.get(1), (long) tmp.get(2), parseArgs(tmp.get(3)),
-						client, clientName);
+						parseHostAndPort(tmp.get(4)), parseClientName(tmp.get(5)));
 			}
 		}
 
 		return null;
 	}
 
-	private static Client parseHostAndPort(final Object value) {
-		final Client client = new Client();
-
-		if(value != null){
-			String[] hostAndPort = StringUtils.split(new String((byte[]) value), ':');
-			client.setHost(hostAndPort[0]);
-			client.setPort(Integer.parseInt(hostAndPort[1]));
-		}
-
-		return client;
+	private static HostAndPort parseHostAndPort(final Object value) {
+		return value == null ? null : HostAndPort.create(new String((byte[]) value));
 	}
 
 	private static String parseClientName(final Object value) {
@@ -83,10 +70,6 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 
 		final List<byte[]> tmp = (List<byte[]>) value;
 		return tmp.stream().map((v)->v == null ? null : new String(v)).collect(Collectors.toList());
-	}
-
-	public static ListConverter<Object, SlowLog> listConverter() {
-		return new ListConverter<>(new SlowlogConverter());
 	}
 
 }

@@ -19,41 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Stream 消息内容
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntry implements Serializable {
-
-	private final static long serialVersionUID = 6763043914884686198L;
-
-	private final StreamEntryId id;
-
-	private final Map<String, String> fields;
-
-	public StreamEntry(final StreamEntryId id, final Map<String, String> fields){
-		this.id = id;
-		this.fields = fields;
-	}
-
-	public StreamEntryId getId(){
-		return id;
-	}
-
-	public Map<String, String> getFields(){
-		return fields;
-	}
+public record StreamEntry<K, V>(StreamEntryId id, Map<K, V> fields) {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return id + " " + fields;
 	}
 

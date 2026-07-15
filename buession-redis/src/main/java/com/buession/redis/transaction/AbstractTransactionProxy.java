@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.FutureResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +45,10 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> implements TransactionProxy<T, FR> {
+public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object, ?>>
+		implements TransactionProxy<T, FR> {
 
-	private Transaction target;
+	private final Transaction target;
 
 	private final T object;
 
@@ -54,19 +56,27 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> im
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 *
+	 * @param target
+	 * 		事务 {@link Transaction} 实例
+	 * @param object
+	 * 		原生对象
+	 */
 	public AbstractTransactionProxy(final Transaction target, final T object) {
-		//Assert.isNull(target, "Redis Transaction cloud not be null.");
+		Assert.isNull(target, "Redis Transaction cloud not be null.");
 		this.target = target;
 		this.object = object;
 	}
 
 	@Override
-	public T getObject() {
+	public final T getObject() {
 		return object;
 	}
 
 	@Override
-	public Queue<FR> getTxResults() {
+	public final Queue<FR> getTxResults() {
 		return txResults;
 	}
 
@@ -74,7 +84,7 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> im
 	public List<Object> exec() {
 		logger.info("Redis transaction exec.");
 		target.exec();
-		return txResults.stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
+		return getTxResults().stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -86,12 +96,8 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> im
 	@Override
 	public void close() {
 		logger.info("Redis pipeline close.");
-		txResults.clear();
+		getTxResults().clear();
 		target.close();
-	}
-
-	protected void setTarget(Transaction target) {
-		this.target = target;
 	}
 
 }

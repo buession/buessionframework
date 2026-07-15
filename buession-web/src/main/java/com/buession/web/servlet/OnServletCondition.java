@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
@@ -39,14 +39,15 @@ public class OnServletCondition implements Condition {
 	private static volatile Boolean result = null;
 
 	@Override
-	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata){
+	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata) {
 		if(result == null){
 			synchronized(OnServletCondition.class){
 				if(result == null){
 					ClassLoader classLoader =
 							context == null || context.getClassLoader() ==
 									null ? OnServletCondition.class.getClassLoader() : context.getClassLoader();
-					result = ClassUtils.isPresent("javax.servlet.Filter", classLoader);
+					result = ClassUtils.isPresent("jakarta.servlet.Filter", classLoader) ||
+							ClassUtils.isPresent("javax.servlet.Filter", classLoader);
 				}
 			}
 		}

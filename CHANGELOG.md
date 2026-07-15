@@ -1,6 +1,51 @@
 Buession Framework Changelog
 ===========================
 
+## [4.0.0](https://github.com/buession/buessionframework/releases/tag/v4.0.0) (2026-07-15)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v4.0.0)
+- [geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 4.4.0
+
+### ⭐ 新特性
+
+- 新增 com.buession.core.serializer.FastJson2JsonSerializer 和 com.buession.core.deserializer.FastJson2JsonDeserializer
+- redis 序列化和反序列化新增 fastjson2 支持
+- 新增 JDK HttpClient 支持
+
+### 🔔 变化
+
+- 删除 java.io.FileAlreadyExistedException，迁移至 com.buession.lang.FileAlreadyExisteException
+- 删除 org.apache.ibatis.type.DefaultEnumTypeHandler
+- 删除 com.buession.httpclient.IBaseHttpClient
+- GEO IP Model 字段发生变化
+- 删除 com.buession.beans.BeanUtils#toMap()
+- 删除 buession-velocity 模块
+- 删除 com.buession.redis.client.connection.datasource.DataSource#getConnection()
+- MyBatisDao 使用构造方式注入 SqlSessionTemplate 和 MongoDBDao 使用构造方法注入 MongoTemplate
+- 删除 RedisTemplate 已废弃的方法
+- 优化 RedisTemplate 内部实现
+- 模块 buession-beans 不再推荐使用
+
+### 🐞 Bug 修复
+
+- 修复 Converter 中链式操作的问题
+- 修复 com.buession.httpclient.AbstractHttpAsyncClient#put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
+- 修复 com.buession.httpclient.AbstractHttpAsyncClient#report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
+- 修复 RedisTemplate 中无限递归调用的 BUG
+- 修复 RedisTemplate 中 lMove(final String key, final String destKey, final Direction from, final Direction to) 中原 key 设置成目标 key 了的 BUG；
+- 修复 RedisTemplate 中 blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout) 中原 key 设置成目标 key 了的 BUG
+- 修复 jackson 序列化、反序列化不支持 LocalDate、LocalTime、LocalDateTime 的 BUG
+
+### 📔 文档
+
+- 完善代码注释
+
+
+---
+
+
 ## [3.0.1](https://github.com/buession/buessionframework/releases/tag/v3.0.1) (2025-05-19)
 
 ### 🔨依赖升级

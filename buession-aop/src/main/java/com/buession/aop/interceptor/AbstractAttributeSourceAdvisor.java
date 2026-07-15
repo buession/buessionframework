@@ -30,6 +30,7 @@ import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * @author Yong.Teng

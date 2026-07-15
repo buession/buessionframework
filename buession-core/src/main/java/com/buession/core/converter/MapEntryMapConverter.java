@@ -25,7 +25,6 @@
 package com.buession.core.converter;
 
 import com.buession.core.builder.MapBuilder;
-import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
@@ -44,17 +43,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class MapEntryMapConverter<SK, SV, TK, TV> implements Converter<Map.Entry<SK, SV>, Map<TK, TV>> {
-
-	/**
-	 * Map key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * Map value 转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public class MapEntryMapConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, Map.Entry<SK, SV>, Map<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -65,11 +55,9 @@ public class MapEntryMapConverter<SK, SV, TK, TV> implements Converter<Map.Entry
 	 * 		Map value 转换器
 	 */
 	public MapEntryMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
-	@Nullable
 	@Override
 	public Map<TK, TV> convert(final Map.Entry<SK, SV> source) {
 		if(source == null){

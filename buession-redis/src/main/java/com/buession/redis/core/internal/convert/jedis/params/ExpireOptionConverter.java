@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.ExpireOption;
 import redis.clients.jedis.args.ExpiryOption;
 
 /**
@@ -38,18 +38,16 @@ public final class ExpireOptionConverter implements Converter<ExpireOption, Expi
 
 	@Override
 	public ExpiryOption convert(final ExpireOption source) {
-		switch(source){
-			case NX:
-				return ExpiryOption.NX;
-			case XX:
-				return ExpiryOption.XX;
-			case GT:
-				return ExpiryOption.GT;
-			case LT:
-				return ExpiryOption.LT;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case NX -> ExpiryOption.NX;
+			case XX -> ExpiryOption.XX;
+			case GT -> ExpiryOption.GT;
+			case LT -> ExpiryOption.LT;
+		};
 	}
 
 }

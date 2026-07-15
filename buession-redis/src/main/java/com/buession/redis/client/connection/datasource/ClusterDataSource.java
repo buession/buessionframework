@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.client.connection.RedisNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Redis 集群（Cluster）模式数据源
@@ -35,17 +35,14 @@ import java.util.List;
  */
 public interface ClusterDataSource extends DataSource {
 
-	/**
-	 * 默认最大重定向次数
-	 */
-	int DEFAULT_MAX_REDIRECTS = 5;
+	int DEFAULT_MAX_ATTEMPTS = 5;
 
 	/**
 	 * 获取集群主机节点
 	 *
 	 * @return 集群主机节点
 	 */
-	List<RedisNode> getNodes();
+	Set<RedisNode> getNodes();
 
 	/**
 	 * 设置集群主机节点
@@ -53,7 +50,7 @@ public interface ClusterDataSource extends DataSource {
 	 * @param nodes
 	 * 		集群主机节点
 	 */
-	void setNodes(List<RedisNode> nodes);
+	void setNodes(Set<RedisNode> nodes);
 
 	/**
 	 * 返回最大重定向次数
@@ -71,18 +68,22 @@ public interface ClusterDataSource extends DataSource {
 	void setMaxRedirects(int maxRedirects);
 
 	/**
-	 * 返回最大重试持续时长（单位：秒）
+	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
-	 * @return 最大重试持续时长
+	 * @return 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
 	 */
-	int getMaxTotalRetriesDuration();
+	int getTopologyRefreshPeriod();
 
 	/**
-	 * 设置最大重试持续时长（单位：秒）
+	 * 设置定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试持续时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
+	 *
+	 * @since 4.0.0
 	 */
-	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
+	void setTopologyRefreshPeriod(int topologyRefreshPeriod);
 
 }

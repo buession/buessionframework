@@ -25,9 +25,12 @@
 package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -53,7 +56,13 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 	@Test
 	public void info() {
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.info());
+		System.out.println(redisTemplate.info().toPrettyString());
+	}
+
+	@Test
+	public void commandInfo() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.commandInfo(RedisCommand.SET));
 	}
 
 	@Test
@@ -75,6 +84,13 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 		RedisTemplate redisTemplate = redisTemplate();
 		List<Module> result = redisTemplate.moduleList();
 		result.forEach(System.out::println);
+	}
+
+	@Test
+	public void aclLog() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<AclLog> result = redisTemplate.aclLog();
+		System.out.println(result);
 	}
 
 }

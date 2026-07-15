@@ -19,20 +19,59 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.HyperLogLogCommands;
+import com.buession.redis.utils.KeyUtils;
 
 /**
  * HyperLogLog 运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hyperloglog" target="_blank">https://redis.io/docs/latest/commands/?group=hyperloglog</a></p>
  *
  * @author Yong.Teng
  */
 public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+
+	@Override
+	default Status pfAdd(final String key, final String... elements) {
+		return doExecute((cmd)->cmd.pfAdd(KeyUtils.rawKey(this, key), elements));
+	}
+
+	@Override
+	default Status pfAdd(final byte[] key, final byte[]... elements) {
+		return doExecute((cmd)->cmd.pfAdd(KeyUtils.rawKey(this, key), elements));
+	}
+
+	@Override
+	default Long pfCount(final String... keys) {
+		return doExecute((cmd)->cmd.pfCount(KeyUtils.rawKeys(this, keys)));
+	}
+
+	@Override
+	default Long pfCount(final byte[]... keys) {
+		return doExecute((cmd)->cmd.pfCount(KeyUtils.rawKeys(this, keys)));
+	}
+
+	@Override
+	default Status pfMerge(final String destKey, final String... keys) {
+		return doExecute((cmd)->cmd
+				.pfMerge(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
+	}
+
+	@Override
+	default Status pfMerge(final byte[] destKey, final byte[]... keys) {
+		return doExecute((cmd)->cmd
+				.pfMerge(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
+	}
+
+	private <R> R doExecute(final Command.Executor<HyperLogLogCommands, R> executor) {
+		return execute((client)->executor.execute(client.hyperLogLogCommands()));
+	}
 
 }

@@ -19,25 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
-import com.buession.core.collect.Arrays;
-import com.buession.core.utils.ByteUtils;
-import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.core.Options;
 import com.buession.redis.core.command.*;
-import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor implements BitMapCommands, ClusterCommands,
-		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands,
-		PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands, StreamCommands,
-		StringCommands, TransactionCommands {
+public abstract class AbstractRedisTemplate extends RedisAccessor implements AutoSuggestCommands, BitMapCommands,
+		BloomFilterCommands, ClusterCommands, ConnectionCommands, CountMinSketchCommands, CuckooFilterCommands,
+		GenericCommands, GeoCommands, HashCommands, HyperLogLogCommands, JsonCommands, KeyCommands, ListCommands,
+		PubSubCommands, ScriptingCommands, SearchCommands, ServerCommands, SetCommands, SortedSetCommands,
+		StreamCommands, StringCommands, TDigestCommands, TimeSeriesCommands, TopKCommands, TransactionCommands,
+		VectorSetCommands {
 
 	/**
 	 * 构造函数
@@ -56,30 +58,28 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 		super(dataSource);
 	}
 
-	protected final String rawKey(final String key) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		数据源
+	 * @param options
+	 * 		配置选项
+	 */
+	public AbstractRedisTemplate(DataSource dataSource, Options options) {
+		super(dataSource, options);
 	}
 
-	protected final byte[] rawKey(byte[] key) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
+	@Override
+	public Status discard() {
+		//execute((client)->client.transactionCommands().discard());
+		return execute((client)->client.getConnection().discard());
 	}
 
-	protected final String[] rawKeys(final String[] keys) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
-	}
-
-	protected final byte[][] rawKeys(final byte[][] keys) {
-		String prefix = getOptions().getPrefix();
-
-		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
-			return keys;
-		}
-
-		byte[] prefixByte = SafeEncoder.encode(prefix);
-		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
+	@Override
+	public List<Object> exec() {
+		//execute((client)->client.transactionCommands().exec());
+		return execute((client)->client.getConnection().exec());
 	}
 
 }

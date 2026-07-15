@@ -53,6 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public abstract class AbstractBeanConverter implements BeanConverter {
 
 	private final static Map<String, BeanCopier> BEAN_COPIERS = new ConcurrentHashMap<>(32);

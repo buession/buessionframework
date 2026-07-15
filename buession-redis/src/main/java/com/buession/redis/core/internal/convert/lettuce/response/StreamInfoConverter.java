@@ -19,16 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Stream;
-import org.springframework.lang.Nullable;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link Stream}
@@ -36,12 +38,25 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamInfoConverter implements Converter<List<Object>, Stream> {
+public final class StreamInfoConverter<K, V> implements Converter<List<Object>, Stream<K, V>> {
 
-	@Nullable
 	@Override
-	public Stream convert(final List<Object> source) {
-		return null;
+	public Stream<K, V> convert(final List<Object> source) {
+		if(source == null){
+			return null;
+		}else{
+			Long length = null;
+			Long groups = null;
+			Long radixTreeKeys = null;
+			Long radixTreeNodes = null;
+			StreamEntryId lastGeneratedId = null;
+			StreamEntry<K, V> firstEntry = null;
+			StreamEntry<K, V> lastEntry = null;
+			Map<String, Object> infos = null;
+
+			return new Stream<>(length, groups, radixTreeKeys, radixTreeNodes, lastGeneratedId, firstEntry, lastEntry,
+					infos);
+		}
 	}
 
 }

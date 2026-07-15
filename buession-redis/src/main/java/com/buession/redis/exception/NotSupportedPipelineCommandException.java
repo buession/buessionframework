@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 /**
  * 不支持管道异常
@@ -40,12 +41,20 @@ public class NotSupportedPipelineCommandException extends NotSupportedCommandExc
 		super();
 	}
 
-	public NotSupportedPipelineCommandException(ProtocolCommand command) {
+	public NotSupportedPipelineCommandException(RedisCommand command) {
 		super(Type.PIPELINE, command);
 	}
 
-	public NotSupportedPipelineCommandException(RedisMode mode, ProtocolCommand command) {
+	public NotSupportedPipelineCommandException(RedisMode mode, RedisCommand command) {
 		super(mode, command);
+	}
+
+	public NotSupportedPipelineCommandException(RedisCommand command, RedisSubCommand subCommand) {
+		super(Type.PIPELINE, command, subCommand);
+	}
+
+	public NotSupportedPipelineCommandException(RedisMode mode, RedisCommand command, RedisSubCommand subCommand) {
+		super(mode, command, subCommand);
 	}
 
 	public NotSupportedPipelineCommandException(String message) {

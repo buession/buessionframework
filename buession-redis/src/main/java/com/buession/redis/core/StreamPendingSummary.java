@@ -19,63 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Pending 消息的摘要信息
+ *
+ * @param total
+ * 		Pending 消息总数
+ * @param minId
+ * 		最小消息 ID
+ * @param maxId
+ * 		最大消息 ID
+ * @param consumerMessageCount
+ * 		各消费者的 pending 消息数统计
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamPendingSummary implements Serializable {
-
-	private final static long serialVersionUID = 4352578196582945851L;
-
-	private final long total;
-
-	private final StreamEntryId minId;
-
-	private final StreamEntryId maxId;
-
-	private final Map<String, Long> consumerMessageCount;
-
-	public StreamPendingSummary(final long total, final StreamEntryId minId, final StreamEntryId maxId,
-								final Map<String, Long> consumerMessageCount){
-		this.total = total;
-		this.minId = minId;
-		this.maxId = maxId;
-		this.consumerMessageCount = consumerMessageCount;
-	}
-
-	public long getTotal(){
-		return total;
-	}
-
-	public StreamEntryId getMinId(){
-		return minId;
-	}
-
-	public StreamEntryId getMaxId(){
-		return maxId;
-	}
-
-	public Map<String, Long> getConsumerMessageCount(){
-		return consumerMessageCount;
-	}
+public record StreamPendingSummary(Long total, StreamEntryId minId, StreamEntryId maxId,
+								   Map<String, Long> consumerMessageCount) {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("total", total)
 				.add("minId", minId)
 				.add("maxId", maxId)
-				.add("consumerMessageCount", consumerMessageCount)
+				.add("consumer message count", consumerMessageCount)
 				.build();
 	}
 

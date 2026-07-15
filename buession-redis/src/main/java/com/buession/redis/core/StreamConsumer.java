@@ -19,65 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Stream Consumer
+ * Stream 消费者
+ *
+ * @param name
+ * 		消费者名称
+ * @param idle
+ * 		自上次活跃以来的空闲时间（单位：毫秒）
+ * @param pending
+ * 		未 ACK（确认）的消息数量
+ * @param inactive
+ * 		the number of milliseconds that have passed since the consumer's last successful interaction
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamConsumer implements Serializable {
-
-	private final static long serialVersionUID = 1432302411997199283L;
-
-	private final String name;
-
-	private final long idle;
-
-	private final long pending;
-
-	private final Map<String, Object> infos;
-
-	public StreamConsumer(final String name, final long idle, final long pending, final Map<String, Object> infos){
-		this.name = name;
-		this.idle = idle;
-		this.pending = pending;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public long getIdle(){
-		return idle;
-	}
-
-	public long getPending(){
-		return pending;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
+public record StreamConsumer(String name, Long idle, Long pending, Long inactive) {
 
 	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("idle", idle)
-				.add("pending", pending)
-				.add("infos", infos)
-				.build();
+	public String toString() {
+		return ObjectStringBuilder.create().add("name", name).add("idle", idle).add("pending", pending)
+				.add("inactive", inactive).build();
 	}
 
 }

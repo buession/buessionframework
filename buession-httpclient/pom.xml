@@ -7,7 +7,7 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>3.0.1</version>
+		<version>4.0.0</version>
 	</parent>
 	<artifactId>buession-httpclient</artifactId>
 	<url>http://www.buession.com/</url>
@@ -79,10 +79,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -121,8 +117,19 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp-jvm</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

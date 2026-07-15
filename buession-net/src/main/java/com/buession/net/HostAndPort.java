@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -107,8 +107,23 @@ public class HostAndPort implements Serializable {
 	 * 		端口
 	 */
 	public void setPort(int port) {
-		Assert.isTrue(Validate.isPort(port), String.format("Port out of range: %s", port));
+		Assert.isFalse(Validate.isPort(port), String.format("Port out of range: %s", port));
 		this.port = port;
+	}
+
+	/**
+	 * 从字符串主机端口中创建 {@link HostAndPort}
+	 *
+	 * @param addr
+	 * 		字符串主机端口
+	 *
+	 * @return {@link HostAndPort}
+	 *
+	 * @since 4.0.0
+	 */
+	public static HostAndPort create(final String addr) {
+		int ci = addr.indexOf(':');
+		return new HostAndPort(addr.substring(0, ci), Integer.parseInt(addr.substring(ci + 1)));
 	}
 
 	@Override
@@ -127,8 +142,7 @@ public class HostAndPort implements Serializable {
 			return true;
 		}
 
-		if(o instanceof HostAndPort){
-			HostAndPort that = (HostAndPort) o;
+		if(o instanceof HostAndPort that){
 			return Objects.equals(host, that.host) && Objects.equals(port, that.port);
 		}
 

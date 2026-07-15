@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -55,7 +55,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * 默认 Maxmind Geoip 解析器
+ * 默认 Maxmind GeoIP 解析器
  *
  * @author Yong.Teng
  */
@@ -697,6 +697,9 @@ public class DatabaseResolver extends AbstractResolver {
 	public void close() throws IOException {
 		if(reader != null){
 			reader.close();
+		}
+		if(asnReader != null){
+			asnReader.close();
 		}
 	}
 

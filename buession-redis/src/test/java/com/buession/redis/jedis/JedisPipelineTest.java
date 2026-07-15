@@ -25,6 +25,7 @@
 package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,13 +40,20 @@ public class JedisPipelineTest extends AbstractJedisRedisTest {
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
-		redisTemplate.set("a", "A");
-		redisTemplate.exists("a");
-		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("a");
-		//redisTemplate.role();
+		redisTemplate.set("lp_1", "1");
+		redisTemplate.set("lp_2", "2");
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
+		System.out.println(redisTemplate.get("lp_1"));
+	}
+
+	@Test
+	public void test2() {
+		RedisTemplate redisTemplate = redisTemplate();
+		redisTemplate.pipeline();
+		redisTemplate.set("lp_1_2", "1");
+		redisTemplate.set("lp_2_2", "2");
+		System.out.println(redisTemplate.get("lp_1_2"));
 	}
 
 }

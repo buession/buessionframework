@@ -19,17 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.collect.Arrays;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.args.stream.ApproximateExactTrimming;
+import com.buession.redis.core.AutoClaimId;
+import com.buession.redis.core.AutoClaimInfo;
+import com.buession.redis.core.Stream;
+import com.buession.redis.core.StreamConsumer;
+import com.buession.redis.core.StreamDeletionPolicy;
 import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryDeletionResult;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamFull;
+import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
+import com.buession.redis.core.StreamPendingSummary;
+import com.buession.redis.core.XReadGroupInfo;
+import com.buession.redis.core.XReadInfo;
 import com.buession.redis.core.command.StreamCommands;
+import com.buession.redis.core.command.args.MaxLenMinId;
+import com.buession.redis.core.command.args.stream.XAddArgument;
+import com.buession.redis.core.command.args.stream.XClaimArgument;
+import com.buession.redis.core.command.args.stream.XReadGroupArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +61,16 @@ import java.util.Map;
  * @since 2.0.0
  */
 public interface StreamOperations extends StreamCommands, RedisOperations {
+
+	@Override
+	default Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAck(KeyUtils.rawKey(this, key), groupName, ids));
+	}
+
+	@Override
+	default Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAck(KeyUtils.rawKey(this, key), groupName, ids));
+	}
 
 	/**
 	 * The XACK command removes one or multiple messages from the Pending Entries List (PEL) of a stream consumer group
@@ -58,7 +86,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default Long xAck(final String key, final String groupName, final String[] ids){
+	default Long xAck(final String key, final String groupName, final String... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xAck(key, groupName, streamEntryIds);
 	}
@@ -77,9 +105,141 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default Long xAck(final byte[] key, final byte[] groupName, final byte[][] ids){
+	default Long xAck(final byte[] key, final byte[] groupName, final byte[]... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xAck(key, groupName, streamEntryIds);
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
+	                                                final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, ids));
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
+	                                                final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, ids));
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
+	                                                final StreamDeletionPolicy deletionPolicy,
+	                                                final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, deletionPolicy, ids));
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
+	                                                final StreamDeletionPolicy deletionPolicy,
+	                                                final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, deletionPolicy, ids));
+	}
+
+	/**
+	 * Acknowledges and conditionally deletes one or multiple entries (messages) for a stream consumer group at the specified key.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xackdel/" target="_blank">https://redis.io/docs/latest/commands/xackdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName, final String... ids) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, streamEntryIds));
+	}
+
+	/**
+	 * Acknowledges and conditionally deletes one or multiple entries (messages) for a stream consumer group at the specified key.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xackdel/" target="_blank">https://redis.io/docs/latest/commands/xackdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName, final byte[]... ids) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return doExecute((cmd)->cmd.xAckDel(KeyUtils.rawKey(this, key), groupName, streamEntryIds));
+	}
+
+	/**
+	 * Acknowledges and conditionally deletes one or multiple entries (messages) for a stream consumer group at the specified key.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xackdel/" target="_blank">https://redis.io/docs/latest/commands/xackdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param deletionPolicy
+	 * 		删除策略
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
+	                                                final StreamDeletionPolicy deletionPolicy, final String... ids) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return doExecute((cmd)->cmd
+				.xAckDel(KeyUtils.rawKey(this, key), groupName, deletionPolicy, streamEntryIds));
+	}
+
+	/**
+	 * Acknowledges and conditionally deletes one or multiple entries (messages) for a stream consumer group at the specified key.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xackdel/" target="_blank">https://redis.io/docs/latest/commands/xackdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param deletionPolicy
+	 * 		删除策略
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
+	                                                final StreamDeletionPolicy deletionPolicy, final byte[]... ids) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return doExecute((cmd)->cmd
+				.xAckDel(KeyUtils.rawKey(this, key), groupName, deletionPolicy, streamEntryIds));
+	}
+
+	@Override
+	default StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
+		return doExecute((cmd)->cmd.xAdd(KeyUtils.rawKey(this, key), id, hash));
+	}
+
+	@Override
+	default StreamEntryId xAdd(final byte[] key, final StreamEntryId id, Map<byte[], byte[]> hash) {
+		return doExecute((cmd)->cmd.xAdd(KeyUtils.rawKey(this, key), id, hash));
+	}
+
+	@Override
+	default StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
+	                           final XAddArgument xAddArgument) {
+		return doExecute((cmd)->cmd.xAdd(KeyUtils.rawKey(this, key), id, hash, xAddArgument));
+	}
+
+	@Override
+	default StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
+	                           final XAddArgument xAddArgument) {
+		return doExecute((cmd)->cmd.xAdd(KeyUtils.rawKey(this, key), id, hash, xAddArgument));
 	}
 
 	/**
@@ -97,7 +257,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	default StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash){
+	default StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash) {
 		return xAdd(key, new StreamEntryId(id), hash);
 	}
 
@@ -116,7 +276,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	default StreamEntryId xAdd(final byte[] key, byte[] id, final Map<byte[], byte[]> hash){
+	default StreamEntryId xAdd(final byte[] key, byte[] id, final Map<byte[], byte[]> hash) {
 		return xAdd(key, new StreamEntryId(id), hash);
 	}
 
@@ -138,7 +298,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamEntryId}
 	 */
 	default StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash,
-							   final XAddArgument xAddArgument){
+	                           final XAddArgument xAddArgument) {
 		return xAdd(key, new StreamEntryId(id), hash, xAddArgument);
 	}
 
@@ -160,10 +320,338 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamEntryId}
 	 */
 	default StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
-							   final XAddArgument xAddArgument){
+	                           final XAddArgument xAddArgument) {
 		return xAdd(key, new StreamEntryId(id), hash, xAddArgument);
 	}
 
+	@Override
+	default AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final StreamEntryId start) {
+		return doExecute((cmd)->cmd
+				.xAutoClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	default AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final StreamEntryId start) {
+		return doExecute((cmd)->cmd
+				.xAutoClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	default AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd
+				.xAutoClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	default AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd
+				.xAutoClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final String start) {
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final byte[] start) {
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final String start, final int count) {
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final byte[] start, final int count) {
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	@Override
+	default AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+	                                     final int minIdleTime, final StreamEntryId start) {
+		return doExecute((cmd)->cmd
+				.xAutoClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	default AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                     final int minIdleTime, final StreamEntryId start) {
+		return doExecute((cmd)->cmd
+				.xAutoClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	default AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+	                                     final int minIdleTime, final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd
+				.xAutoClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	default AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                     final int minIdleTime, final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd
+				.xAutoClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+	                                     final int minIdleTime, final String start) {
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                     final int minIdleTime, final byte[] start) {
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+	                                     final int minIdleTime, final String start, final int count) {
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                     final int minIdleTime, final byte[] start, final int count) {
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	@Override
+	default Status xCfgSet(final String key) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default Status xCfgSet(final byte[] key) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default Status xCfgSet(final String key, final long duration) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), duration));
+	}
+
+	@Override
+	default Status xCfgSet(final byte[] key, final long duration) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), duration));
+	}
+
+	@Override
+	default Status xCfgSet(final String key, final long duration, final int maxsize) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), duration, maxsize));
+	}
+
+	@Override
+	default Status xCfgSet(final byte[] key, final long duration, final int maxsize) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), duration, maxsize));
+	}
+
+	@Override
+	default Status xCfgSet(final String key, final int maxsize) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), maxsize));
+	}
+
+	@Override
+	default Status xCfgSet(final byte[] key, final int maxsize) {
+		return doExecute((cmd)->cmd.xCfgSet(KeyUtils.rawKey(this, key), maxsize));
+	}
+
+	@Override
+	default List<StreamEntry<String, String>> xClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd
+				.xClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd
+				.xClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	default List<StreamEntry<String, String>> xClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final StreamEntryId[] ids, final XClaimArgument xClaimArgument) {
+		return doExecute((cmd)->cmd
+				.xClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final StreamEntryId[] ids, final XClaimArgument xClaimArgument) {
+		return doExecute((cmd)->cmd
+				.xClaim(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
 	 * so that the new owner is the consumer specified as the command argument
@@ -183,210 +671,11 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
-									 final int minIdleTime, final String[] ids){
+	default List<StreamEntry<String, String>> xClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final String[] ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
-	 */
-	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
-															 final String consumerName,
-															 final int minIdleTime, final String start){
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
-	 */
-	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															 final byte[] consumerName,
-															 final int minIdleTime, final byte[] start){
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 * @param count
-	 * 		数量
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
-	 */
-	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
-															 final String consumerName, final int minIdleTime,
-															 final String start, final long count){
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 * @param count
-	 * 		数量
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
-	 */
-	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															 final byte[] consumerName, final int minIdleTime,
-															 final byte[] start, final long count){
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
-	 */
-	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
-																	 final String consumerName, final int minIdleTime,
-																	 final String start){
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
-	 */
-	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																	 final byte[] consumerName, final int minIdleTime,
-																	 final byte[] start){
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 * @param count
-	 * 		数量
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
-	 */
-	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
-																	 final String consumerName, final int minIdleTime,
-																	 final String start, final long count){
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
-	}
-
-	/**
-	 * This command transfers ownership of pending stream entries that match the specified criteria
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param minIdleTime
-	 * 		Min Idle Time
-	 * @param start
-	 * 		greater ID than
-	 * @param count
-	 * 		数量
-	 *
-	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
-	 */
-	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																	 final byte[] consumerName, final int minIdleTime,
-																	 final byte[] start, final long count){
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
 	/**
@@ -408,12 +697,12 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-									 final int minIdleTime, final byte[][] ids){
+	default List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final byte[][] ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
-
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -436,8 +725,9 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
-									 final int minIdleTime, final String[] ids, final XClaimArgument xClaimArgument){
+	default List<StreamEntry<String, String>> xClaim(final String key, final String groupName,
+	                                                 final String consumerName, final int minIdleTime,
+	                                                 final String[] ids, final XClaimArgument xClaimArgument) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
 	}
@@ -463,10 +753,41 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-									 final int minIdleTime, final byte[][] ids, final XClaimArgument xClaimArgument){
+	default List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName,
+	                                                 final byte[] consumerName, final int minIdleTime,
+	                                                 final byte[][] ids, final XClaimArgument xClaimArgument) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
+	}
+
+	@Override
+	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+	                                         final int minIdleTime, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd
+				.xClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                         final int minIdleTime, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd
+				.xClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+	                                         final int minIdleTime, final StreamEntryId[] ids,
+	                                         final XClaimArgument xClaimArgument) {
+		return doExecute((cmd)->cmd
+				.xClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                         final int minIdleTime, final StreamEntryId[] ids,
+	                                         final XClaimArgument xClaimArgument) {
+		return doExecute((cmd)->cmd
+				.xClaimJustId(KeyUtils.rawKey(this, key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
 	}
 
 	/**
@@ -489,7 +810,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
-											 final int minIdleTime, final String[] ids){
+	                                         final int minIdleTime, final String[] ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
@@ -514,12 +835,78 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											 final int minIdleTime, final byte[][] ids){
+	                                         final int minIdleTime, final byte[][] ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
 	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+	                                         final int minIdleTime, final String[] ids,
+	                                         final XClaimArgument xClaimArgument) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
+	}
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	                                         final int minIdleTime, final byte[][] ids,
+	                                         final XClaimArgument xClaimArgument) {
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
+	}
+
+	@Override
+	default Long xDel(final String key, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xDel(KeyUtils.rawKey(this, key), ids));
+	}
+
+	@Override
+	default Long xDel(final byte[] key, final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xDel(KeyUtils.rawKey(this, key), ids));
+	}
+
+	/**
 	 * Removes the specified entries from a stream, and returns the number of entries deleted
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/xdel/" target="_blank">https://redis.io/commands/xdel/</a></p>
@@ -531,7 +918,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	default Long xDel(final String key, final String... ids){
+	default Long xDel(final String key, final String... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xDel(key, streamEntryIds);
 	}
@@ -548,9 +935,105 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	default Long xDel(final byte[] key, final byte[]... ids){
+	default Long xDel(final byte[] key, final byte[]... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
 		return xDel(key, streamEntryIds);
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xDelEx(final String key, final StreamDeletionPolicy deletionPolicy,
+	                                               final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xDelEx(KeyUtils.rawKey(this, key), deletionPolicy, ids));
+	}
+
+	@Override
+	default List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamDeletionPolicy deletionPolicy,
+	                                               final StreamEntryId... ids) {
+		return doExecute((cmd)->cmd.xDelEx(KeyUtils.rawKey(this, key), deletionPolicy, ids));
+	}
+
+	@Override
+	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id));
+	}
+
+	@Override
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id));
+	}
+
+	@Override
+	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
+	                            final boolean makeStream) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, makeStream));
+	}
+
+	@Override
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
+	                            final boolean makeStream) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, makeStream));
+	}
+
+	@Override
+	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
+	                            final boolean makeStream, final long entriesRead) {
+		return doExecute((cmd)->cmd
+				.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, makeStream, entriesRead));
+	}
+
+	@Override
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
+	                            final boolean makeStream, final long entriesRead) {
+		return doExecute((cmd)->cmd
+				.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, makeStream, entriesRead));
+	}
+
+	@Override
+	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
+	                            final long entriesRead) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, entriesRead));
+	}
+
+	@Override
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
+	                            final long entriesRead) {
+		return doExecute((cmd)->cmd.xGroupCreate(KeyUtils.rawKey(this, key), groupName, id, entriesRead));
+	}
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final String key, final String groupName, final String id) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id));
+	}
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id));
 	}
 
 	/**
@@ -569,7 +1052,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	default Status xGroupCreate(final String key, final String groupName, final String id, final boolean makeStream){
+	default Status xGroupCreate(final String key, final String groupName, final String id, final boolean makeStream) {
 		return xGroupCreate(key, groupName, new StreamEntryId(id), makeStream);
 	}
 
@@ -589,11 +1072,153 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id, final boolean makeStream){
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id, final boolean makeStream) {
 		return xGroupCreate(key, groupName, new StreamEntryId(id), makeStream);
 	}
 
 	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param makeStream
+	 * 		Can use the optional MKSTREAM subcommand as the last argument after the id to automatically create the stream (with length of 0)
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final String key, final String groupName, final String id, final boolean makeStream,
+	                            final long entriesRead) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id), makeStream, entriesRead);
+	}
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param makeStream
+	 * 		Can use the optional MKSTREAM subcommand as the last argument after the id to automatically create the stream (with length of 0)
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id, final boolean makeStream,
+	                            final long entriesRead) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id), makeStream, entriesRead);
+	}
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final String key, final String groupName, final String id, final long entriesRead) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id), entriesRead);
+	}
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id, final long entriesRead) {
+		return xGroupCreate(key, groupName, new StreamEntryId(id), entriesRead);
+	}
+
+	@Override
+	default Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
+		return doExecute((cmd)->cmd
+				.xGroupCreateConsumer(KeyUtils.rawKey(this, key), groupName, consumerName));
+	}
+
+	@Override
+	default Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
+		return doExecute((cmd)->cmd
+				.xGroupCreateConsumer(KeyUtils.rawKey(this, key), groupName, consumerName));
+	}
+
+	@Override
+	default Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
+		return doExecute((cmd)->cmd
+				.xGroupDelConsumer(KeyUtils.rawKey(this, key), groupName, consumerName));
+	}
+
+	@Override
+	default Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
+		return doExecute((cmd)->cmd
+				.xGroupDelConsumer(KeyUtils.rawKey(this, key), groupName, consumerName));
+	}
+
+	@Override
+	default Status xGroupDestroy(final String key, final String groupName) {
+		return doExecute((cmd)->cmd.xGroupDestroy(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default Status xGroupDestroy(final byte[] key, final byte[] groupName) {
+		return doExecute((cmd)->cmd.xGroupDestroy(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
+		return doExecute((cmd)->cmd.xGroupSetId(KeyUtils.rawKey(this, key), groupName, id));
+	}
+
+	@Override
+	default Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
+		return doExecute((cmd)->cmd.xGroupSetId(KeyUtils.rawKey(this, key), groupName, id));
+	}
+
+	@Override
+	default Status xGroupSetId(final String key, final String groupName, final StreamEntryId id,
+	                           final long entriesRead) {
+		return doExecute((cmd)->cmd.xGroupSetId(KeyUtils.rawKey(this, key), groupName, id, entriesRead));
+	}
+
+	@Override
+	default Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id,
+	                           final long entriesRead) {
+		return doExecute((cmd)->cmd.xGroupSetId(KeyUtils.rawKey(this, key), groupName, id, entriesRead));
+	}
+
+	/**
 	 * Normally, a consumer group's last delivered ID is set when the group is created with XGROUP CREATE
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-setid/" target="_blank">https://redis.io/commands/xgroup-setid/</a></p>
@@ -607,7 +1232,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	default Status xGroupSetId(final String key, final String groupName, final String id){
+	default Status xGroupSetId(final String key, final String groupName, final String id) {
 		return xGroupSetId(key, groupName, new StreamEntryId(id));
 	}
 
@@ -625,8 +1250,174 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	default Status xGroupSetId(final byte[] key, final byte[] groupName, final byte[] id){
+	default Status xGroupSetId(final byte[] key, final byte[] groupName, final byte[] id) {
 		return xGroupSetId(key, groupName, new StreamEntryId(id));
+	}
+
+	/**
+	 * Normally, a consumer group's last delivered ID is set when the group is created with XGROUP CREATE
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-setid/" target="_blank">https://redis.io/commands/xgroup-setid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		The optional entries_read argument can be specified to enable consumer group lag tracking for an arbitrary ID.
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupSetId(final String key, final String groupName, final String id, final long entriesRead) {
+		return xGroupSetId(key, groupName, new StreamEntryId(id), entriesRead);
+	}
+
+	/**
+	 * Normally, a consumer group's last delivered ID is set when the group is created with XGROUP CREATE
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-setid/" target="_blank">https://redis.io/commands/xgroup-setid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		The optional entries_read argument can be specified to enable consumer group lag tracking for an arbitrary ID.
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status xGroupSetId(final byte[] key, final byte[] groupName, final byte[] id, final long entriesRead) {
+		return xGroupSetId(key, groupName, new StreamEntryId(id), entriesRead);
+	}
+
+	@Override
+	default List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
+		return doExecute((cmd)->cmd.xInfoConsumers(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
+		return doExecute((cmd)->cmd.xInfoConsumers(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default List<StreamGroup> xInfoGroups(final String key) {
+		return doExecute((cmd)->cmd.xInfoGroups(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default List<StreamGroup> xInfoGroups(final byte[] key) {
+		return doExecute((cmd)->cmd.xInfoGroups(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default Stream<String, String> xInfoStream(final String key) {
+		return doExecute((cmd)->cmd.xInfoStream(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default Stream<byte[], byte[]> xInfoStream(final byte[] key) {
+		return doExecute((cmd)->cmd.xInfoStream(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default StreamFull<String, String> xInfoStreamFull(final String key) {
+		return doExecute((cmd)->cmd.xInfoStreamFull(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key) {
+		return doExecute((cmd)->cmd.xInfoStreamFull(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default StreamFull<String, String> xInfoStreamFull(final String key, final int count) {
+		return doExecute((cmd)->cmd.xInfoStreamFull(KeyUtils.rawKey(this, key), count));
+	}
+
+	@Override
+	default StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count) {
+		return doExecute((cmd)->cmd.xInfoStreamFull(KeyUtils.rawKey(this, key), count));
+	}
+
+	@Override
+	default Long xLen(final String key) {
+		return doExecute((cmd)->cmd.xLen(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default Long xLen(final byte[] key) {
+		return doExecute((cmd)->cmd.xLen(KeyUtils.rawKey(this, key)));
+	}
+
+	@Override
+	default StreamPendingSummary xPending(final String key, final String groupName) {
+		return doExecute((cmd)->cmd.xPending(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
+		return doExecute((cmd)->cmd.xPending(KeyUtils.rawKey(this, key), groupName));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
+	                                     final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd.xPending(KeyUtils.rawKey(this, key), groupName, start, end, count));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
+	                                     final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd.xPending(KeyUtils.rawKey(this, key), groupName, start, end, count));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+	                                     final StreamEntryId start, final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, minIdleTime, start, end, count));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+	                                     final StreamEntryId start, final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, minIdleTime, start, end, count));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
+	                                     final StreamEntryId end, final int count, final String consumerName) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, start, end, count, consumerName));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
+	                                     final StreamEntryId end, final int count, final byte[] consumerName) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, start, end, count, consumerName));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+	                                     final StreamEntryId start, final StreamEntryId end, final int count,
+	                                     final String consumerName) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, minIdleTime, start, end, count, consumerName));
+	}
+
+	@Override
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+	                                     final StreamEntryId start, final StreamEntryId end, final int count,
+	                                     final byte[] consumerName) {
+		return doExecute((cmd)->cmd
+				.xPending(KeyUtils.rawKey(this, key), groupName, minIdleTime, start, end, count, consumerName));
 	}
 
 	/**
@@ -648,7 +1439,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final String start, final String end,
-										 final long count){
+	                                     final int count) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -671,7 +1462,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start, final byte[] end,
-										 final long count){
+	                                     final int count) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -696,7 +1487,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										 final String start, final String end, final long count){
+	                                     final String start, final String end, final int count) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -721,7 +1512,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										 final byte[] start, final byte[] end, final long count){
+	                                     final byte[] start, final byte[] end, final int count) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -745,8 +1536,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamPending} 列表
 	 */
-	default List<StreamPending> xPending(final String key, final String groupName, final String start,
-										 final String end, final long count, final String consumerName){
+	default List<StreamPending> xPending(final String key, final String groupName, final String start, final String end,
+	                                     final int count, final String consumerName) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
 	}
 
@@ -770,8 +1561,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamPending} 列表
 	 */
-	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start,
-										 final byte[] end, final long count, final byte[] consumerName){
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start, final byte[] end,
+	                                     final int count, final byte[] consumerName) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
 	}
 
@@ -798,8 +1589,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										 final String start, final String end, final long count,
-										 final String consumerName){
+	                                     final String start, final String end, final int count,
+	                                     final String consumerName) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
 				consumerName);
 	}
@@ -827,12 +1618,36 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										 final byte[] start, final byte[] end, final long count,
-										 final byte[] consumerName){
+	                                     final byte[] start, final byte[] end, final int count,
+	                                     final byte[] consumerName) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
 				consumerName);
 	}
 
+	@Override
+	default List<StreamEntry<String, String>> xRange(final String key, final StreamEntryId start,
+	                                                 final StreamEntryId end) {
+		return doExecute((cmd)->cmd.xRange(KeyUtils.rawKey(this, key), start, end));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xRange(final byte[] key, final StreamEntryId start,
+	                                                 final StreamEntryId end) {
+		return doExecute((cmd)->cmd.xRange(KeyUtils.rawKey(this, key), start, end));
+	}
+
+	@Override
+	default List<StreamEntry<String, String>> xRange(final String key, final StreamEntryId start,
+	                                                 final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd.xRange(KeyUtils.rawKey(this, key), start, end));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xRange(final byte[] key, final StreamEntryId start,
+	                                                 final StreamEntryId end, final int count) {
+		return doExecute((cmd)->cmd.xRange(KeyUtils.rawKey(this, key), start, end));
+	}
+
 	/**
 	 * The command returns the stream entries matching a given range of IDs
 	 *
@@ -847,7 +1662,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final String key, final String start, final String end){
+	default List<StreamEntry<String, String>> xRange(final String key, final String start, final String end) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end));
 	}
 
@@ -865,7 +1680,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end){
+	default List<StreamEntry<byte[], byte[]>> xRange(final byte[] key, final byte[] start, final byte[] end) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end));
 	}
 
@@ -885,7 +1700,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final String key, final String start, final String end, final long count){
+	default List<StreamEntry<String, String>> xRange(final String key, final String start, final String end,
+	                                                 final int count) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -905,8 +1721,108 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end, final long count){
+	default List<StreamEntry<byte[], byte[]>> xRange(final byte[] key, final byte[] start, final byte[] end,
+	                                                 final int count) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	@Override
+	default List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams) {
+		return doExecute((cmd)->cmd.xRead(streams));
+	}
+
+	@Override
+	default List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final int count) {
+		return doExecute((cmd)->cmd.xRead(streams, count));
+	}
+
+	@Override
+	default List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block) {
+		return doExecute((cmd)->cmd.xRead(streams, block));
+	}
+
+	@Override
+	default List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block,
+	                                              final int count) {
+		return doExecute((cmd)->cmd.xRead(streams, block, count));
+	}
+
+	@Override
+	default List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
+	                                                        final Map<String, StreamEntryId> streams) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, streams));
+	}
+
+	@Override
+	default List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+	                                                        final Map<byte[], StreamEntryId> streams) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, streams));
+	}
+
+	@Override
+	default List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
+	                                                        final XReadGroupArgument xReadGroupArgument,
+	                                                        final Map<String, StreamEntryId> streams) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, xReadGroupArgument, streams));
+	}
+
+	@Override
+	default List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+	                                                        final XReadGroupArgument xReadGroupArgument,
+	                                                        final Map<byte[], StreamEntryId> streams) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, xReadGroupArgument, streams));
+	}
+
+	@Override
+	default List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
+	                                                        final XReadGroupArgument xReadGroupArgument,
+	                                                        final Map<String, StreamEntryId> streams, final int count) {
+		return doExecute((cmd)->cmd
+				.xReadGroup(groupName, consumerName, xReadGroupArgument, streams, count));
+	}
+
+	@Override
+	default List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+	                                                        final XReadGroupArgument xReadGroupArgument,
+	                                                        final Map<byte[], StreamEntryId> streams, final int count) {
+		return doExecute((cmd)->cmd
+				.xReadGroup(groupName, consumerName, xReadGroupArgument, streams, count));
+	}
+
+	@Override
+	default List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
+	                                                        final Map<String, StreamEntryId> streams, final int count) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, streams, count));
+	}
+
+	@Override
+	default List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+	                                                        final Map<byte[], StreamEntryId> streams, final int count) {
+		return doExecute((cmd)->cmd.xReadGroup(groupName, consumerName, streams, count));
+	}
+
+	@Override
+	default List<StreamEntry<String, String>> xRevRange(final String key, final StreamEntryId end,
+	                                                    final StreamEntryId start) {
+		return doExecute((cmd)->cmd.xRevRange(KeyUtils.rawKey(this, key), end, start));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xRevRange(final byte[] key, final StreamEntryId end,
+	                                                    final StreamEntryId start) {
+		return doExecute((cmd)->cmd.xRevRange(KeyUtils.rawKey(this, key), end, start));
+	}
+
+	@Override
+	default List<StreamEntry<String, String>> xRevRange(final String key, final StreamEntryId end,
+	                                                    final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd.xRevRange(KeyUtils.rawKey(this, key), end, start, count));
+	}
+
+	@Override
+	default List<StreamEntry<byte[], byte[]>> xRevRange(final byte[] key, final StreamEntryId end,
+	                                                    final StreamEntryId start, final int count) {
+		return doExecute((cmd)->cmd.xRevRange(KeyUtils.rawKey(this, key), end, start, count));
 	}
 
 	/**
@@ -925,7 +1841,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final String key, final String end, final String start){
+	default List<StreamEntry<String, String>> xRevRange(final String key, final String end, final String start) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start));
 	}
 
@@ -945,7 +1861,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start){
+	default List<StreamEntry<byte[], byte[]>> xRevRange(final byte[] key, final byte[] end, final byte[] start) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start));
 	}
 
@@ -967,7 +1883,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final String key, final String end, final String start, final long count){
+	default List<StreamEntry<String, String>> xRevRange(final String key, final String end, final String start,
+	                                                    final int count) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
 	}
 
@@ -989,8 +1906,301 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start, final long count){
+	default List<StreamEntry<byte[], byte[]>> xRevRange(final byte[] key, final byte[] end, final byte[] start,
+	                                                    final int count) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
+	}
+
+	@Override
+	default Status xSetId(final String key, final StreamEntryId lastId) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId));
+	}
+
+	@Override
+	default Status xSetId(final byte[] key, final StreamEntryId lastId) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId));
+	}
+
+	@Override
+	default Status xSetId(final String key, final StreamEntryId lastId, final long entriesAdded) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId, entriesAdded));
+	}
+
+	@Override
+	default Status xSetId(final byte[] key, final StreamEntryId lastId, final long entriesAdded) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId, entriesAdded));
+	}
+
+	@Override
+	default Status xSetId(final String key, final StreamEntryId lastId, final long entriesAdded,
+	                      final StreamEntryId maxDeletedId) {
+		return doExecute((cmd)->cmd
+				.xSetId(KeyUtils.rawKey(this, key), lastId, entriesAdded, maxDeletedId));
+	}
+
+	@Override
+	default Status xSetId(final byte[] key, final StreamEntryId lastId, final long entriesAdded,
+	                      final StreamEntryId maxDeletedId) {
+		return doExecute((cmd)->cmd
+				.xSetId(KeyUtils.rawKey(this, key), lastId, entriesAdded, maxDeletedId));
+	}
+
+	@Override
+	default Status xSetId(final String key, final StreamEntryId lastId, final StreamEntryId maxDeletedId) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId, maxDeletedId));
+	}
+
+	@Override
+	default Status xSetId(final byte[] key, final StreamEntryId lastId, final StreamEntryId maxDeletedId) {
+		return doExecute((cmd)->cmd.xSetId(KeyUtils.rawKey(this, key), lastId, maxDeletedId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final String key, final String lastId) {
+		return xSetId(key, new StreamEntryId(lastId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final byte[] key, final byte[] lastId) {
+		return xSetId(key, new StreamEntryId(lastId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param entriesAdded
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final String key, final String lastId, final long entriesAdded) {
+		return xSetId(key, new StreamEntryId(lastId), entriesAdded);
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param entriesAdded
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final byte[] key, final byte[] lastId, final long entriesAdded) {
+		return xSetId(key, new StreamEntryId(lastId), entriesAdded);
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param entriesAdded
+	 * 		-
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final String key, final String lastId, final long entriesAdded, final String maxDeletedId) {
+		return xSetId(key, new StreamEntryId(lastId), entriesAdded, new StreamEntryId(maxDeletedId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param entriesAdded
+	 * 		-
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final byte[] key, final byte[] lastId, final long entriesAdded, final byte[] maxDeletedId) {
+		return xSetId(key, new StreamEntryId(lastId), entriesAdded, new StreamEntryId(maxDeletedId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final String key, final String lastId, final String maxDeletedId) {
+		return xSetId(key, new StreamEntryId(lastId), new StreamEntryId(maxDeletedId));
+	}
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	default Status xSetId(final byte[] key, final byte[] lastId, final byte[] maxDeletedId) {
+		return xSetId(key, new StreamEntryId(lastId), new StreamEntryId(maxDeletedId));
+	}
+
+	@Override
+	default Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId));
+	}
+
+	@Override
+	default Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId));
+	}
+
+	@Override
+	default Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId, deletionPolicy));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId, deletionPolicy));
+	}
+
+	@Override
+	default Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, deletionPolicy));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, deletionPolicy));
+	}
+
+	@Override
+	default Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int count) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, count));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int count) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, count));
+	}
+
+	@Override
+	default Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final int count) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId, count));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final int count) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), approximateExactTrimming, maxLenMinId, count));
+	}
+
+	@Override
+	default Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key),
+				approximateExactTrimming, maxLenMinId, deletionPolicy, count));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+	                   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count) {
+		return doExecute((cmd)->cmd.xTrim(KeyUtils.rawKey(this, key),
+				approximateExactTrimming, maxLenMinId, deletionPolicy, count));
+	}
+
+	@Override
+	default Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
+	                   final int count) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, deletionPolicy, count));
+	}
+
+	@Override
+	default Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
+	                   final int count) {
+		return doExecute((cmd)->cmd
+				.xTrim(KeyUtils.rawKey(this, key), maxLenMinId, deletionPolicy, count));
+	}
+
+	private <R> R doExecute(final Command.Executor<StreamCommands, R> executor) {
+		return execute((client)->executor.execute(client.streamCommands()));
 	}
 
 }

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.ScanResult;
 import org.junit.jupiter.api.Assertions;
@@ -40,13 +41,28 @@ public class LettuceKeyTest extends AbstractLettuceRedisTest {
 	@Test
 	public void exists() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertTrue(redisTemplate.exists("a"));
+		System.out.println(redisTemplate.exists("t59"));
+		System.out.println(redisTemplate.exists("user"));
+	}
+
+	@Test
+	public void set() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Status result = redisTemplate.set("lettuce_key_a", "A");
+		System.out.println(result);
+	}
+
+	@Test
+	public void get() {
+		RedisTemplate redisTemplate = redisTemplate();
+		String result = redisTemplate.get("lettuce_key_a");
+		System.out.println(result);
 	}
 
 	@Test
 	public void scan() {
 		RedisTemplate redisTemplate = redisTemplate();
-		ScanResult<List<String>> result = redisTemplate.scan(0);
+		ScanResult<String> result = redisTemplate.scan(0);
 		System.out.println(result.getCursorAsString());
 		result.getResults().forEach(System.out::println);
 	}

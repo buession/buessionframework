@@ -19,73 +19,46 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Stream Group
+ * Stream 消费者组
+ *
+ * @param name
+ * 		消费者组名称
+ * @param consumers
+ * 		消费者的数量
+ * @param pending
+ * 		已投递但未被 ACK（确认）的消息数量
+ * @param lastDeliveredId
+ * 		最后投递给消费者的消息 ID
+ * @param entriesRread
+ * 		-
+ * @param lag
+ * 		-
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamGroup implements Serializable {
-
-	private final static long serialVersionUID = -3992031318445262909L;
-
-	private final String name;
-
-	private final long consumers;
-
-	private final long pending;
-
-	private final StreamEntryId lastDeliveredId;
-
-	private final Map<String, Object> infos;
-
-	public StreamGroup(final String name, final long consumers, final long pending, final StreamEntryId lastDeliveredId,
-					   final Map<String, Object> infos){
-		this.name = name;
-		this.consumers = consumers;
-		this.pending = pending;
-		this.lastDeliveredId = lastDeliveredId;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public long getConsumers(){
-		return consumers;
-	}
-
-	public long getPending(){
-		return pending;
-	}
-
-	public StreamEntryId getLastDeliveredId(){
-		return lastDeliveredId;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
+public record StreamGroup(String name, Long consumers, Long pending, StreamEntryId lastDeliveredId,
+                          Long entriesRread, Long lag) {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("name", name)
 				.add("consumers", consumers)
 				.add("pending", pending)
-				.add("lastDeliveredId", lastDeliveredId)
-				.add("infos", infos)
+				.add("last-delivered-id", lastDeliveredId)
+				.add("entries-read", entriesRread)
+				.add("lag", lag)
 				.build();
 	}
 

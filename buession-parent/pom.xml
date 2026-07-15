@@ -7,11 +7,11 @@
 		<groupId>com.buession</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath/>
-		<version>3.0.1</version>
+		<version>4.0.0</version>
 	</parent>
 	<groupId>com.buession</groupId>
 	<artifactId>buession-parent</artifactId>
-	<version>3.0.1</version>
+	<version>4.0.0</version>
 	<url>http://www.buession.com/</url>
 	<description>Buession Framework Parent</description>
 	<packaging>pom</packaging>
@@ -68,7 +68,6 @@
 		<module>../buession-net</module>
 		<module>../buession-redis</module>
 		<module>../buession-thesaurus</module>
-		<module>../buession-velocity</module>
 		<module>../buession-web</module>
 	</modules>
 

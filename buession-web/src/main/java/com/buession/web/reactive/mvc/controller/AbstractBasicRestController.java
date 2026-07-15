@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2063 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.mvc.controller;
@@ -45,30 +45,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<P, DTO, VO> {
+public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<VO> {
 
 	@RequestMapping(path = "", method = RequestMethod.POST)
-	public Response<VO> add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody DTO e){
+	public Response<VO> add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody DTO e) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	public Response<VO> edit(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id,
-							 @RequestBody DTO e){
+	                         @RequestBody DTO e) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public Response<VO> detail(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
+	public Response<VO> detail(ServerHttpRequest request, ServerHttpResponse response,
+	                           @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	public Response<VO> delete(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
+	public Response<VO> delete(ServerHttpRequest request, ServerHttpResponse response,
+	                           @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 
-	protected Response<VO> pageNotFound(final ServerHttpRequest request){
+	protected Response<VO> pageNotFound(final ServerHttpRequest request) {
 		return pageNotFound(request.getPath().toString());
 	}
 

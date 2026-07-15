@@ -25,6 +25,7 @@
 package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,23 +37,30 @@ import java.util.List;
 public class LettuceTransactionTest extends AbstractLettuceRedisTest {
 
 	@Test
-	public void exec() {
+	public void multi1() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("a", "Lettuce");
-		redisTemplate.exists("a");
-		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("a");
-		//redisTemplate.role();
+		redisTemplate.set("lp_s_1_1", "1");
+		redisTemplate.set("lp_s_1_2", "2");
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
+		System.out.println(redisTemplate.get("lp_s_2"));
+	}
+
+	@Test
+	public void multi2() {
+		RedisTemplate redisTemplate = redisTemplate();
+		//redisTemplate.multi();
+		//redisTemplate.set("lp_s_2_1", "1");
+		//redisTemplate.set("lp_s_2_2", "2");
+		System.out.println(redisTemplate.get("lp_s_discard"));
 	}
 
 	@Test
 	public void discard() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("b", "B");
+		redisTemplate.set("lp_s_discard", "B");
 		redisTemplate.discard();
 	}
 

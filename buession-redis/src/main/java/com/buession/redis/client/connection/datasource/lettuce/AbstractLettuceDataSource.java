@@ -34,4 +34,69 @@ import com.buession.redis.client.connection.datasource.AbstractDataSource;
  */
 public abstract class AbstractLettuceDataSource extends AbstractDataSource implements LettuceRedisDataSource {
 
+	/**
+	 * 计算线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int computationThreadPoolSize;
+
+	/**
+	 * IO 线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int ioThreadPoolSize;
+
+	/**
+	 * 请求队列大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int requestQueueSize;
+
+	/**
+	 * 关闭超时时间（单位：毫秒）
+	 */
+	private int shutdownTimeout;
+
+	@Override
+	public int getComputationThreadPoolSize() {
+		return computationThreadPoolSize;
+	}
+
+	@Override
+	public void setComputationThreadPoolSize(int computationThreadPoolSize) {
+		this.computationThreadPoolSize = computationThreadPoolSize;
+	}
+
+	@Override
+	public int getIoThreadPoolSize() {
+		return ioThreadPoolSize;
+	}
+
+	@Override
+	public void setIoThreadPoolSize(int ioThreadPoolSize) {
+		this.ioThreadPoolSize = ioThreadPoolSize;
+	}
+
+	@Override
+	public int getRequestQueueSize() {
+		return requestQueueSize;
+	}
+
+	@Override
+	public void setRequestQueueSize(int requestQueueSize) {
+		this.requestQueueSize = requestQueueSize;
+	}
+
+	@Override
+	public int getShutdownTimeout() {
+		return shutdownTimeout;
+	}
+
+	@Override
+	public void setShutdownTimeout(int shutdownTimeout) {
+		this.shutdownTimeout = shutdownTimeout;
+	}
 }

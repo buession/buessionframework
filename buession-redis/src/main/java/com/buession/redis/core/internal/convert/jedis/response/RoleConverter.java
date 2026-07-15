@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.redis.core.Role;
 
@@ -42,6 +41,10 @@ public final class RoleConverter implements Converter<Object, Role> {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Role convert(final Object source) {
+		if(source == null){
+			return null;
+		}
+
 		if(source instanceof List){
 			List<Object> tmp = (List<Object>) source;
 

@@ -19,19 +19,56 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
+import io.lettuce.core.BaseRedisClient;
+import io.lettuce.core.codec.RedisCodec;
 
 /**
  * Lettuce Redis 连接对象
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ * @param <C>
+ *        {@link BaseRedisClient} 类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface LettuceRedisConnection extends RedisConnection {
+public interface LettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>> extends RedisConnection {
+
+	/**
+	 * 返回 Lettuce 原生客户端
+	 *
+	 * @return Lettuce 原生客户端
+	 *
+	 * @since 4.0.0
+	 */
+	C getClient();
+
+	/**
+	 * 获取 Redis 编解码器
+	 *
+	 * @return Redis 编解码器
+	 *
+	 * @since 4.0.0
+	 */
+	RedisCodec<K, V> getCodec();
+
+	/**
+	 * 设置 Redis 编解码器
+	 *
+	 * @param codec
+	 * 		Redis 编解码器
+	 *
+	 * @since 4.0.0
+	 */
+	void setCodec(RedisCodec<K, V> codec);
 
 }

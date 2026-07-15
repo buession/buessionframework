@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.net.HostAndPort;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
@@ -50,17 +52,14 @@ public class Client implements Serializable {
 	/**
 	 * 客户端的地址和端口
 	 */
-	private String addr;
+	private HostAndPort addr;
 
 	/**
-	 * 客户端的地址
+	 * 本地地址和端口
+	 *
+	 * @since 4.0.0
 	 */
-	private String host;
-
-	/**
-	 * 客户端端口
-	 */
-	private int port;
+	private HostAndPort laddr;
 
 	/**
 	 * 套接字所使用的文件描述符
@@ -91,6 +90,13 @@ public class Client implements Serializable {
 	 * 已订阅频道的数量
 	 */
 	private int sub;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int ssub;
 
 	/**
 	 * 已订阅模式的数量
@@ -128,6 +134,111 @@ public class Client implements Serializable {
 	private int omem;
 
 	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int watch;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int rbs;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int rbp;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int multiMem;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int argvMem;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int totMem;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int redir;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int resp;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int ioThread;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int totNetIn;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int totNetOut;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private int totCmds;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private String user;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private String libName;
+
+	/**
+	 * -
+	 *
+	 * @since 4.0.0
+	 */
+	private String libVer;
+
+	/**
 	 * 文件描述符事件（见下文）
 	 */
 	private Event events;
@@ -135,14 +246,19 @@ public class Client implements Serializable {
 	/**
 	 * 最近一次执行的命令
 	 */
-	private ProtocolCommand cmd;
+	private RedisCommand cmd;
+
+	/**
+	 * 最近一次执行的命令子命令
+	 */
+	private RedisSubCommand subCmd;
 
 	/**
 	 * 获取客户端 ID
 	 *
 	 * @return 客户端 ID
 	 */
-	public int getId(){
+	public int getId() {
 		return id;
 	}
 
@@ -152,7 +268,7 @@ public class Client implements Serializable {
 	 * @param id
 	 * 		客户端 ID
 	 */
-	public void setId(final int id){
+	public void setId(final int id) {
 		this.id = id;
 	}
 
@@ -161,7 +277,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 客户端名称
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 
@@ -171,7 +287,7 @@ public class Client implements Serializable {
 	 * @param name
 	 * 		客户端名称
 	 */
-	public void setName(final String name){
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -180,7 +296,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 客户端的地址和端口
 	 */
-	public String getAddr(){
+	public HostAndPort getAddr() {
 		return addr;
 	}
 
@@ -190,46 +306,31 @@ public class Client implements Serializable {
 	 * @param addr
 	 * 		客户端的地址和端口
 	 */
-	public void setAddr(String addr){
+	public void setAddr(HostAndPort addr) {
 		this.addr = addr;
 	}
 
 	/**
-	 * 获取客户端的地址
+	 * 返回本地地址和端口
 	 *
-	 * @return 客户端的地址
+	 * @return 本地地址和端口
+	 *
+	 * @since 4.0.0
 	 */
-	public String getHost(){
-		return host;
+	public HostAndPort getLaddr() {
+		return laddr;
 	}
 
 	/**
-	 * 设置客户端的地址
+	 * 设置本地地址和端口
 	 *
-	 * @param host
-	 * 		客户端的地址
-	 */
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	/**
-	 * 获取客户端的端口
+	 * @param laddr
+	 * 		本地地址和端口
 	 *
-	 * @return 客户端的端口
+	 * @since 4.0.0
 	 */
-	public int getPort(){
-		return port;
-	}
-
-	/**
-	 * 设置客户端的端口
-	 *
-	 * @param port
-	 * 		客户端的端口
-	 */
-	public void setPort(int port){
-		this.port = port;
+	public void setLaddr(HostAndPort laddr) {
+		this.laddr = laddr;
 	}
 
 	/**
@@ -237,7 +338,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 套接字所使用的文件描述符
 	 */
-	public int getFd(){
+	public int getFd() {
 		return fd;
 	}
 
@@ -247,7 +348,7 @@ public class Client implements Serializable {
 	 * @param fd
 	 * 		套接字所使用的文件描述符
 	 */
-	public void setFd(int fd){
+	public void setFd(int fd) {
 		this.fd = fd;
 	}
 
@@ -256,7 +357,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 已连接时长（单位：秒）
 	 */
-	public int getAge(){
+	public int getAge() {
 		return age;
 	}
 
@@ -266,7 +367,7 @@ public class Client implements Serializable {
 	 * @param age
 	 * 		已连接时长（单位：秒）
 	 */
-	public void setAge(int age){
+	public void setAge(int age) {
 		this.age = age;
 	}
 
@@ -275,7 +376,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 空闲时长（单位：秒）
 	 */
-	public int getIdle(){
+	public int getIdle() {
 		return idle;
 	}
 
@@ -285,7 +386,7 @@ public class Client implements Serializable {
 	 * @param idle
 	 * 		空闲时长（单位：秒）
 	 */
-	public void setIdle(int idle){
+	public void setIdle(int idle) {
 		this.idle = idle;
 	}
 
@@ -294,7 +395,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 客户端 flag
 	 */
-	public Set<Flag> getFlags(){
+	public Set<Flag> getFlags() {
 		return flags;
 	}
 
@@ -304,7 +405,7 @@ public class Client implements Serializable {
 	 * @param flags
 	 * 		客户端 flag
 	 */
-	public void setFlags(Set<Flag> flags){
+	public void setFlags(Set<Flag> flags) {
 		this.flags = flags;
 	}
 
@@ -313,7 +414,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 该客户端正在使用的数据库 ID
 	 */
-	public int getDb(){
+	public int getDb() {
 		return db;
 	}
 
@@ -323,7 +424,7 @@ public class Client implements Serializable {
 	 * @param db
 	 * 		该客户端正在使用的数据库 ID
 	 */
-	public void setDb(int db){
+	public void setDb(int db) {
 		this.db = db;
 	}
 
@@ -332,7 +433,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 已订阅频道的数量
 	 */
-	public int getSub(){
+	public int getSub() {
 		return sub;
 	}
 
@@ -342,8 +443,31 @@ public class Client implements Serializable {
 	 * @param sub
 	 * 		已订阅频道的数量
 	 */
-	public void setSub(int sub){
+	public void setSub(int sub) {
 		this.sub = sub;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getSsub() {
+		return ssub;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param ssub
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setSsub(int ssub) {
+		this.ssub = ssub;
 	}
 
 	/**
@@ -351,7 +475,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 已订阅模式的数量
 	 */
-	public int getPsub(){
+	public int getPsub() {
 		return psub;
 	}
 
@@ -361,7 +485,7 @@ public class Client implements Serializable {
 	 * @param psub
 	 * 		已订阅模式的数量
 	 */
-	public void setPsub(int psub){
+	public void setPsub(int psub) {
 		this.psub = psub;
 	}
 
@@ -370,7 +494,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 在事务中被执行的命令数量
 	 */
-	public int getMulti(){
+	public int getMulti() {
 		return multi;
 	}
 
@@ -380,7 +504,7 @@ public class Client implements Serializable {
 	 * @param multi
 	 * 		在事务中被执行的命令数量
 	 */
-	public void setMulti(int multi){
+	public void setMulti(int multi) {
 		this.multi = multi;
 	}
 
@@ -389,7 +513,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 查询缓冲区的长度（字节为单位， 0 表示没有分配查询缓冲区）
 	 */
-	public int getQBuf(){
+	public int getQBuf() {
 		return qBuf;
 	}
 
@@ -399,7 +523,7 @@ public class Client implements Serializable {
 	 * @param qBuf
 	 * 		查询缓冲区的长度（字节为单位， 0 表示没有分配查询缓冲区）
 	 */
-	public void setQBuf(int qBuf){
+	public void setQBuf(int qBuf) {
 		this.qBuf = qBuf;
 	}
 
@@ -408,7 +532,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 查询缓冲区剩余空间的长度（字节为单位， 0 表示没有剩余空间）
 	 */
-	public int getQBufFree(){
+	public int getQBufFree() {
 		return qBufFree;
 	}
 
@@ -418,7 +542,7 @@ public class Client implements Serializable {
 	 * @param qBufFree
 	 * 		查询缓冲区剩余空间的长度（字节为单位， 0 表示没有剩余空间）
 	 */
-	public void setQBufFree(int qBufFree){
+	public void setQBufFree(int qBufFree) {
 		this.qBufFree = qBufFree;
 	}
 
@@ -427,7 +551,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 输出缓冲区的长度（字节为单位， 0 表示没有分配输出缓冲区）
 	 */
-	public int getObl(){
+	public int getObl() {
 		return obl;
 	}
 
@@ -437,7 +561,7 @@ public class Client implements Serializable {
 	 * @param obl
 	 * 		输出缓冲区的长度（字节为单位， 0 表示没有分配输出缓冲区）
 	 */
-	public void setObl(int obl){
+	public void setObl(int obl) {
 		this.obl = obl;
 	}
 
@@ -446,7 +570,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 输出列表包含的对象数量（当输出缓冲区没有剩余空间时，命令回复会以字符串对象的形式被入队到这个队列里）
 	 */
-	public int getOll(){
+	public int getOll() {
 		return oll;
 	}
 
@@ -456,7 +580,7 @@ public class Client implements Serializable {
 	 * @param oll
 	 * 		输出列表包含的对象数量（当输出缓冲区没有剩余空间时，命令回复会以字符串对象的形式被入队到这个队列里）
 	 */
-	public void setOll(int oll){
+	public void setOll(int oll) {
 		this.oll = oll;
 	}
 
@@ -465,7 +589,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 输出缓冲区和输出列表占用的内存总量
 	 */
-	public int getOmem(){
+	public int getOmem() {
 		return omem;
 	}
 
@@ -475,8 +599,353 @@ public class Client implements Serializable {
 	 * @param omem
 	 * 		输出缓冲区和输出列表占用的内存总量
 	 */
-	public void setOmem(int omem){
+	public void setOmem(int omem) {
 		this.omem = omem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getWatch() {
+		return watch;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param watch
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setWatch(int watch) {
+		this.watch = watch;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getRbs() {
+		return rbs;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param rbs
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setRbs(int rbs) {
+		this.rbs = rbs;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getRbp() {
+		return rbp;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param rbp
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setRbp(int rbp) {
+		this.rbp = rbp;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getMultiMem() {
+		return multiMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param multiMem
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setMultiMem(int multiMem) {
+		this.multiMem = multiMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getArgvMem() {
+		return argvMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param argvMem
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setArgvMem(int argvMem) {
+		this.argvMem = argvMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getTotMem() {
+		return totMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param totMem
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setTotMem(int totMem) {
+		this.totMem = totMem;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getRedir() {
+		return redir;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param redir
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setRedir(int redir) {
+		this.redir = redir;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getResp() {
+		return resp;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param resp
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setResp(int resp) {
+		this.resp = resp;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getIoThread() {
+		return ioThread;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param ioThread
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setIoThread(int ioThread) {
+		this.ioThread = ioThread;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getTotNetIn() {
+		return totNetIn;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param totNetIn
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setTotNetIn(int totNetIn) {
+		this.totNetIn = totNetIn;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getTotNetOut() {
+		return totNetOut;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param totNetOut
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setTotNetOut(int totNetOut) {
+		this.totNetOut = totNetOut;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public int getTotCmds() {
+		return totCmds;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param totCmds
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setTotCmds(int totCmds) {
+		this.totCmds = totCmds;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public String getUser() {
+		return user;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param user
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public String getLibName() {
+		return libName;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param libName
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setLibName(String libName) {
+		this.libName = libName;
+	}
+
+	/**
+	 * -
+	 *
+	 * @return -
+	 *
+	 * @since 4.0.0
+	 */
+	public String getLibVer() {
+		return libVer;
+	}
+
+	/**
+	 * -
+	 *
+	 * @param libVer
+	 * 		-
+	 *
+	 * @since 4.0.0
+	 */
+	public void setLibVer(String libVer) {
+		this.libVer = libVer;
 	}
 
 	/**
@@ -484,7 +953,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 文件描述符事件
 	 */
-	public Event getEvents(){
+	public Event getEvents() {
 		return events;
 	}
 
@@ -494,7 +963,7 @@ public class Client implements Serializable {
 	 * @param events
 	 * 		文件描述符事件
 	 */
-	public void setEvents(Event events){
+	public void setEvents(Event events) {
 		this.events = events;
 	}
 
@@ -503,7 +972,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 最近一次执行的命令
 	 */
-	public ProtocolCommand getCmd(){
+	public RedisCommand getCmd() {
 		return cmd;
 	}
 
@@ -513,34 +982,46 @@ public class Client implements Serializable {
 	 * @param cmd
 	 * 		最近一次执行的命令
 	 */
-	public void setCmd(ProtocolCommand cmd){
+	public void setCmd(RedisCommand cmd) {
 		this.cmd = cmd;
 	}
 
+	/**
+	 * 获取最近一次执行的命令子命令
+	 *
+	 * @return 最近一次执行的命令子命令
+	 *
+	 * @since 4.0.0
+	 */
+	public RedisSubCommand getSubCmd() {
+		return subCmd;
+	}
+
+	/**
+	 * 设置最近一次执行的命令子命令
+	 *
+	 * @param subCmd
+	 * 		最近一次执行的命令子命令
+	 *
+	 * @since 4.0.0
+	 */
+	public void setSubCmd(RedisSubCommand subCmd) {
+		this.subCmd = subCmd;
+	}
+
 	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("id", id)
-				.add("name", name)
-				.add("addr", addr)
-				.add("host", host)
-				.add("port", port)
-				.add("fd", fd)
-				.add("age", age)
-				.add("idle", idle)
-				.add("flags", flags)
-				.add("db", db)
-				.add("su", sub)
-				.add("psub", psub)
-				.add("mult", multi)
-				.add("qBuf", qBuf)
-				.add("qBufFree", qBufFree)
-				.add("obl", obl)
-				.add("oll", oll)
-				.add("omem", omem)
-				.add("events", events)
-				.add("cmd", cmd)
-				.build();
+	public String toString() {
+		return ObjectStringBuilder.create().add("id", id).add("name", name).add("addr", addr)
+				.add("laddr", laddr).add("fd", fd).add("age", age).add("idle", idle)
+				.add("flags", flags).add("db", db).add("sub", sub).add("ssub", ssub).add("psub", psub)
+				.add("mult", multi).add("qBuf", qBuf).add("qbuf-free", qBufFree).add("obl", obl)
+				.add("oll", oll).add("omem", omem).add("watch", watch).add("rbs", rbs)
+				.add("rbp", rbp).add("multi-mem", multiMem).add("argv-mem", argvMem)
+				.add("tot-mem", totMem).add("redir", redir).add("resp", resp)
+				.add("io-thread", ioThread).add("tot-net-in", totNetIn).add("tot-net-out", totNetOut)
+				.add("tot-cmds", totCmds).add("user", user).add("lib-name", libName)
+				.add("lib-ver", libVer).add("events", events)
+				.add("cmd", cmd + (subCmd == null ? "" : '|' + subCmd.name())).build();
 	}
 
 	public enum Flag {
@@ -573,8 +1054,7 @@ public class Client implements Serializable {
 		/**
 		 * 客户端正在等待 VM I/O 操作（已废弃）
 		 */
-		@Deprecated
-		i,
+		@Deprecated i,
 
 		/**
 		 * 一个受监视（watched）的键已被修改， EXEC 命令将失败
@@ -600,14 +1080,6 @@ public class Client implements Serializable {
 		 * 未设置任何 flag
 		 */
 		N
-	}
-
-	public enum Event {
-
-		R,
-
-		W
-
 	}
 
 }

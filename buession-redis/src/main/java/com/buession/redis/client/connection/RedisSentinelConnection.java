@@ -24,11 +24,15 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.utils.Assert;
+import com.buession.lang.Status;
 import com.buession.redis.core.RedisNamedNode;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Redis 哨兵连接器
@@ -69,11 +73,50 @@ public interface RedisSentinelConnection extends RedisConnection {
 	void setSentinelSoTimeout(int sentinelSoTimeout);
 
 	/**
+	 * 获取当前 Master 节点
+	 *
+	 * @return 当前 Master 节点
+	 */
+	String myId();
+
+	/**
+	 * 返回哨兵节点
+	 *
+	 * @param master
+	 * 		Master 节点
+	 *
+	 * @return 哨兵节点
+	 */
+	default List<RedisNode> sentinels(RedisNamedNode master) {
+		Assert.isNull(master, "Redis master node cloud not be 'null' for loading sentinels.");
+		return sentinels(master.getName());
+	}
+
+	/**
+	 * 返回哨兵节点
+	 *
+	 * @param masterName
+	 * 		master 名称
+	 *
+	 * @return 哨兵节点
+	 */
+	List<RedisNode> sentinels(String masterName);
+
+	String sentinelSet(String masterName, Map<String, String> parameters);
+
+	/**
 	 * 返回 Master 节点列表
 	 *
 	 * @return Master 节点列表
 	 */
 	List<RedisServer> masters();
+
+	/**
+	 * 返回 Master 节点列表
+	 *
+	 * @return Master 节点列表
+	 */
+	RedisServer master(String masterName);
 
 	/**
 	 * 返回 Slave 节点列表
@@ -83,7 +126,10 @@ public interface RedisSentinelConnection extends RedisConnection {
 	 *
 	 * @return Slave 节点列表
 	 */
-	List<RedisServer> slaves(RedisNamedNode master);
+	default List<RedisServer> slaves(RedisNamedNode master) {
+		Assert.isNull(master, "Redis master node cloud not be 'null' for loading slaves.");
+		return slaves(master.getName());
+	}
 
 	/**
 	 * 返回 Slave 节点列表
@@ -96,20 +142,76 @@ public interface RedisSentinelConnection extends RedisConnection {
 	List<RedisServer> slaves(String masterName);
 
 	/**
+	 * 返回 Replica 节点列表
+	 *
+	 * @param masterName
+	 * 		Master 节点名称
+	 *
+	 * @return Replica 节点列表
+	 */
+	List<RedisServer> replicas(String masterName);
+
+	/**
 	 * failover
 	 *
-	 * @param namedNode
-	 * 		节点
+	 * @param master
+	 * 		Master 节点
+	 *
+	 * @return 操作结果
 	 */
-	void failover(RedisNamedNode namedNode);
+	default Status failover(RedisNamedNode master) {
+		Assert.isNull(master, "Redis master node cloud not be 'null' for loading failover.");
+		return failover(master.getName());
+	}
+
+	/**
+	 * failover
+	 *
+	 * @param masterName
+	 * 		Master 节点名称
+	 */
+	Status failover(String masterName);
 
 	/**
 	 * 监控节点
 	 *
-	 * @param server
-	 * 		节点
+	 * @param master
+	 * 		Master 节点
+	 * @param ip
+	 * 		-
+	 * @param port
+	 * 		-
+	 * @param quorum
+	 * 		-
 	 */
-	void monitor(RedisSentinelNode server);
+	default Status monitor(RedisNamedNode master, String ip, int port, int quorum) {
+		Assert.isNull(master, "Redis master node cloud not be 'null' for loading monitor.");
+		return monitor(master.getName(), ip, port, quorum);
+	}
+
+	/**
+	 * 监控节点
+	 *
+	 * @param masterName
+	 * 		Master 节点名称
+	 * @param ip
+	 * 		-
+	 * @param port
+	 * 		-
+	 * @param quorum
+	 * 		-
+	 */
+	Status monitor(String masterName, String ip, int port, int quorum);
+
+	/**
+	 * 重置
+	 *
+	 * @param pattern
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	Long reset(String pattern);
 
 	/**
 	 * 移除节点
@@ -117,14 +219,19 @@ public interface RedisSentinelConnection extends RedisConnection {
 	 * @param master
 	 * 		节点
 	 */
-	void remove(RedisNamedNode master);
+	default void remove(RedisNamedNode master) {
+		Assert.isNull(master, "Master node cloud be 'null' when trying to remove.");
+		remove(master.getName());
+	}
 
 	/**
 	 * 移除节点
 	 *
 	 * @param masterName
 	 * 		节点名称
+	 *
+	 * @return 操作结果
 	 */
-	void remove(String masterName);
+	Status remove(String masterName);
 
 }

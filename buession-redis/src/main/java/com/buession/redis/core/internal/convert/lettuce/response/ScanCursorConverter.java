@@ -19,18 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.MapCollectionKeyValueConverter;
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -38,8 +38,8 @@ import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScoredValueScanCursor;
 import io.lettuce.core.ValueScanCursor;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Lettuce {@link ScanCursor} 转换为 {@link ScanResult}
@@ -52,39 +52,32 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
+@FunctionalInterface
 public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<T, ScanResult<R>> {
 
 	/**
 	 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
 	 *
-	 * @param <K>
-	 * 		Key 类型
+	 * @param <SK>
+	 * 		原始 Key 类型
+	 * @param <TK>
+	 * 		目标 Key 类型
 	 *
 	 * @author Yong.Teng
 	 */
-	final class KeyScanCursorConverter<K> implements ScanCursorConverter<KeyScanCursor<K>, List<K>> {
+	final class KeyScanCursorConverter<SK, TK> implements ScanCursorConverter<KeyScanCursor<SK>, TK> {
 
-		@Override
-		public ScanResult<List<K>> convert(final KeyScanCursor<K> source) {
-			return new ScanResult<>(source.getCursor(), source.getKeys());
+		private final Converter<SK, TK> converter;
+
+		public KeyScanCursorConverter(final Converter<SK, TK> converter) {
+			this.converter = converter;
 		}
 
-		/**
-		 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<KeyScanCursor<byte[]>,
-				List<String>> {
-
-			private final ListConverter<byte[], String> binaryToStringListConverter =
-					new ListConverter<>(SafeEncoder::encode);
-
-			@Override
-			public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getKeys()));
-			}
-
+		@Override
+		public ScanResult<TK> convert(final KeyScanCursor<SK> source) {
+			final ListConverter<SK, TK> listConverter = new ListConverter<>(converter);
+			final List<TK> results = listConverter.convert(source.getKeys());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}
@@ -92,52 +85,43 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	/**
 	 * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
 	 *
-	 * @param <K>
-	 * 		Key 类型
+	 * @param <SV>
+	 * 		原始值类型
+	 * @param <TV>
+	 * 		目标值类型
 	 *
 	 * @author Yong.Teng
 	 */
-	final class ValueScanCursorConverter<K> implements ScanCursorConverter<ValueScanCursor<K>, List<K>> {
+	final class ValueScanCursorConverter<SV, TV> implements ScanCursorConverter<ValueScanCursor<SV>, TV> {
+
+		private final Converter<SV, TV> converter;
+
+		public ValueScanCursorConverter(final Converter<SV, TV> converter) {
+			this.converter = converter;
+		}
 
 		@Override
-		public ScanResult<List<K>> convert(final ValueScanCursor<K> source) {
-			return new ScanResult<>(source.getCursor(), source.getValues());
+		public ScanResult<TV> convert(final ValueScanCursor<SV> source) {
+			final ListConverter<SV, TV> listConverter = new ListConverter<>(converter);
+			final List<TV> results = listConverter.convert(source.getValues());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
-		/**
-		 * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<ValueScanCursor<byte[]>,
-				List<String>> {
+	}
 
-			private final ListConverter<byte[], String> binaryToStringListConverter =
-					new ListConverter<>(SafeEncoder::encode);
+	/**
+	 * Lettuce {@link ScoredValueScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 */
+	final class ScoredValueScanCursorConverter implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, Tuple> {
 
-			@Override
-			public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getValues()));
-			}
-
-		}
-
-		/**
-		 * Lettuce {@link ScoredValueScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		public final static class ScoredValueScanCursorConverter
-				implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, List<Tuple>> {
-
-			private final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter
-					= ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
-
-			@Override
-			public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), listScoredValueConverter.convert(source.getValues()));
-			}
-
+		@Override
+		public ScanResult<Tuple> convert(final ScoredValueScanCursor<byte[]> source) {
+			ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = new ListConverter<>(
+					new ScoredValueTupleConverter());
+			final List<Tuple> results = listScoredValueConverter.convert(source.getValues());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}
@@ -145,36 +129,30 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	/**
 	 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
 	 *
-	 * @param <K>
-	 * 		Key 类型
-	 * @param <V>
-	 * 		值类型
+	 * @param <SK>
+	 * 		原始 Key 类型
+	 * @param <SV>
+	 * 		原始值类型
+	 * @param <TK>
+	 * 		目标 Key 类型
+	 * @param <TV>
+	 * 		目标 Key 类型
 	 *
 	 * @author Yong.Teng
 	 */
-	final class MapScanCursorConverter<K, V> implements ScanCursorConverter<MapScanCursor<K, V>, Map<K, V>> {
+	final class MapScanCursorConverter<SK, SV, TK, TV>
+			extends BaseKeyValueConverter<SK, SV, TK, TV, MapScanCursor<SK, SV>, ScanResult<KeyValue<TK, TV>>>
+			implements ScanCursorConverter<MapScanCursor<SK, SV>, KeyValue<TK, TV>> {
 
-		@Override
-		public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
-			return new ScanResult<>(source.getCursor(), source.getMap());
+		public MapScanCursorConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+			super(keyConverter, valueConverter);
 		}
 
-		/**
-		 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		public final static class BvSvMapScanCursorConverter implements ScanCursorConverter<MapScanCursor<byte[],
-				byte[]>, Map<String, String>> {
-
-			private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
-					Converters.mapBinaryToString();
-
-			@Override
-			public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringMapConverter.convert(source.getMap()));
-			}
-
+		@Override
+		public ScanResult<KeyValue<TK, TV>> convert(final MapScanCursor<SK, SV> source) {
+			final MapCollectionKeyValueConverter<SK, SV, TK, TV> mapConverter = new MapCollectionKeyValueConverter<>(
+					keyConverter, valueConverter);
+			return new ScanResult<>(source.getCursor(), new ArrayList<>(mapConverter.convert(source.getMap())));
 		}
 
 	}

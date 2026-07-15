@@ -7,7 +7,7 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>3.0.1</version>
+		<version>4.0.0</version>
 	</parent>
 	<artifactId>buession-thesaurus</artifactId>
 	<url>http://www.buession.com/</url>
@@ -56,6 +56,12 @@
 			<groupId>com.buession</groupId>
 			<artifactId>buession-core</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.micrometer</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

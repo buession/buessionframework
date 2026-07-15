@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,6 +52,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @JacksonStdImpl
 public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> implements ContextualDeserializer {
+
+	private final static long serialVersionUID = 519940321650314022L;
 
 	private final static Map<String, Enum<?>> cache = new ConcurrentHashMap<>(32);
 
@@ -72,9 +73,9 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		/** 当前节点名 */
-		String fieldName = jsonParser.getCurrentName();
+		String fieldName = jsonParser.currentName();
 		/** 当前值 */
-		Object currentValue = jsonParser.getCurrentValue();
+		Object currentValue = jsonParser.currentValue();
 		Class<?> clazz = currentValue.getClass();
 
 		try{
@@ -86,7 +87,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			}
 
 			/** 可能只是字符串 **/
-			if(node.size() == 0){
+			if(node.isEmpty()){
 				return Enum.valueOf((Class<Enum>) nodeCurrentFieldType, node.asText());
 			}
 
@@ -161,12 +162,9 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			return null;
 		}
 
-		final Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
 		final Map<String, JsonNode> result = new HashMap<>(node.size());
-		Map.Entry<String, JsonNode> entry;
 
-		while(iterator.hasNext()){
-			entry = iterator.next();
+		for(Map.Entry<String, JsonNode> entry : node.properties()){
 			result.put(entry.getKey(), entry.getValue());
 		}
 

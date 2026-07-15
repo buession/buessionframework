@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -29,6 +29,7 @@ package com.buession.web.servlet.filter;
 import com.buession.core.Framework;
 
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * Powered By 过滤器
@@ -41,9 +42,13 @@ public class PoweredByFilter extends ResponseHeadersFilter {
 	/**
 	 * 构造函数
 	 */
-	public PoweredByFilter(){
+	public PoweredByFilter() {
 		super();
-		setHeaders(Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION));
+		super.setHeaders(Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION));
+	}
+
+	@Override
+	public void setHeaders(Map<String, String> headers) {
 	}
 
 }

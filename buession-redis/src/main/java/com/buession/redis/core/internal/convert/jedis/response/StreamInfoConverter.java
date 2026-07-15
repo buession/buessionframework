@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -29,6 +29,7 @@ import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.resps.StreamInfo;
 
 /**
@@ -37,18 +38,28 @@ import redis.clients.jedis.resps.StreamInfo;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamInfoConverter implements Converter<StreamInfo, Stream> {
+public final class StreamInfoConverter<K, V> extends BaseKeyValueConverter<String, String, K, V, StreamInfo,
+		Stream<K, V>> {
 
-	private final StreamEntryConverter streamEntryConverter = new StreamEntryConverter();
-
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+	public StreamInfoConverter(final Converter<String, K> keyConverter,
+	                           final Converter<String, V> valueConverter) {
+		super(keyConverter, valueConverter);
+	}
 
 	@Override
-	public Stream convert(final StreamInfo source) {
+	public Stream<K, V> convert(final StreamInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+		final StreamEntryConverter<K, V> streamEntryConverter = new StreamEntryConverter<>(keyConverter,
+				valueConverter);
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
-		final StreamEntry firstEntry = streamEntryConverter.convert(source.getFirstEntry());
-		final StreamEntry lastEntry = streamEntryConverter.convert(source.getLastEntry());
-		return new Stream(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
+		final StreamEntry<K, V> firstEntry = streamEntryConverter.convert(source.getFirstEntry());
+		final StreamEntry<K, V> lastEntry = streamEntryConverter.convert(source.getLastEntry());
+
+		return new Stream<>(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				source.getGroups(), lastGeneratedId, firstEntry, lastEntry, source.getStreamInfo());
 	}
 

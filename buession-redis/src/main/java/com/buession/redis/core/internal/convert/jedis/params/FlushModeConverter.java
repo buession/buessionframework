@@ -19,31 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.FlushMode;
 
 /**
- * {@link FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
+ * {@link com.buession.redis.core.command.args.FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class FlushModeConverter implements Converter<FlushMode, redis.clients.jedis.args.FlushMode> {
+public final class FlushModeConverter
+		implements Converter<com.buession.redis.core.command.args.FlushMode, redis.clients.jedis.args.FlushMode> {
 
 	@Override
-	public redis.clients.jedis.args.FlushMode convert(final FlushMode source) {
-		switch(source){
-			case ASYNC:
-				return redis.clients.jedis.args.FlushMode.ASYNC;
-			case SYNC:
-				return redis.clients.jedis.args.FlushMode.SYNC;
-			default:
-				return null;
+	public redis.clients.jedis.args.FlushMode convert(final com.buession.redis.core.command.args.FlushMode source) {
+		if(source == com.buession.redis.core.command.args.FlushMode.ASYNC){
+			return redis.clients.jedis.args.FlushMode.ASYNC;
+		}else if(source == com.buession.redis.core.command.args.FlushMode.SYNC){
+			return redis.clients.jedis.args.FlushMode.SYNC;
+		}else{
+			return null;
 		}
 	}
 

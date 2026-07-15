@@ -19,45 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author Yong.Teng
  */
-public final class RedisServerTime implements Serializable {
-
-	private final static long serialVersionUID = 7818271427941747714L;
-
-	private final Date date;
-
-	private final long usec;
-
-	public RedisServerTime(final Date date, final long usec) {
-		this.date = date;
-		this.usec = usec;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public long getUsec() {
-		return usec;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(date, usec);
-	}
+public record RedisServerTime(Date date, Long usec) {
 
 	@Override
 	public boolean equals(Object obj) {
@@ -65,9 +40,8 @@ public final class RedisServerTime implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof RedisServerTime){
-			RedisServerTime that = (RedisServerTime) obj;
-			return usec == that.usec && Objects.equals(date, that.date);
+		if(obj instanceof RedisServerTime that){
+			return Objects.equals(usec, that.usec) && Objects.equals(date, that.date);
 		}
 
 		return false;

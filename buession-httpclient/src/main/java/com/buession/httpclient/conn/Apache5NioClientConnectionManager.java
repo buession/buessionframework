@@ -341,7 +341,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 
 	private static Lookup<TlsStrategy> getDefaultLookup() {
 		return RegistryBuilder.<TlsStrategy>create()
-				.register(URIScheme.HTTPS.getId(), DefaultClientTlsStrategy.getDefault())
+				.register(URIScheme.HTTPS.getId(), DefaultClientTlsStrategy.createDefault())
 				.build();
 	}
 

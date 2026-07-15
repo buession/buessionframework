@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.concurrent;
 
 import org.springframework.lang.NonNull;
 
+import java.util.Optional;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -77,8 +78,7 @@ public class DefaultThreadFactory implements ThreadFactory {
 	 * 		名称前缀
 	 */
 	public DefaultThreadFactory(final String namePrefix) {
-		SecurityManager securityManager = System.getSecurityManager();
-		group = securityManager == null ? Thread.currentThread().getThreadGroup() : securityManager.getThreadGroup();
+		this.group = Thread.currentThread().getThreadGroup();
 		this.namePrefix = namePrefix + "-thread-";
 	}
 
@@ -169,9 +169,7 @@ public class DefaultThreadFactory implements ThreadFactory {
 			thread.setPriority(priority);
 		}
 
-		if(daemon != null){
-			thread.setDaemon(daemon);
-		}
+		Optional.ofNullable(daemon).ifPresent(thread::setDaemon);
 
 		return thread;
 	}

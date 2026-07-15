@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.annotation;
@@ -31,14 +31,13 @@ import com.buession.core.validator.Validate;
 import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.http.request.annotation.RequestClientIpAnnotationUtils;
 import com.buession.web.servlet.http.request.RequestUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ValueConstants;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 方法参数注解 {@link RequestClientIp} 解析器

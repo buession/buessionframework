@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -71,21 +71,16 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * 		原生连接管理器
 	 */
 	public OkHttpClientConnectionManager(Configuration configuration,
-										 HttpClientConnectionManager clientConnectionManager) {
+	                                     HttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
-	/**
-	 * 创建驱动默认连接管理器
-	 *
-	 * @return 连接管理器
-	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
 		// 最大连接数
-		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxRequests);
 		// 同时请求相同主机的请求数量最大值
 		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setMaxRequestsPerHost);
 		// 默认的最大并发请求数量

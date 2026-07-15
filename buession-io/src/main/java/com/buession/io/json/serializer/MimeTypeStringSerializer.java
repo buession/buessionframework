@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.json.serializer;
@@ -69,12 +69,8 @@ public class MimeTypeStringSerializer extends StdScalarSerializer<MimeType> impl
 	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
 			throws JsonMappingException {
 		JsonFormat.Value format = findFormatOverrides(provider, property, handledType());
-
-		if(format != null){
-			return new MimeTypeStringSerializer((Class<MimeType>) property.getType().getRawClass());
-		}
-
-		return this;
+		return format == null ? this :
+				new MimeTypeStringSerializer((Class<MimeType>) property.getType().getRawClass());
 	}
 
 }

@@ -27,6 +27,7 @@ package com.buession.redis.core.internal.convert.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.KeyValueParser;
+import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.BumpEpoch;
 
@@ -40,6 +41,10 @@ public final class BumpEpochConverter implements Converter<String, KeyValue<Bump
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> convert(final String source) {
+		if(Validate.isEmpty(source)){
+			return null;
+		}
+
 		final KeyValueParser keyValueParser = new KeyValueParser(source, " ");
 		return new KeyValue<>(EnumUtils.getEnum(BumpEpoch.class, keyValueParser.getKey()),
 				keyValueParser.getIntValue());

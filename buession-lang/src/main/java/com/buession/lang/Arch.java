@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -42,20 +42,23 @@ public enum Arch {
 	 */
 	BIT_64("64"),
 
+	/**
+	 * 未知
+	 */
 	UNKNOWN("Unknown");
 
 	private final String label;
 
-	Arch(final String label){
+	Arch(final String label) {
 		this.label = label;
 	}
 
-	public String getLabel(){
+	public String getLabel() {
 		return this.label;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return label;
 	}
 

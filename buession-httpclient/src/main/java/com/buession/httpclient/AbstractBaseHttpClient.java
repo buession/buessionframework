@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -36,7 +36,7 @@ import com.buession.httpclient.core.ProtocolVersion;
  * @author Yong.Teng
  * @since 2.3.0
  */
-abstract class AbstractBaseHttpClient<CM extends IConnectionManager> implements IBaseHttpClient, IHttpClient {
+abstract class AbstractBaseHttpClient<CM extends IConnectionManager> implements IHttpClient {
 
 	/**
 	 * 连接管理器

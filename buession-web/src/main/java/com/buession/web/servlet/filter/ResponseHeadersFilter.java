@@ -21,18 +21,18 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
 
 import com.buession.core.validator.Validate;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class ResponseHeadersFilter extends OncePerRequestFilter {
 	/**
 	 * 构造函数
 	 */
-	public ResponseHeadersFilter(){
+	public ResponseHeadersFilter() {
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ResponseHeadersFilter extends OncePerRequestFilter {
 	 *
 	 * @since 2.0.0
 	 */
-	public ResponseHeadersFilter(Map<String, String> headers){
+	public ResponseHeadersFilter(Map<String, String> headers) {
 		this.headers = headers;
 	}
 
@@ -71,7 +71,7 @@ public class ResponseHeadersFilter extends OncePerRequestFilter {
 	 *
 	 * @return 响应头，Key =&gt; Value 形式
 	 */
-	public Map<String, String> getHeaders(){
+	public Map<String, String> getHeaders() {
 		return headers;
 	}
 
@@ -81,13 +81,13 @@ public class ResponseHeadersFilter extends OncePerRequestFilter {
 	 * @param headers
 	 * 		响应头，Key =&gt; Value 形式
 	 */
-	public void setHeaders(Map<String, String> headers){
+	public void setHeaders(Map<String, String> headers) {
 		this.headers = headers;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException{
+			throws ServletException, IOException {
 		Map<String, String> headers = getHeaders();
 		if(Validate.isNotEmpty(headers)){
 			headers.forEach(response::addHeader);

@@ -19,17 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
@@ -39,14 +40,38 @@ import java.util.List;
  */
 public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
 
-	@Nullable
 	@Override
 	public StreamGroup convert(final Object source) {
-		return null;
-	}
+		if(source instanceof List<?> tmp){
+			int sourceSize = tmp.size();
 
-	public static ListConverter<Object, StreamGroup> listConverter() {
-		return new ListConverter<>(new StreamGroupInfoConverter());
+			String name = SafeEncoder.encode((byte[]) tmp.get(1));
+			Long consumers = null;
+			Long pending = null;
+			StreamEntryId lastDeliveredId = null;
+			Long entriesRread = null;
+			Long lag = null;
+
+			if(sourceSize >= 4){
+				consumers = (Long) tmp.get(3);
+				if(sourceSize >= 6){
+					pending = (Long) tmp.get(5);
+					if(sourceSize >= 8){
+						lastDeliveredId = new StreamEntryId((byte[]) tmp.get(7));
+						if(sourceSize >= 10){
+							entriesRread = (Long) tmp.get(9);
+							if(sourceSize >= 12){
+								lag = (Long) tmp.get(11);
+							}
+						}
+					}
+				}
+			}
+
+			return new StreamGroup(name, consumers, pending, lastDeliveredId, entriesRread, lag);
+		}else{
+			return null;
+		}
 	}
 
 }

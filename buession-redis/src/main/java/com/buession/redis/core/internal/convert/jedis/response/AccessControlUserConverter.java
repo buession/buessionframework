@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -38,6 +38,10 @@ public final class AccessControlUserConverter implements Converter<AccessControl
 
 	@Override
 	public AclUser convert(final AccessControlUser source) {
+		if(source == null){
+			return null;
+		}
+
 		return new AclUser(source.getCommands(), source.getUserInfo(), source.getPasswords(), source.getFlags(),
 				source.getKeysList(), source.getChannelsList(), source.getSelectors());
 	}

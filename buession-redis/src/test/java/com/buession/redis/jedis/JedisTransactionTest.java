@@ -25,6 +25,7 @@
 package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,11 +40,13 @@ public class JedisTransactionTest extends AbstractJedisRedisTest {
 	public void exec() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("a", "Jedis");
-		redisTemplate.exists("a");
-		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("a");
+		redisTemplate.set("ak", "Jedis");
+		//redisTemplate.exists("a1");
+		redisTemplate.expire("a1", 60);
+		String ret = redisTemplate.get("ak");
 		//redisTemplate.role();
+		User user = redisTemplate.get("user", User.class);
+		System.out.println(user);
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
 	}
@@ -52,8 +55,14 @@ public class JedisTransactionTest extends AbstractJedisRedisTest {
 	public void discard() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("b", "B");
+		redisTemplate.set("discard1", "B");
 		redisTemplate.discard();
+		redisTemplate.multi();
+		String ret = redisTemplate.get("discard1");
+		redisTemplate.get("ak");
+		System.out.println(redisTemplate.get("user", User.class));
+		List<Object> result = redisTemplate.exec();
+		System.out.println(result);
 	}
 
 }

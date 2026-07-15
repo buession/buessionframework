@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.lang.KeyValue;
-import org.springframework.lang.Nullable;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
+import io.lettuce.core.KeyValue;
 
 /**
- * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link KeyValue}
+ * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
  *
  * @param <SK>
  * 		原始 Key 类型
@@ -43,18 +43,8 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.core.KeyValue<SK, SV>,
-		KeyValue<TK, TV>> {
-
-	/**
-	 * Key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * 值转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public final class KeyValueConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, KeyValue<SK, SV>, com.buession.lang.KeyValue<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -65,15 +55,22 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.c
 	 * 		值转换器
 	 */
 	public KeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
-	@Nullable
+	public static <K, V> KeyValueConverter<K, V, K, V> defaultKeyValueConverter() {
+		return new KeyValueConverter<>((k)->k, (v)->v);
+	}
+
 	@Override
-	public KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
-		return new KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
-				source.getValue()));
+	public com.buession.lang.KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
+		if(source == null){
+			return null;
+		}
+
+		final TK key = keyConverter.convert(source.getKey());
+		final TV value = valueConverter.convert(source.getValue());
+		return new com.buession.lang.KeyValue<>(key, value);
 	}
 
 }

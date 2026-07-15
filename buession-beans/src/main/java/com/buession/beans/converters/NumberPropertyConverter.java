@@ -40,6 +40,7 @@ import java.util.Date;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public abstract class NumberPropertyConverter<T extends Number> extends AbstractPropertyConverter<T> {
 
 	private final static Integer ZERO = 0;

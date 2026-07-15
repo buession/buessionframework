@@ -19,17 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
+import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import redis.clients.jedis.resps.GeoRadiusResponse;
-
-import java.util.List;
 
 /**
  * Jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
@@ -39,16 +37,15 @@ import java.util.List;
  */
 public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, GeoRadius> {
 
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-
 	@Override
 	public GeoRadius convert(final GeoRadiusResponse source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
-	}
+		if(source == null){
+			return null;
+		}
 
-	public static ListConverter<GeoRadiusResponse, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
+		final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+		final Geo geo = geoCoordinateConverter.convert(source.getCoordinate());
+		return new GeoRadius(source.getMember(), source.getDistance(), geo);
 	}
 
 }

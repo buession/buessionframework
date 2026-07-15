@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * 事务命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=transactions" target="_blank">https://redis.io/docs/latest/commands/?group=transactions</a></p>
  *
  * @author Yong.Teng
  */
@@ -41,8 +41,10 @@ public interface TransactionCommands extends RedisCommands {
 	 * 取消事务，放弃执行事务块内的所有命令
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/transaction/discard.html" target="_blank">http://redisdoc.com/transaction/discard.html</a></p>
+	 *
+	 * @return 操作结果
 	 */
-	void discard();
+	Status discard();
 
 	/**
 	 * 执行所有事务块内的命令

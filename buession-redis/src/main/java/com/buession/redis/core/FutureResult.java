@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,24 +31,24 @@ import org.springframework.lang.Nullable;
 /**
  * 事务、管道异步结果
  *
+ * @param <SV>
+ * 		Redis 命令返回原生结果类型
  * @param <T>
  * 		Response
  *
  * @author Yong.Teng
  */
-public abstract class FutureResult<T> {
+public abstract class FutureResult<SV, T> {
 
 	private final T holder;
 
-	@SuppressWarnings({"rawtypes"})
-	private final Converter converter;
+	private final Converter<SV, ?> converter;
 
 	public FutureResult(final T holder) {
 		this(holder, Converters.always());
 	}
 
-	@SuppressWarnings({"rawtypes"})
-	public FutureResult(final T holder, final Converter converter) {
+	public FutureResult(final T holder, final Converter<SV, ?> converter) {
 		this.holder = holder;
 		this.converter = converter;
 	}
@@ -68,10 +68,24 @@ public abstract class FutureResult<T> {
 	 *
 	 * @return 转换结果
 	 */
-	@SuppressWarnings({"unchecked"})
 	@Nullable
-	public Object convert(@Nullable Object result) {
+	public Object convert(@Nullable SV result) {
 		return result == null ? null : converter.convert(result);
+	}
+
+	protected abstract static class BaseBuilder<SV, TV, REP, T, FR extends FutureResult<SV, T>> {
+
+		protected final REP response;
+
+		protected Converter<SV, TV> converter;
+
+		protected BaseBuilder(final REP response, final Converter<SV, TV> converter) {
+			this.response = response;
+			this.converter = converter;
+		}
+
+		public abstract FR build();
+
 	}
 
 }

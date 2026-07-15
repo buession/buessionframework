@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.apache.convert;
 
-import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import org.apache.http.HttpEntity;
 
 /**

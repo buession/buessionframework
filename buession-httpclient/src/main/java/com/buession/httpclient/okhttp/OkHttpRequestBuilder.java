@@ -19,14 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.core.builder.MapBuilder;
-import com.buession.core.utils.StringUtils;
-import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.ContentType;
 import com.buession.httpclient.core.EncodedFormRequestBody;
@@ -39,28 +36,16 @@ import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.core.utils.UriUtils;
-import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.HtmlRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.InputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.JavaScriptRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.JsonRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.MultipartFormRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.TextRawRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
+import com.buession.httpclient.okhttp.convert.*;
 import okhttp3.FormBody;
 import okhttp3.Headers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,20 +66,19 @@ public class OkHttpRequestBuilder {
 
 	protected OkHttpRequest request;
 
-	private final static Logger logger = LoggerFactory.getLogger(OkHttpRequestBuilder.class);
-
 	static {
-		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class,
+				new OkHttpChunkedInputStreamRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new OkHttpEncodedFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new OkHttpHtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new OkHttpInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new OkHttpJavaScriptRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new OkHttpJsonRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new OkHttpMultipartFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
-				new RepeatableInputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+				new OkHttpRepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new OkHttpTextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new OkHttpXmlRawRequestBodyConverter());
 	}
 
 	private OkHttpRequestBuilder() {
@@ -281,13 +265,14 @@ public class OkHttpRequestBuilder {
 			}
 		}
 
-		request.getRequestBuilder().url(determineRequestUrl(uri, parameters)).headers(headersBuilder.build());
+		request.getRequestBuilder().url(UriUtils.determineRequestUri(uri, parameters).toString())
+				.headers(headersBuilder.build());
 
 		return request;
 	}
 
 	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder requestBuilder,
-											  final RequestMethod method) {
+	                                          final RequestMethod method) {
 		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
@@ -315,32 +300,6 @@ public class OkHttpRequestBuilder {
 		final RequestBodyConverter<RequestBody<?>, okhttp3.RequestBody> convert = REQUEST_BODY_CONVERTS.get(
 				data.getClass());
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
-	}
-
-	private static String determineRequestUrl(final URI uri, final Map<String, Object> parameters) {
-		if(Validate.isEmpty(uri.getRawQuery())){
-			return uri.toString();
-		}
-
-		final StringBuilder newQuery = new StringBuilder(uri.getRawQuery().length());
-
-		newQuery.append(uri.getRawQuery());
-
-		if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
-			newQuery.append('&');
-		}
-
-		newQuery.append(UriUtils.buildQuery(parameters, false));
-
-		try{
-			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(),
-					uri.getPath(), newQuery.toString(), uri.getFragment()).toString();
-		}catch(URISyntaxException e){
-			if(logger.isErrorEnabled()){
-				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());
-			}
-			return uri.toString();
-		}
 	}
 
 }

@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * 发布与订阅命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/pubsub/index.html" target="_blank">http://redisdoc.com/pubsub/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=pubsub" target="_blank">https://redis.io/docs/latest/commands/?group=pubsub</a></p>
  *
  * @author Yong.Teng
  */
@@ -141,6 +141,15 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
 	 *
+	 * @return 指定信道的订阅者个数
+	 */
+	Map<String, Long> pubsubNumSub();
+
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
 	 * @param channels
 	 * 		一个或多个频道
 	 *
@@ -159,6 +168,72 @@ public interface PubSubCommands extends RedisCommands {
 	 * @return 指定信道的订阅者个数
 	 */
 	Map<byte[], Long> pubsubNumSub(final byte[]... channels);
+
+	/**
+	 * 列出当前 Redis 节点上活跃的分片（sharded）发布/订阅频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<String> pubsubShardChannels();
+
+	/**
+	 * 列出当前 Redis 节点上活跃的分片（sharded）发布/订阅频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<String> pubsubShardChannels(final String pattern);
+
+	/**
+	 * 列出当前 Redis 节点上活跃的分片（sharded）发布/订阅频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<byte[]> pubsubShardChannels(final byte[] pattern);
+
+	/**
+	 * 获取一个或多个分片（sharded）发布/订阅频道的订阅者数量
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
+	 *
+	 * @return 分片（sharded）发布/订阅频道的订阅者数量
+	 */
+	Map<String, Long> pubsubShardNumSub();
+
+	/**
+	 * 获取一个或多个分片（sharded）发布/订阅频道的订阅者数量
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
+	 *
+	 * @param shardChannels
+	 * 		一个或多个频道
+	 *
+	 * @return 分片（sharded）发布/订阅频道的订阅者数量
+	 */
+	Map<String, Long> pubsubShardNumSub(final String... shardChannels);
+
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
+	 *
+	 * @param shardChannels
+	 * 		一个或多个频道
+	 *
+	 * @return 分片（sharded）发布/订阅频道的订阅者数量
+	 */
+	Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels);
 
 	/**
 	 * 指示客户端退订使用 PSUBSCRIBE pattern [pattern …] 命令订阅的所有模式消息
@@ -194,6 +269,58 @@ public interface PubSubCommands extends RedisCommands {
 	Object pUnSubscribe(final byte[]... patterns);
 
 	/**
+	 * 向 分片发布/订阅（Sharded Pub/Sub） 频道发送消息
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/spublish/" target="_blank">https://redis.io/docs/latest/commands/spublish/</a></p>
+	 *
+	 * @param shardchannel
+	 * 		频道名称
+	 * @param message
+	 * 		信息
+	 *
+	 * @return 接收到信息 message 的订阅者数量
+	 */
+	Long sPublish(final String shardchannel, final String message);
+
+	/**
+	 * 向 分片发布/订阅（Sharded Pub/Sub） 频道发送消息
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/spublish/" target="_blank">https://redis.io/docs/latest/commands/spublish/</a></p>
+	 *
+	 * @param shardchannel
+	 * 		频道名称
+	 * @param message
+	 * 		信息
+	 *
+	 * @return 接收到信息 message 的订阅者数量
+	 */
+	Long sPublish(final byte[] shardchannel, final byte[] message);
+
+	/**
+	 * 订阅分片发布/订阅（Sharded Pub/Sub）频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ssubscribe/" target="_blank">https://redis.io/docs/latest/commands/ssubscribe/</a></p>
+	 *
+	 * @param patterns
+	 * 		一个或多个模式
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener);
+
+	/**
+	 * 订阅分片发布/订阅（Sharded Pub/Sub）频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ssubscribe/" target="_blank">https://redis.io/docs/latest/commands/ssubscribe/</a></p>
+	 *
+	 * @param patterns
+	 * 		一个或多个模式
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener);
+
+	/**
 	 * 订阅给定的一个或多个频道的信息
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc.com/pubsub/subscribe.html</a></p>
@@ -216,6 +343,39 @@ public interface PubSubCommands extends RedisCommands {
 	 * 		订阅监听者
 	 */
 	void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener);
+
+	/**
+	 * 退订一个或多个分片发布/订阅（Sharded Pub/Sub）频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sunsubscribe/" target="_blank">https://redis.io/docs/latest/commands/sunsubscribe/</a></p>
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	Object sUnSubscribe();
+
+	/**
+	 * 退订一个或多个分片发布/订阅（Sharded Pub/Sub）频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sunsubscribe/" target="_blank">https://redis.io/docs/latest/commands/sunsubscribe/</a></p>
+	 *
+	 * @param shardchannel
+	 * 		一个或多个频道
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	Object sUnSubscribe(final String... shardchannel);
+
+	/**
+	 * 退订一个或多个分片发布/订阅（Sharded Pub/Sub）频道
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sunsubscribe/" target="_blank">https://redis.io/docs/latest/commands/sunsubscribe/</a></p>
+	 *
+	 * @param shardchannel
+	 * 		一个或多个频道
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	Object sUnSubscribe(final byte[]... shardchannel);
 
 	/**
 	 * 指示客户端退订所有频道

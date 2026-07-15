@@ -19,62 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
-
 /**
+ * Pending 消息的摘要信息
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamPending implements Serializable {
-
-	private static final long serialVersionUID = -9058837565507153831L;
-
-	private final StreamEntryId id;
-
-	private final String consumerName;
-
-	private final long idleTime;
-
-	private final long deliveredTimes;
-
-	public StreamPending(final StreamEntryId id, final String consumerName, final long idleTime,
-						 final long deliveredTimes){
-		this.id = id;
-		this.consumerName = consumerName;
-		this.idleTime = idleTime;
-		this.deliveredTimes = deliveredTimes;
-	}
-
-	public StreamEntryId getId(){
-		return id;
-	}
-
-	public String getConsumerName(){
-		return consumerName;
-	}
-
-	public long getIdleTime(){
-		return idleTime;
-	}
-
-	public long getDeliveredTimes(){
-		return deliveredTimes;
-	}
+public record StreamPending(StreamEntryId id, String consumerName, Long idleTime, Long deliveredTimes) {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("id", id)
-				.add("consumerName", consumerName)
-				.add("idleTime", idleTime)
-				.add("deliveredTimes", deliveredTimes)
+				.add("consumer name", consumerName)
+				.add("idle time", idleTime)
+				.add("delivered times", deliveredTimes)
 				.build();
 	}
 

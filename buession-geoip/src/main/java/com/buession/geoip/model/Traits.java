@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -80,7 +80,7 @@ public final class Traits implements Serializable {
 	/**
 	 * Autonomous 系统号码
 	 */
-	private final Integer autonomousSystemNumber;
+	private final Long autonomousSystemNumber;
 
 	/**
 	 * 移动国家代码
@@ -208,12 +208,12 @@ public final class Traits implements Serializable {
 	 */
 	public Traits(final String ipAddress, final String domain, final String isp, final Network network,
 				  final ConnectionType connectionType, final Organization organization,
-				  final Organization autonomousSystemOrganization, final Integer autonomousSystemNumber,
+				  final Organization autonomousSystemOrganization, final Long autonomousSystemNumber,
 				  final String mobileCountryCode, final String mobileNetworkCode,
 				  final boolean isAnonymous, final boolean isAnonymousProxy, final boolean isAnonymousVpn,
 				  final boolean isHostingProvider, final boolean isLegitimateProxy, final boolean isPublicProxy,
 				  final boolean isResidentialProxy, final boolean isSatelliteProvider, final boolean isTorExitNode,
-				  final String userType, final Integer userCount, final Double staticIpScore){
+				  final String userType, final Integer userCount, final Double staticIpScore) {
 		this.ipAddress = ipAddress;
 		this.domain = domain;
 		this.isp = isp;
@@ -243,7 +243,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return IP 地址
 	 */
-	public String getIpAddress(){
+	public String getIpAddress() {
 		return ipAddress;
 	}
 
@@ -252,7 +252,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 域名
 	 */
-	public String getDomain(){
+	public String getDomain() {
 		return domain;
 	}
 
@@ -261,7 +261,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return ISP 运营商
 	 */
-	public String getIsp(){
+	public String getIsp() {
 		return isp;
 	}
 
@@ -272,7 +272,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public Network getNetwork(){
+	public Network getNetwork() {
 		return network;
 	}
 
@@ -283,7 +283,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public ConnectionType getConnectionType(){
+	public ConnectionType getConnectionType() {
 		return connectionType;
 	}
 
@@ -292,7 +292,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 所属机构
 	 */
-	public Organization getOrganization(){
+	public Organization getOrganization() {
 		return organization;
 	}
 
@@ -301,7 +301,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return Autonomous 系统机构
 	 */
-	public Organization getAutonomousSystemOrganization(){
+	public Organization getAutonomousSystemOrganization() {
 		return autonomousSystemOrganization;
 	}
 
@@ -310,7 +310,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return Autonomous 系统号码
 	 */
-	public Integer getAutonomousSystemNumber(){
+	public Long getAutonomousSystemNumber() {
 		return autonomousSystemNumber;
 	}
 
@@ -319,7 +319,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 移动国家代码
 	 */
-	public String getMobileCountryCode(){
+	public String getMobileCountryCode() {
 		return mobileCountryCode;
 	}
 
@@ -328,7 +328,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 移动网络代码
 	 */
-	public String getMobileNetworkCode(){
+	public String getMobileNetworkCode() {
 		return mobileNetworkCode;
 	}
 
@@ -337,7 +337,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是 Autonomous
 	 */
-	public boolean isAnonymous(){
+	public boolean isAnonymous() {
 		return isAnonymous;
 	}
 
@@ -346,7 +346,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是 Autonomous 代理
 	 */
-	public boolean isAnonymousProxy(){
+	public boolean isAnonymousProxy() {
 		return isAnonymousProxy;
 	}
 
@@ -355,7 +355,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是 Autonomous VPN
 	 */
-	public boolean isAnonymousVpn(){
+	public boolean isAnonymousVpn() {
 		return isAnonymousVpn;
 	}
 
@@ -364,7 +364,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是主机提供商
 	 */
-	public boolean isHostingProvider(){
+	public boolean isHostingProvider() {
 		return isHostingProvider;
 	}
 
@@ -373,7 +373,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是合法的代理
 	 */
-	public boolean isLegitimateProxy(){
+	public boolean isLegitimateProxy() {
 		return isLegitimateProxy;
 	}
 
@@ -382,7 +382,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是公共代理
 	 */
-	public boolean isPublicProxy(){
+	public boolean isPublicProxy() {
 		return isPublicProxy;
 	}
 
@@ -391,7 +391,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是住宅/家庭代理
 	 */
-	public boolean isResidentialProxy(){
+	public boolean isResidentialProxy() {
 		return isResidentialProxy;
 	}
 
@@ -400,7 +400,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return 是否是卫星提供商
 	 */
-	public boolean isSatelliteProvider(){
+	public boolean isSatelliteProvider() {
 		return isSatelliteProvider;
 	}
 
@@ -409,7 +409,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @return Is tor exit node
 	 */
-	public boolean isTorExitNode(){
+	public boolean isTorExitNode() {
 		return isTorExitNode;
 	}
 
@@ -420,7 +420,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public String getUserType(){
+	public String getUserType() {
 		return userType;
 	}
 
@@ -431,7 +431,7 @@ public final class Traits implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public Integer getUserCount(){
+	public Integer getUserCount() {
 		return userCount;
 	}
 
@@ -442,12 +442,12 @@ public final class Traits implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public Double getStaticIpScore(){
+	public Double getStaticIpScore() {
 		return staticIpScore;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(ipAddress, domain, isp, network, connectionType, organization,
 				autonomousSystemOrganization, autonomousSystemNumber, isAnonymous, isAnonymousProxy, isAnonymousVpn,
 				isHostingProvider, isLegitimateProxy, isPublicProxy, isResidentialProxy, isSatelliteProvider,
@@ -455,7 +455,7 @@ public final class Traits implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -482,7 +482,7 @@ public final class Traits implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Traits{" + "ipAddress=" + ipAddress + ", domain=" + domain + ", isp=" + isp +
 				", network=" + network + ", connectionType=" + connectionType + ", organization=" + organization + ", "
 				+ "autonomousSystemOrganization=" + autonomousSystemOrganization + ", autonomousSystemNumber=" +

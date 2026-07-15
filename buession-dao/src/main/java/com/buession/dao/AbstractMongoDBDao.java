@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -42,7 +42,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +64,19 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 *
 	 * @since 2.3.3
 	 */
-	@Resource
 	private MongoTemplate mongoTemplate;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mongoTemplate
+	 *        {@link MongoTemplate}
+	 *
+	 * @since 4.0.0
+	 */
+	public AbstractMongoDBDao(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
 
 	/**
 	 * 返回 {@link MongoTemplate} 实例
@@ -264,8 +274,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		Criteria criteria = new Criteria();
 
 		conditions.forEach((field, value)->{
-			if(value instanceof MongoOperation){
-				MongoOperation mongoOperation = (MongoOperation) value;
+			if(value instanceof MongoOperation mongoOperation){
 				MongoDBOperatorUtils.operator(criteria, field, mongoOperation);
 			}else{
 				criteria.and(field).is(value);

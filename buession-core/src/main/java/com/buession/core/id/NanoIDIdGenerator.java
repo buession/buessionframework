@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.id;
@@ -189,7 +189,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 
 	private void setAlphabet(final char[] alphabet) {
 		Assert.isNull(alphabet, "Alphabet cloud not be null.");
-		Assert.isTrue(alphabet.length <= 0 || alphabet.length > 255,
+		Assert.isTrue(alphabet.length == 0 || alphabet.length > 255,
 				"Alphabet must contain between 1 and 255 symbols.");
 
 		this.alphabet = alphabet;

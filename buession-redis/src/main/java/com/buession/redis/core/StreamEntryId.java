@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -38,60 +38,83 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 
 	private final static long serialVersionUID = -4487927281373256508L;
 
+	public final static StreamEntryId NOW = new StreamEntryId("*");
+
+	public final static StreamEntryId LAST = new StreamEntryId("$");
+
+	public final static StreamEntryId UNDELIVERED = new StreamEntryId(">");
+
+	public final static StreamEntryId MINIMUM_ID = new StreamEntryId("-");
+
+	public final static StreamEntryId MAXIMUM_ID = new StreamEntryId("+");
+
 	private final long time;
 
 	private final long sequence;
 
-	public StreamEntryId(){
+	private final String value;
+
+	public StreamEntryId() {
 		this(0L, 0L);
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public StreamEntryId(final String id) {
+		if("*".equals(id) || "$".equals(id) || ">".equals(id) || "-".equals(id) || "+".equals(id)){
+			this.time = 0L;
+			this.sequence = 0L;
+			this.value = id;
+		}else{
+			String[] split = StringUtils.split(id, '-');
+			this.time = Long.parseLong(split[0]);
+			this.sequence = Long.parseLong(split[1]);
+			this.value = time + "-" + sequence;
+		}
 	}
 
-	public StreamEntryId(final byte[] id){
+	public StreamEntryId(final byte[] id) {
 		this(SafeEncoder.encode(id));
 	}
 
-	public StreamEntryId(final long time){
+	public StreamEntryId(final long time) {
 		this(time, 0L);
 	}
 
-	public StreamEntryId(final long time, final long sequence){
+	public StreamEntryId(final long time, final long sequence) {
 		this.time = time;
 		this.sequence = sequence;
+		this.value = time + "-" + sequence;
 	}
 
-	public long getTime(){
+	public long getTime() {
 		return time;
 	}
 
-	public long getSequence(){
+	public long getSequence() {
 		return sequence;
 	}
 
+	public byte[] getRaw() {
+		return SafeEncoder.encode(value);
+	}
+
 	@Override
-	public int compareTo(StreamEntryId other){
+	public int compareTo(StreamEntryId other) {
 		int timeCompare = Long.compare(this.time, other.time);
 		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(time, sequence);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(obj == this){
 			return true;
 		}
 
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
+		if(obj instanceof StreamEntryId that){
 			return that.time == time && that.sequence == sequence;
 		}
 
@@ -99,8 +122,8 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 	}
 
 	@Override
-	public String toString(){
-		return time + "-" + sequence;
+	public String toString() {
+		return value;
 	}
 
 }

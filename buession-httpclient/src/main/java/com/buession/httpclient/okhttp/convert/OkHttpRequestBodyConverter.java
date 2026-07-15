@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import okhttp3.RequestBody;
 
 /**

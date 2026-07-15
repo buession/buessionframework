@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -32,6 +32,7 @@ import com.buession.core.validator.Validate;
 import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -49,7 +50,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	/**
 	 * 构造函数
 	 */
-	public ServerInfoFilter(){
+	public ServerInfoFilter() {
 		this(SERVER_NAME_HEADER_NAME);
 	}
 
@@ -59,24 +60,24 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	 * @param headerName
 	 * 		响应头名称
 	 */
-	public ServerInfoFilter(final String headerName){
+	public ServerInfoFilter(final String headerName) {
 		super();
 		setHeaderName(headerName);
 	}
 
 	@Override
-	public String getHeaderName(){
+	public String getHeaderName() {
 		return headerName;
 	}
 
 	@Override
-	public void setHeaderName(String headerName){
+	public void setHeaderName(String headerName) {
 		Assert.isBlank(headerName, "Server info response header name cloud not be null or empty");
 		this.headerName = headerName;
 	}
 
 	@Override
-	public Map<String, String> getHeaders(){
+	public Map<String, String> getHeaders() {
 		Map<String, String> headers = super.getHeaders();
 
 		if(Validate.isEmpty(headers)){
@@ -86,7 +87,8 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 		return headers;
 	}
 
-	protected String format(final String computerName){
+	@Nullable
+	protected String format(@Nullable final String computerName) {
 		return computerName;
 	}
 

@@ -19,14 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
+
+import java.util.function.Consumer;
 
 /**
  * Redis 数据源
@@ -145,32 +146,73 @@ public interface DataSource {
 	void setPoolConfig(PoolConfig poolConfig);
 
 	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	boolean getAutoReconnect();
+
+	/**
+	 * 设置是否自动重连
+	 *
+	 * @param autoReconnect
+	 * 		是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	void setAutoReconnect(boolean autoReconnect);
+
+	/**
+	 * 返回重连间隔
+	 *
+	 * @return 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	int getReconnectDelay();
+
+	/**
+	 * 设置重连间隔
+	 *
+	 * @param reconnectDelay
+	 * 		重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	void setReconnectDelay(int reconnectDelay);
+
+	/**
 	 * 返回 SSL 配置
 	 *
 	 * @return SSL 配置
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	SslConfiguration getSslConfiguration();
+	SslOptions getSslOptions();
 
 	/**
 	 * 设置 SSL 配置
 	 *
-	 * @param sslConfiguration
+	 * @param sslOptions
 	 * 		SSL 配置
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	void setSslConfiguration(SslConfiguration sslConfiguration);
+	void setSslOptions(SslOptions sslOptions);
 
-	/**
-	 * 获取 Redis 连接实例 {@link RedisConnection}
-	 *
-	 * @return Redis 连接实例 {@link RedisConnection}
-	 *
-	 * @since 2.0.0
-	 */
-	@Deprecated
-	RedisConnection getConnection();
+	void apply(Consumer<DataSource> consumer);
 
 }

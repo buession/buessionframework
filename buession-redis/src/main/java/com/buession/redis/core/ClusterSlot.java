@@ -19,89 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * 哈希槽和 Redis 实例映射关系,详细信息请看 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a>
  *
+ * @param range
+ * 		哈希槽起止编号
+ * @param masterNodes
+ * 		master 节点副本列表
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ClusterSlot implements Serializable {
-
-	private final static long serialVersionUID = -809787517243228575L;
-
-	/**
-	 * 哈希槽起始编号
-	 */
-	private final long start;
-
-	/**
-	 * 哈希槽结束编号
-	 */
-	private final long end;
-
-	/**
-	 * master 节点副本列表
-	 */
-	private final List<RedisServer> masterNodes;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		哈希槽起始编号
-	 * @param end
-	 * 		哈希槽结束编号
-	 * @param masterNodes
-	 * 		master 节点副本列表
-	 */
-	public ClusterSlot(final long start, final long end, final List<RedisServer> masterNodes){
-		this.start = start;
-		this.end = end;
-		this.masterNodes = masterNodes;
-	}
-
-	/**
-	 * 返回哈希槽起始编号
-	 *
-	 * @return 哈希槽起始编号
-	 */
-	public long getStart(){
-		return start;
-	}
-
-	/**
-	 * 返回哈希槽结束编号
-	 *
-	 * @return 哈希槽结束编号
-	 */
-	public long getEnd(){
-		return end;
-	}
-
-	/**
-	 * 返回 master 节点副本列表
-	 *
-	 * @return master 节点副本列表
-	 */
-	public List<RedisServer> getMasterNodes(){
-		return masterNodes;
-	}
+public record ClusterSlot(SlotRange range, List<RedisServer> masterNodes) {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("start", start)
-				.add("end", end)
+				.add("range", range)
 				.add("masterNodes", masterNodes)
 				.build();
 	}

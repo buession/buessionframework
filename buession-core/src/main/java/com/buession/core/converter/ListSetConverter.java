@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -42,12 +43,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ListSetConverter<S, T> implements Converter<List<S>, Set<T>> {
-
-	/**
-	 * List item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ListSetConverter<S, T> extends AbstractCollectionConverter<S, T, List<S>, Set<T>> {
 
 	/**
 	 * 构造函数
@@ -56,17 +52,12 @@ public class ListSetConverter<S, T> implements Converter<List<S>, Set<T>> {
 	 * 		List item 转换器
 	 */
 	public ListSetConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
 
 	@Override
-	public Set<T> convert(final List<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			return source.stream().map(itemConverter::convert)
-					.collect(Collectors.toCollection(source instanceof LinkedList ? LinkedHashSet::new : HashSet::new));
-		}
+	protected Collector<T, ?, Set<T>> collect(final List<S> source) {
+		return Collectors.toCollection(source instanceof LinkedList ? LinkedHashSet::new : HashSet::new);
 	}
 
 }

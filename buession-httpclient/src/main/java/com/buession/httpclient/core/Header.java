@@ -19,37 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
-import com.buession.core.utils.StringUtils;
+import com.buession.lang.NameValue;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * HTTP 头
  *
  * @author Yong.Teng
  */
-public class Header {
+public class Header extends NameValue<String, String> {
 
-	/**
-	 * HTTP 头名称
-	 */
-	private String name;
-
-	/**
-	 * HTTP 头值
-	 */
-	private String value;
+	private final static long serialVersionUID = 535326643150736933L;
 
 	/**
 	 * 构造函数
 	 */
 	public Header() {
+		super();
 	}
 
 	/**
@@ -61,8 +53,7 @@ public class Header {
 	 * 		HTTP 头值
 	 */
 	public Header(String name, String value) {
-		this.name = name;
-		this.value = value;
+		super(name, value);
 	}
 
 	/**
@@ -163,66 +154,9 @@ public class Header {
 		this(name, Double.toString(value));
 	}
 
-	/**
-	 * 返回 HTTP 头名称
-	 *
-	 * @return HTTP 头名称
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 设置 HTTP 头名称
-	 *
-	 * @param name
-	 * 		HTTP 头名称
-	 */
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	/**
-	 * 返回 HTTP 头值
-	 *
-	 * @return HTTP 头值
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * 设置 HTTP 头值
-	 *
-	 * @param value
-	 * 		HTTP 头值
-	 */
-	public void setValue(final String value) {
-		this.value = value;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, value);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj){
-			return true;
-		}
-
-		if(obj instanceof Header){
-			Header that = (Header) obj;
-			return StringUtils.equalsIgnoreCase(name, that.name) && Objects.equals(value, that.value);
-		}
-
-		return false;
-	}
-
 	@Override
 	public String toString() {
-		return name + ": " + value;
+		return getName() + ": " + getValue();
 	}
 
 }

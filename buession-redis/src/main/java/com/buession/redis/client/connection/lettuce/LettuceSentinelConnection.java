@@ -19,72 +19,53 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.net.HostAndPort;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
-import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
-import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.LettucePoolConfig;
-import io.lettuce.core.LettuceSentinelPool;
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisCredentialsProvider;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.StaticCredentialsProvider;
-import io.lettuce.core.api.PipeliningFlushPolicy;
-import io.lettuce.core.api.PipeliningFlushState;
-import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.core.RedisSentinelClient;
+import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.builders.SentinelClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
-import io.lettuce.core.support.ConnectionPoolUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Lettuce 哨兵模式连接器
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelConnection extends AbstractLettuceRedisConnection implements RedisSentinelConnection {
+public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnection<K, V, RedisSentinelClient<K, V>>
+		implements RedisSentinelConnection {
 
 	/**
 	 * 哨兵节点连接超时（单位：毫秒）
@@ -95,20 +76,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 * 哨兵节点读取超时（单位：毫秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
-
-	/**
-	 * 连接池
-	 */
-	private LettuceSentinelPool pool;
-
-	/**
-	 * {@link StatefulRedisSentinelConnection} 实例
-	 */
-	private StatefulRedisSentinelConnection<byte[], byte[]> delegate;
-
-	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
-
-	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelConnection.class);
 
 	/**
 	 * 构造函数
@@ -132,187 +99,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int sentinelConnectTimeout, int sentinelSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
 	 */
@@ -325,18 +111,11 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
+	 * @param codec
+	 * 		Redis 编解码器
 	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, RedisCodec<K, V> codec) {
+		super(dataSource, codec);
 	}
 
 	/**
@@ -346,180 +125,12 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
+	 * @param codec
+	 * 		Redis 编解码器
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig,
-									 SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = connectTimeout;
-		this.sentinelSoTimeout = soTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-									 int sentinelSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-									 int sentinelSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.sentinelConnectTimeout = sentinelConnectTimeout;
-		this.sentinelSoTimeout = sentinelSoTimeout;
+	                                 RedisCodec<K, V> codec) {
+		super(dataSource, poolConfig, codec);
 	}
 
 	@Override
@@ -543,216 +154,104 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	}
 
 	@Override
-	public List<RedisServer> masters() {
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
-		}
-
-		final List<Map<byte[], byte[]>> masterNodes = getSentinelCommands(
-				(LettuceSentinelDataSource) dataSource).masters();
-		return parseRedisServer(masterNodes, Role.MASTER);
+	public String myId() {
+		return client.myId();
 	}
 
 	@Override
-	public List<RedisServer> slaves(RedisNamedNode master) {
-		Assert.isNull(master, "Redis master node cloud not be 'null' for loading slaves.");
-		return slaves(master.getName());
+	public List<RedisNode> sentinels(String masterName) {
+		return client.sentinels(masterName);
+	}
+
+	@Override
+	public String sentinelSet(String masterName, Map<String, String> parameters) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading sentinel set.");
+		return client.sentinelSet(masterName, parameters);
+	}
+
+	@Override
+	public List<RedisServer> masters() {
+		return client.masters();
+	}
+
+	@Override
+	public RedisServer master(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading master.");
+		return client.master(masterName);
 	}
 
 	@Override
 	public List<RedisServer> slaves(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading slaves.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
-		}
-
-		final List<Map<byte[], byte[]>> slaveNodes = getSentinelCommands(
-				(LettuceSentinelDataSource) dataSource).slaves(SafeEncoder.encode(masterName));
-		return parseRedisServer(slaveNodes, Role.SLAVE);
+		return client.slaves(masterName);
 	}
 
 	@Override
-	public void failover(RedisNamedNode namedNode) {
-		Assert.isNull(namedNode, "Redis master node cloud not be 'null' for failover.");
-		Assert.isBlank(namedNode.getName(), "Redis master name cloud not be 'null' or empty for failover.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
-
-		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
-				.failover(SafeEncoder.encode(namedNode.getName()));
+	public List<RedisServer> replicas(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading replicas.");
+		return client.replicas(masterName);
 	}
 
 	@Override
-	public void monitor(RedisSentinelNode server) {
-		Assert.isNull(server, "Cannot monitor 'null' server.");
-		Assert.isBlank(server.getName(), "Name of server to monitor must not be 'null' or empty.");
-		Assert.isBlank(server.getHost(), "Host must not be 'null' for server to monitor.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
-
-		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
-				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
-	}
-
-	public StatefulRedisSentinelConnection<byte[], byte[]> getStatefulRedisSentinelConnection() {
-		return delegate;
+	public Status failover(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+		return client.failover(masterName);
 	}
 
 	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
-					new LettucePipelineProxy<>(flushState);
-
-			lettucePipelineProxy.setTarget(
-					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
-			pipeline = lettucePipelineProxy;
-		}
-
-		return pipeline;
+	public Status monitor(String masterName, String ip, int port, int quorum) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+		return client.monitor(masterName, ip, port, quorum);
 	}
 
 	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
+	public Long reset(String pattern) {
+		return client.reset(pattern);
+	}
+
+	@Override
+	public Status remove(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
+		return client.remove(masterName);
 	}
 
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			final RedisSentinelCommands<byte[], byte[]> commands = delegate.sync();
-			//transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
+			final RedisCommands<byte[], byte[]> commands = null;//conn.sync();
+			commands.multi();
+			//transaction = new DefaultTransactionProxy<>(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
 	}
 
 	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void remove(RedisNamedNode master) {
-		Assert.isNull(master, "Master node cloud be 'null' when trying to remove.");
-		remove(master.getName());
-	}
-
-	@Override
-	public void remove(String masterName) {
-		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		delegate.async().remove(SafeEncoder.encode(masterName));
-	}
-
-	@Override
-	public boolean isConnected() {
-		return delegate != null && delegate.isOpen();
-	}
-
-	@Override
-	public boolean isClosed() {
-		return delegate == null || delegate.isOpen() == false;
-	}
-
-	@Override
 	protected void internalInit() {
-		if(pool == null && getPoolConfig() != null){
-			pool = createPool();
+		super.internalInit();
+		if(client == null){
+			final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+			final DefaultLettuceClientConfig.Builder clientConfigBuilder = DefaultLettuceClientConfig.builder();
+
+			commonClientConfigBuilder(clientConfigBuilder);
+
+			if(dataSource.getDatabase() > 0){
+				clientConfigBuilder.database(dataSource.getDatabase());
+			}
+
+			final SentinelClientBuilder<K, V, RedisSentinelClient<K, V>> builder = RedisSentinelClient.<K, V>builder()
+					.sentinels(createNodes(dataSource.getSentinels(), RedisSentinelNode.DEFAULT_SENTINEL_PORT))
+					.clientConfig(clientConfigBuilder.build())
+					.sentinelClientConfig(createSentinelLettuceClientConfig(dataSource)).codec(getCodec());
+
+			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
+			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
+			if(Validate.hasText(dataSource.getMasterName())){
+				builder.masterName(dataSource.getMasterName());
+			}
+
+			client = builder.build();
 		}
-	}
-
-	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
-		return delegate.sync();
-	}
-
-	protected boolean isUsePool() {
-		return pool != null;
-	}
-
-	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisSentinelConnection(
-			final RedisCodec<K, V> codec) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-						null, dataSource.getPassword().toCharArray()) : null;
-
-		if(dataSource.getDatabase() >= 0){
-			redisURIBuilder.withDatabase(dataSource.getDatabase());
-		}
-
-		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
-		propertyMapper.from(dataSource.getClientName()).to(redisURIBuilder::withClientName);
-
-		if(dataSource.getConnectTimeout() > 0){
-			redisURIBuilder.withTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-		}
-
-		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
-
-		return RedisClient.create(redisURIBuilder.build()).connectSentinel(codec);
-	}
-
-	protected LettuceSentinelPool createPool() {
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.database(dataSource.getDatabase())
-				.build();
-		final LettuceClientConfig sentinelClientConfig = createSentinelLettuceClientConfig(dataSource);
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		if(getSslConfiguration() == null){
-			logger.debug("Create LettuceSentinelPool.");
-		}else{
-			logger.debug("Create LettuceSentinelPool with ssl.");
-		}
-
-		return ConnectionPoolUtils.createLettuceSentinelPool(dataSource.getMasterName(), lettucePoolConfig,
-				sentinels, clientConfig, sentinelClientConfig);
 	}
 
 	@Override
@@ -761,83 +260,32 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return Status.SUCCESS;
 		}
 
-		if(isUsePool()){
-			try{
-				delegate = pool.getResource();
-
-				if(logger.isDebugEnabled()){
-					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisSentinelConnection initialized with pool failure: {}", e.getMessage(),
-							e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			delegate = createStatefulRedisSentinelConnection(new ByteArrayCodec());
-		}
-
-		return delegate == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-
-		logger.debug("Lettuce destroy.");
-		if(pool != null){
-			if(logger.isDebugEnabled()){
-				logger.debug("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
-			}
-
-			try{
-				pool.destroy();
-			}catch(Exception e){
-				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Lettuce sentinel pool.", e);
-				}
-				throw new RedisException(e);
-			}
-
-			pool = null;
-		}
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Lettuce close.");
-
-		if(delegate != null){
-			delegate.close();
-		}
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	protected LettuceClientConfig createSentinelLettuceClientConfig(final LettuceSentinelDataSource dataSource) {
-		return LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getSentinelConnectTimeout())
-				.socketTimeout(getSentinelSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.clientName(dataSource.getSentinelClientName())
-				.build();
-	}
+		final DefaultLettuceClientConfig.Builder clientConfigBuilder = DefaultLettuceClientConfig.builder();
 
-	protected Set<HostAndPort> createSentinelHosts(final Collection<RedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
+		commonClientConfigBuilder(clientConfigBuilder);
+		clientConfigBuilder.user(null);
+		clientConfigBuilder.password(null);
+
+		if(Validate.hasText(dataSource.getSentinelPassword())){
+			clientConfigBuilder.password(dataSource.getSentinelPassword());
+			if(Validate.hasText(dataSource.getSentinelUsername())){
+				clientConfigBuilder.user(dataSource.getSentinelUsername());
+			}
 		}
 
-		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
+		clientConfigBuilder.connectionTimeoutMillis(getSentinelConnectTimeout());
+		clientConfigBuilder.socketTimeoutMillis(getSentinelSoTimeout());
+
+		propertyMapper.from(dataSource.getSentinelClientName()).as(clientConfigBuilder::clientName);
+
+		return clientConfigBuilder.build();
 	}
 
-	protected List<RedisServer> parseRedisServer(final List<Map<byte[], byte[]>> nodes, final Role role) {
+	protected List<RedisServer> parseRedisServer(final List<Map<K, V>> nodes, final Role role) {
 		if(nodes == null){
 			return null;
 		}
@@ -847,7 +295,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			final Properties properties = new Properties();
 
 			node.forEach((key, value)->{
-				sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
+				sNodes.put(SafeEncoder.encode(getCodec().encodeKey(key).array()),
+						SafeEncoder.encode(getCodec().encodeValue(value).array()));
 			});
 
 			properties.putAll(sNodes);

@@ -24,9 +24,9 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Redis 哨兵（Sentinel）模式数据源
@@ -50,6 +50,44 @@ public interface SentinelDataSource extends DataSource {
 	 * 		数据库
 	 */
 	void setDatabase(int database);
+
+	/**
+	 * 返回哨兵节点用户名
+	 *
+	 * @return 哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	String getSentinelUsername();
+
+	/**
+	 * 设置哨兵节点用户名
+	 *
+	 * @param sentinelUsername
+	 * 		哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	void setSentinelUsername(String sentinelUsername);
+
+	/**
+	 * 返回哨兵节点密码
+	 *
+	 * @return 哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	String getSentinelPassword();
+
+	/**
+	 * 设置哨兵节点密码
+	 *
+	 * @param sentinelPassword
+	 * 		哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	void setSentinelPassword(String sentinelPassword);
 
 	/**
 	 * 返回哨兵节点连接超时（单位：秒）
@@ -116,7 +154,7 @@ public interface SentinelDataSource extends DataSource {
 	 *
 	 * @return 哨兵节点
 	 */
-	List<RedisNode> getSentinels();
+	Set<RedisSentinelNode> getSentinels();
 
 	/**
 	 * 设置哨兵节点
@@ -124,6 +162,6 @@ public interface SentinelDataSource extends DataSource {
 	 * @param sentinels
 	 * 		哨兵节点
 	 */
-	void setSentinels(List<RedisNode> sentinels);
+	void setSentinels(Set<RedisSentinelNode> sentinels);
 
 }

@@ -19,31 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.operations.BitMapOperations;
-import com.buession.redis.client.operations.ClusterOperations;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.client.operations.GenericOperations;
-import com.buession.redis.client.operations.GeoOperations;
-import com.buession.redis.client.operations.HashOperations;
-import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.client.operations.KeyOperations;
-import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.client.operations.PubSubOperations;
-import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.client.operations.ServerOperations;
-import com.buession.redis.client.operations.SetOperations;
-import com.buession.redis.client.operations.SortedSetOperations;
-import com.buession.redis.client.operations.StreamOperations;
-import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.client.operations.TransactionOperations;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,104 +34,149 @@ import org.slf4j.LoggerFactory;
 /**
  * Redis 客户端抽象类
  *
- * @param <CONN>
- * 		Redis 连接对象类型 {@link RedisConnection}
- *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClient<CONN extends RedisConnection> implements RedisClient {
+public abstract class AbstractRedisClient implements RedisClient {
 
 	/**
 	 * Redis 连接对象
 	 */
-	protected CONN connection;
+	protected RedisConnection connection;
 
 	/**
-	 * BitMap 命令操作
+	 * 自动提示命令
 	 */
-	protected BitMapOperations bitMapOperations;
+	protected AutoSuggestCommands autoSuggestCommands;
 
 	/**
-	 * 集群命令操作
+	 * BitMap 命令
 	 */
-	protected ClusterOperations clusterOperations;
+	protected BitMapCommands bitMapCommands;
 
 	/**
-	 * 连接命令操作
+	 * 布隆过滤器命令
 	 */
-	protected ConnectionOperations connectionOperations;
+	protected BloomFilterCommands bloomFilterCommands;
+
+	/**
+	 * 布谷鸟过滤器命令
+	 */
+	protected CuckooFilterCommands cuckooFilterCommands;
+
+	/**
+	 * 集群命令
+	 */
+	protected ClusterCommands clusterCommands;
+
+	/**
+	 * 计数最小草图命令
+	 */
+	protected CountMinSketchCommands countMinSketchCommands;
+
+	/**
+	 * 连接命令
+	 */
+	protected ConnectionCommands connectionCommands;
 
 	/**
 	 * 一般命令
-	 *
-	 * @since 3.0.0
 	 */
-	protected GenericOperations genericOperations;
+	protected GenericCommands genericCommands;
 
 	/**
 	 * 地理位置操作命令
 	 */
-	protected GeoOperations geoOperations;
+	protected GeoCommands geoCommands;
 
 	/**
-	 * 哈希表命令操作
+	 * 哈希表命令
 	 */
-	protected HashOperations hashOperations;
+	protected HashCommands hashCommands;
 
 	/**
-	 * HyperLogLog 命令操作
+	 * HyperLogLog 命令
 	 */
-	protected HyperLogLogOperations hyperLogLogOperations;
+	protected HyperLogLogCommands hyperLogLogCommands;
 
 	/**
-	 * KEY 命令操作
+	 * JSON 命令
 	 */
-	protected KeyOperations keyOperations;
+	protected JsonCommands jsonCommands;
 
 	/**
-	 * 列表命令操作
+	 * KEY 命令
 	 */
-	protected ListOperations listOperations;
+	protected KeyCommands keyCommands;
 
 	/**
-	 * 发布订阅命令操作
+	 * 列表命令
 	 */
-	protected PubSubOperations pubSubOperations;
+	protected ListCommands listCommands;
 
 	/**
-	 * Script 命令操作
+	 * 发布订阅命令
 	 */
-	protected ScriptingOperations scriptingOperations;
+	protected PubSubCommands pubSubCommands;
+
+	/**
+	 * Script 命令
+	 */
+	protected ScriptingCommands scriptingCommands;
+
+	/**
+	 * 搜索命令
+	 */
+	protected SearchCommands searchCommands;
 
 	/**
 	 * 服务端操作命令
 	 */
-	protected ServerOperations serverOperations;
+	protected ServerCommands serverCommands;
 
 	/**
-	 * 集合命令操作
+	 * 集合命令
 	 */
-	protected SetOperations setOperations;
+	protected SetCommands setCommands;
 
 	/**
-	 * 有序集合命令操作
+	 * 有序集合命令
 	 */
-	protected SortedSetOperations sortedSetOperations;
+	protected SortedSetCommands sortedSetCommands;
 
 	/**
-	 * Stream 命令操作
+	 * Stream 命令
 	 */
-	protected StreamOperations streamOperations;
+	protected StreamCommands streamCommands;
 
 	/**
-	 * 字符串命令操作
+	 * 字符串命令
 	 */
-	protected StringOperations stringOperations;
+	protected StringCommands stringCommands;
 
 	/**
-	 * 事务命令操作
+	 * T-Digest 命令
 	 */
-	protected TransactionOperations transactionOperations;
+	protected TDigestCommands tDigestCommands;
+
+	/**
+	 * TimeSeries 命令
+	 */
+	protected TimeSeriesCommands timeSeriesCommands;
+
+	/**
+	 * TOP K 命令
+	 */
+	protected TopKCommands topKCommands;
+
+	/**
+	 * 事务命令
+	 */
+	protected TransactionCommands transactionCommands;
+
+	/**
+	 * Vector Set 命令
+	 */
+	protected VectorSetCommands vectorSetCommands;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -165,46 +193,37 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	 * @param connection
 	 * 		Redis 连接对象 {@link RedisConnection}
 	 */
-	public AbstractRedisClient(final CONN connection) {
+	public AbstractRedisClient(final RedisConnection connection) {
 		setConnection(connection);
 	}
 
 	@Override
-	public CONN getConnection() {
+	public RedisConnection getConnection() {
 		return connection;
 	}
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public void setConnection(RedisConnection connection) {
-		this.connection = (CONN) connection;
+		this.connection = connection;
 	}
 
 	@Override
-	public <R> R execute(final Command<R> command, final CommandArguments arguments) {
+	public <R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments) {
 		long startTime = 0;
 		if(logger.isDebugEnabled()){
 			startTime = System.nanoTime();
 		}
 
 		if(logger.isDebugEnabled()){
-			if(arguments != null){
-				logger.debug("Execute command: {} {}", command.getCommand(), arguments);
-			}else{
-				logger.debug("Execute command: {}", command.getCommand());
-			}
+			logger.debug("Execute command: {}", runCommand(command.getCommand(), arguments));
 		}
 
 		try{
-			return getConnection().execute((conn)->command.execute());
+			return getConnection().execute((conn)->command.execute(conn, arguments));
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
-				if(arguments != null){
-					logger.error("Execute command: {} {}, failure: {}", command.getCommand(), arguments,
-							e.getMessage(), e);
-				}else{
-					logger.error("Execute command: {}, failure: {}", command.getCommand(), e.getMessage(), e);
-				}
+				logger.error("Execute command: {}, failure: {}", runCommand(command.getCommand(), arguments),
+						e.getMessage(), e);
 			}
 			throw e;
 		}finally{
@@ -213,6 +232,16 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 				logger.debug("Command execution time: {}ns", finishTime - startTime);
 			}
 		}
+	}
+
+	protected static String runCommand(final RedisCommand command, final CommandArguments arguments) {
+		final StringBuilder sb = new StringBuilder(command.name());
+
+		if(arguments != null){
+			sb.append(" ").append(arguments);
+		}
+
+		return sb.toString();
 	}
 
 }

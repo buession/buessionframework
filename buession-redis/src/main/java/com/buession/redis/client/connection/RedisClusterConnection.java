@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
+import com.buession.lang.Status;
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -57,19 +58,23 @@ public interface RedisClusterConnection extends RedisConnection {
 	void setMaxRedirects(int maxRedirects);
 
 	/**
-	 * 返回最大重试持续时长（单位：秒）
+	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
-	 * @return 最大重试持续时长
+	 * @return 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
 	 */
-	int getMaxTotalRetriesDuration();
+	int getTopologyRefreshPeriod();
 
 	/**
-	 * 设置最大重试持续时长（单位：秒）
+	 * 设置定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试持续时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
 	 */
-	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
+	void setTopologyRefreshPeriod(int topologyRefreshPeriod);
 
 	@Override
 	default Pipeline openPipeline() {
@@ -85,17 +90,17 @@ public interface RedisClusterConnection extends RedisConnection {
 
 	@Override
 	default Transaction multi() {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.MULTI);
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
 	@Override
 	default List<Object> exec() throws RedisException {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.EXEC);
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.EXEC);
 	}
 
 	@Override
-	default void discard() throws RedisException {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.DISCARD);
+	default Status discard() throws RedisException {
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.DISCARD);
 	}
 
 }

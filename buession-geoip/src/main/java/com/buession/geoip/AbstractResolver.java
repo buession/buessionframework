@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -39,7 +39,7 @@ import java.net.UnknownHostException;
 import java.util.Locale;
 
 /**
- * Maxmind Geoip 解析器抽象类
+ * Maxmind GeoIP 解析器抽象类
  *
  * @author Yong.Teng
  */
@@ -48,45 +48,30 @@ public abstract class AbstractResolver implements Resolver {
 	private final static Logger logger = LoggerFactory.getLogger(AbstractResolver.class);
 
 	@Override
-	public Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		InetAddress addr;
-
-		try{
-			addr = InetAddress.getByName(ipAddress);
-		}catch(UnknownHostException e){
-			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
-			return null;
-		}
-
-		return country(addr, locale);
+	public Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception {
+		InetAddress addr = getInetAddress(ipAddress);
+		return addr == null ? null : country(addr, locale);
 	}
 
 	@Override
-	public District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		InetAddress addr;
-
-		try{
-			addr = InetAddress.getByName(ipAddress);
-		}catch(UnknownHostException e){
-			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
-			return null;
-		}
-
-		return district(addr, locale);
+	public District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception {
+		InetAddress addr = getInetAddress(ipAddress);
+		return addr == null ? null : district(addr, locale);
 	}
 
 	@Override
-	public Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		InetAddress addr;
+	public Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception {
+		InetAddress addr = getInetAddress(ipAddress);
+		return addr == null ? null : location(addr, locale);
+	}
 
+	protected InetAddress getInetAddress(final String ipAddress) {
 		try{
-			addr = InetAddress.getByName(ipAddress);
+			return InetAddress.getByName(ipAddress);
 		}catch(UnknownHostException e){
 			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
 			return null;
 		}
-
-		return location(addr, locale);
 	}
 
 }

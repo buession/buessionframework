@@ -41,33 +41,45 @@ public final class ObjectStringBuilder {
 		return new ObjectStringBuilder();
 	}
 
-	public ObjectStringBuilder add(final String name, final boolean value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Boolean value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final short value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Short value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final int value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Integer value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final long value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Long value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final float value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Float value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final double value) {
-		joiner.add(name + '=' + value);
+	public ObjectStringBuilder add(final String name, final Double value) {
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
@@ -75,18 +87,19 @@ public final class ObjectStringBuilder {
 		if(value != null){
 			joiner.add(name + '=' + SafeEncoder.encode(value));
 		}
-
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final Object value) {
-		joiner.add(name + '=' + value);
+		if(value != null){
+			joiner.add(name + '=' + value);
+		}
 		return this;
 	}
 
-	public ObjectStringBuilder addIfAbsent(final String name, final Object value) {
+	public ObjectStringBuilder append(final Number value) {
 		if(value != null){
-			joiner.add(name + '=' + value);
+			joiner.add(value);
 		}
 
 		return this;
@@ -95,6 +108,14 @@ public final class ObjectStringBuilder {
 	public ObjectStringBuilder append(final CharSequence seq) {
 		if(seq != null){
 			joiner.add(seq);
+		}
+
+		return this;
+	}
+
+	public ObjectStringBuilder append(final Object obj) {
+		if(obj != null){
+			joiner.add(obj.toString());
 		}
 
 		return this;

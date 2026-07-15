@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -40,7 +40,7 @@ public class IpValidator {
 	}
 
 	public static boolean isValid(final CharSequence charSequence) {
-		if(charSequence == null || charSequence.length() == 0){
+		if(charSequence == null || charSequence.isEmpty()){
 			return false;
 		}
 
@@ -49,7 +49,7 @@ public class IpValidator {
 	}
 
 	public static boolean isValid(final CharSequence charSequence, final IpType type) {
-		if(charSequence == null || charSequence.length() == 0){
+		if(charSequence == null || charSequence.isEmpty()){
 			return false;
 		}
 

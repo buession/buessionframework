@@ -19,12 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Redis 哨兵节点
@@ -32,7 +30,7 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RedisSentinelNode extends RedisNode {
+public class RedisSentinelNode extends RedisNamedNode {
 
 	private final static long serialVersionUID = 7609068824843419481L;
 
@@ -44,7 +42,7 @@ public class RedisSentinelNode extends RedisNode {
 	 * @param host
 	 * 		主机地址
 	 */
-	public RedisSentinelNode(@Nullable String host){
+	public RedisSentinelNode(String host) {
 		super(host);
 	}
 
@@ -56,7 +54,7 @@ public class RedisSentinelNode extends RedisNode {
 	 * @param port
 	 * 		端口
 	 */
-	public RedisSentinelNode(@Nullable String host, int port){
+	public RedisSentinelNode(String host, int port) {
 		super(host, port);
 	}
 
@@ -68,8 +66,9 @@ public class RedisSentinelNode extends RedisNode {
 	 * @param role
 	 * 		主机角色
 	 */
-	public RedisSentinelNode(@Nullable String host, @Nullable Role role){
-		super(host, role);
+	public RedisSentinelNode(String host, Role role) {
+		super(host);
+		setRole(role);
 	}
 
 	/**
@@ -82,15 +81,16 @@ public class RedisSentinelNode extends RedisNode {
 	 * @param role
 	 * 		主机角色
 	 */
-	public RedisSentinelNode(@Nullable String host, int port, @Nullable Role role){
-		super(host, port, role);
+	public RedisSentinelNode(String host, int port, Role role) {
+		super(host, port);
+		setRole(role);
 	}
 
-	public int getQuorum(){
+	public int getQuorum() {
 		return quorum;
 	}
 
-	public void setQuorum(int quorum){
+	public void setQuorum(int quorum) {
 		this.quorum = quorum;
 	}
 

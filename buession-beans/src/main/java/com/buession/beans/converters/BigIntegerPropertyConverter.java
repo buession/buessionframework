@@ -33,6 +33,7 @@ import java.math.BigInteger;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@Deprecated
 public final class BigIntegerPropertyConverter extends NumberPropertyConverter<BigInteger> {
 
 	@Override

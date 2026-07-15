@@ -19,15 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
-import redis.clients.jedis.JedisPool;
 
 /**
  * Jedis 单机模式数据源
@@ -50,13 +48,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
-
-	/**
-	 * 连接池
-	 *
-	 * @since 3.0.1
-	 */
-	private JedisPool pool;
 
 	@Override
 	public String getHost() {
@@ -86,26 +77,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	@Override
 	public void setDatabase(int database) {
 		this.database = database;
-	}
-
-	public JedisPool getPool() {
-		return pool;
-	}
-
-	public void setPool(JedisPool pool) {
-		this.pool = pool;
-	}
-
-	@Deprecated
-	@Override
-	public JedisConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new JedisConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
-		}else{
-			return new JedisConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSslConfiguration());
-		}
 	}
 
 }
