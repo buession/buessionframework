@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<name>Buession Parent</name>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.buession</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath/>
-		<version>4.0.0</version>
+		<version>4.0.1</version>
 	</parent>
 	<groupId>com.buession</groupId>
 	<artifactId>buession-parent</artifactId>
-	<version>4.0.0</version>
+	<version>4.0.1</version>
 	<url>http://www.buession.com/</url>
 	<description>Buession Framework Parent</description>
 	<packaging>pom</packaging>
@@ -70,11 +70,6 @@
 		<module>../buession-thesaurus</module>
 		<module>../buession-web</module>
 	</modules>
-
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<finalName>buession-parent</finalName>
