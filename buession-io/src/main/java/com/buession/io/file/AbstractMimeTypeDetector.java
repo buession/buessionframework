@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * MimeType 探测器 抽象类
+ * MimeType 探测器抽象类
  *
  * @author Yong.Teng
  * @since 1.3.2

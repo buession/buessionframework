@@ -45,6 +45,9 @@ import java.util.regex.Pattern;
  */
 public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 
+	private final static Pattern TYPE_PATTERN = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p" +
+			"{Graph}+\\b)");
+
 	private final static Logger logger = LoggerFactory.getLogger(DefaultMimeTypeDetector.class);
 
 	/**
@@ -163,10 +166,8 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		entry = entry.replaceAll("\\s*#.*", "");
 		int equalIdx = entry.indexOf('=');
 		if(equalIdx > 0){
-			Pattern typePattern = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p{Graph" + "}+\\b)");
-
 			// Parse a mime-types command having the key-value pair format
-			Matcher typeMatcher = typePattern.matcher(entry);
+			Matcher typeMatcher = TYPE_PATTERN.matcher(entry);
 
 			if(typeMatcher.find()){
 				String type = typeMatcher.group();
