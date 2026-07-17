@@ -7,6 +7,17 @@ Buession Framework Changelog
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v4.0.1)
 
+### 🐞 Bug 修复
+
+### 🐞 Bug 修复
+
+- 修复 File 文件扩展名为大写时，无法获取 MimeType 的 BUG
+
+### 📔 文档
+
+- 完善代码注释
+
+
 
 ## [4.0.0](https://github.com/buession/buessionframework/releases/tag/v4.0.0) (2026-07-15)
 
