@@ -11,6 +11,7 @@ Buession Framework Changelog
 ### 🔔 变化
 
 - javax.validation 更换为 jakarta.validation
+- maxmind 数据库从代码中移除
 
 ### 🐞 Bug 修复
 
