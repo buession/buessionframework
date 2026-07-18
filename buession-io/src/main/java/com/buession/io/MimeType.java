@@ -29,8 +29,6 @@ import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
-import javax.validation.constraints.NotEmpty;
-
 /**
  * MimeType
  *
@@ -57,7 +55,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String mimeType) {
+	public MimeType(String mimeType) {
 		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
 
 		if(Validate.isMimeType(mimeType)){
@@ -78,7 +76,7 @@ public final class MimeType {
 	 * @param subtype
 	 * 		子 Type
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype) {
+	public MimeType(String type, String subtype) {
 		this.type = type.toLowerCase();
 		this.subtype = subtype.toLowerCase();
 	}
@@ -95,7 +93,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype, String description) {
+	public MimeType(String type, String subtype, String description) {
 		this(type, subtype);
 		this.description = description;
 	}

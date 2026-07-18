@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -28,9 +28,8 @@ import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
 
-import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -66,7 +65,7 @@ public class UrlParameter {
 	 * @param value
 	 * 		参数值
 	 */
-	public UrlParameter(@NotNull final String name, final String value) {
+	public UrlParameter(final String name, final String value) {
 		setName(name);
 		setValue(value);
 	}
@@ -81,7 +80,7 @@ public class UrlParameter {
 	 * @param encode
 	 * 		是否编码
 	 */
-	public UrlParameter(@NotNull final String name, final String value, final boolean encode) {
+	public UrlParameter(final String name, final String value, final boolean encode) {
 		setName(name);
 		setValue(value, encode);
 	}
@@ -92,7 +91,7 @@ public class UrlParameter {
 	 * @param name
 	 * 		参数名称
 	 */
-	public void setName(@NotNull final String name) {
+	public void setName(final String name) {
 		Assert.isBlank(name, "Parameter name cloud not be null or empty.");
 		this.name = name;
 	}
@@ -117,11 +116,7 @@ public class UrlParameter {
 	 */
 	public void setValue(final String value, final boolean encode) {
 		if(encode){
-			try{
-				this.value = value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, "UTF-8");
-			}catch(UnsupportedEncodingException e){
-				throw new RuntimeException("UTF-8 encoding does not support.");
-			}
+			this.value = value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, StandardCharsets.UTF_8);
 		}else{
 			this.value = Optional.ofNullable(value).orElse(Constants.EMPTY_STRING);
 		}

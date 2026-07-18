@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -27,8 +27,8 @@ package com.buession.core.validator.constraintvalidators;
 import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.Port;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
@@ -37,7 +37,7 @@ import javax.validation.ConstraintValidatorContext;
 public abstract class PortConstraintValidator implements ConstraintValidator<Port, Integer> {
 
 	@Override
-	public boolean isValid(Integer value, ConstraintValidatorContext context){
+	public boolean isValid(Integer value, ConstraintValidatorContext context) {
 		return value != null && Validate.isPort(value);
 	}
 

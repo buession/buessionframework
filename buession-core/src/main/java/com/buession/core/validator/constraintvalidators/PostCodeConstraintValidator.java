@@ -27,8 +27,8 @@ package com.buession.core.validator.constraintvalidators;
 import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.PostCode;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
@@ -36,7 +36,7 @@ import javax.validation.ConstraintValidatorContext;
 public class PostCodeConstraintValidator implements ConstraintValidator<PostCode, CharSequence> {
 
 	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
 		return Validate.isPostCode(value);
 	}
 

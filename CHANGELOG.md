@@ -1,13 +1,16 @@
 Buession Framework Changelog
 ===========================
 
+
 ## [4.0.1](https://github.com/buession/buessionframework/releases/tag/v4.0.1) (2026-07-xx)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v4.0.1)
 
-### 🐞 Bug 修复
+### 🔔 变化
+
+- javax.validation 更换为 jakarta.validation
 
 ### 🐞 Bug 修复
 
@@ -17,6 +20,8 @@ Buession Framework Changelog
 
 - 完善代码注释
 
+
+---
 
 
 ## [4.0.0](https://github.com/buession/buessionframework/releases/tag/v4.0.0) (2026-07-15)

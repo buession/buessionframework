@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -29,7 +29,6 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
 import com.buession.lang.NameValue;
 
-import javax.validation.constraints.NotNull;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -59,7 +58,7 @@ public class UrlParameter extends NameValue<String, String> {
 	 * @param value
 	 * 		参数值
 	 */
-	public UrlParameter(@NotNull final String name, final String value) {
+	public UrlParameter(final String name, final String value) {
 		setName(name);
 		setValue(value);
 	}
@@ -74,7 +73,7 @@ public class UrlParameter extends NameValue<String, String> {
 	 * @param encode
 	 * 		是否编码
 	 */
-	public UrlParameter(@NotNull final String name, final String value, final boolean encode) {
+	public UrlParameter(final String name, final String value, final boolean encode) {
 		setName(name);
 		setValue(value, encode);
 	}
@@ -85,7 +84,7 @@ public class UrlParameter extends NameValue<String, String> {
 	 * @param name
 	 * 		参数名称
 	 */
-	public void setName(@NotNull final String name) {
+	public void setName(final String name) {
 		Assert.isBlank(name, "Parameter name cloud not be null or empty.");
 		super.setName(name);
 	}
