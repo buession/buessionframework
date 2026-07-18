@@ -32,46 +32,25 @@ import java.util.Objects;
 /**
  * 包含与 IP 地址关联的洲记录的数据。
  *
+ * @param geoNameId
+ * 		洲名称 ID
+ * @param code
+ * 		洲编码
+ * @param originalName
+ * 		洲原始名称
+ * @param name
+ * 		洲名称
+ *
  * @author Yong.Teng
  */
-public final class Continent extends AbstractNameRecord implements Serializable {
+public record Continent(Long geoNameId, String code, String originalName, String name)
+		implements NameRecord, Serializable {
 
 	private final static long serialVersionUID = -5463257987682894006L;
 
-	/**
-	 * 编码
-	 */
-	private final String code;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param geoNameId
-	 * 		洲名称 ID
-	 * @param code
-	 * 		洲编码
-	 * @param originalName
-	 * 		洲原始名称
-	 * @param name
-	 * 		洲名称
-	 */
-	public Continent(final Long geoNameId, final String code, final String originalName, final String name) {
-		super(geoNameId, originalName, name);
-		this.code = code;
-	}
-
-	/**
-	 * 返回洲编码
-	 *
-	 * @return 洲编码
-	 */
-	public String getCode() {
-		return code;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(getGeoNameId(), getCode(), getOriginalName(), getName());
+		return Objects.hash(geoNameId(), code(), originalName(), name());
 	}
 
 	@Override
@@ -80,9 +59,8 @@ public final class Continent extends AbstractNameRecord implements Serializable 
 			return true;
 		}
 
-		if(obj instanceof Continent){
-			Continent that = (Continent) obj;
-			return Objects.equals(getGeoNameId(), that.getGeoNameId()) && Objects.equals(getCode(), that.getCode());
+		if(obj instanceof Continent that){
+			return Objects.equals(geoNameId(), that.geoNameId()) && Objects.equals(code(), that.code());
 		}
 
 		return false;
@@ -90,8 +68,8 @@ public final class Continent extends AbstractNameRecord implements Serializable 
 
 	@Override
 	public String toString() {
-		return "Continent{" + "geoNameId=" + getGeoNameId() + ", code=" + getCode() + ", originalName=" +
-				getOriginalName() + ", name=" + getName() + '}';
+		return "Continent{" + "geoNameId=" + geoNameId() + ", code=" + code() + ", originalName=" +
+				originalName() + ", name=" + name() + '}';
 	}
 
 }

@@ -21,35 +21,25 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
 
-import com.buession.geoip.model.ConnectionType;
 import com.buession.geoip.model.Network;
 import com.buession.geoip.model.Organization;
 import com.buession.geoip.model.Traits;
-import com.maxmind.geoip2.model.AbstractResponse;
 import com.maxmind.geoip2.model.AsnResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * 特征记录数据转换器
  *
  * @author Yong.Teng
  */
-@SuppressWarnings({"deprecation"})
-public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip2.record.Traits, AbstractResponse> {
-
-	private final static ConnectionTypeConverter connectionTypeConverter = new ConnectionTypeConverter();
-
-	private final static Logger logger = LoggerFactory.getLogger(TraitsConverter.class);
+public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip2.record.Traits, Object> {
 
 	private AsnResponse asnResponse;
 
@@ -69,48 +59,33 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 
 		Network network;
 
-		try{
-			network = traits.getNetwork() == null ? null : new Network(traits.getIpAddress(),
-					traits.getNetwork().getPrefixLength(), traits.getNetwork().getNetworkAddress());
-		}catch(UnknownHostException e){
-			logger.warn(e.getMessage());
-			network = new Network((InetAddress) null, traits.getNetwork().getPrefixLength(),
-					traits.getNetwork().getNetworkAddress());
-		}
+		network = traits.network() == null ? null : new Network(traits.ipAddress(),
+				traits.network().prefixLength(), traits.network().networkAddress());
 
-		final ConnectionType connectionType = connectionTypeConverter.convert(traits.getConnectionType());
-		final Organization organization =
-				traits.getOrganization() == null ? null : new Organization(traits.getOrganization());
+		final Organization organization = traits.organization() == null ? null :
+				new Organization(traits.organization());
 		final Organization autonomousSystemOrganization = parseAutonomousSystemOrganization(traits);
-		final Long autonomousSystemNumber = parseAutonomousSystemNumber(traits);
+		final Long autonomousSystemNumber = Optional.ofNullable(traits.autonomousSystemNumber())
+				.orElse(asnResponse.autonomousSystemNumber());
 
-		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), network, connectionType,
-				organization, autonomousSystemOrganization, autonomousSystemNumber,
-				traits.getMobileCountryCode(), traits.getMobileNetworkCode(), traits.isAnonymous(),
-				traits.isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(),
-				traits.isLegitimateProxy(), traits.isPublicProxy(), traits.isPublicProxy(),
-				traits.isSatelliteProvider(), traits.isTorExitNode(), traits.getUserType(), traits.getUserCount(),
-				traits.getStaticIpScore());
+		return new Traits(traits.ipAddress().getHostAddress(), traits.domain(), traits.isp(), network,
+				traits.connectionType(), organization, autonomousSystemOrganization, autonomousSystemNumber,
+				traits.mobileCountryCode(), traits.mobileNetworkCode(), traits.isAnonymous(), false,
+				traits.isAnonymousVpn(), traits.isHostingProvider(), traits.isLegitimateProxy(),
+				traits.isPublicProxy(), traits.isPublicProxy(), false, traits.isTorExitNode(), traits.isAnycast(),
+				traits.ipRiskSnapshot(), traits.userType(), traits.userCount(), traits.staticIpScore());
 	}
 
 	@Override
-	public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale) {
+	public Traits converter(com.maxmind.geoip2.record.Traits traits, Object response, Locale locale) {
 		return converter(traits);
 	}
 
-	private Long parseAutonomousSystemNumber(com.maxmind.geoip2.record.Traits traits) {
-		if(traits.getAutonomousSystemNumber() == null){
-			return asnResponse == null ? null : asnResponse.getAutonomousSystemNumber();
-		}else{
-			return traits.getAutonomousSystemNumber();
-		}
-	}
-
 	private Organization parseAutonomousSystemOrganization(com.maxmind.geoip2.record.Traits traits) {
-		if(traits.getAutonomousSystemOrganization() == null){
-			return asnResponse == null ? null : new Organization(asnResponse.getAutonomousSystemOrganization());
+		if(traits.autonomousSystemOrganization() == null){
+			return asnResponse == null ? null : new Organization(asnResponse.autonomousSystemOrganization());
 		}else{
-			return new Organization(traits.getAutonomousSystemOrganization());
+			return new Organization(traits.autonomousSystemOrganization());
 		}
 	}
 
