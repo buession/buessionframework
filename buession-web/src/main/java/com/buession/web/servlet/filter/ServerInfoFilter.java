@@ -76,7 +76,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	}
 
 	@Override
-	public Map<String, String> getHeaders() {
+	public final Map<String, String> getHeaders() {
 		Map<String, String> headers = super.getHeaders();
 
 		if(Validate.isEmpty(headers)){
