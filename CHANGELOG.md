@@ -13,6 +13,7 @@ Buession Framework Changelog
 - javax.validation 更换为 jakarta.validation
 - maxmind 数据库从代码中移除
 - geoip model 类型从 class 变更未 record
+- 删除模块 buession-beans
 
 ### 🐞 Bug 修复
 
