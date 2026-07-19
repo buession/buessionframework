@@ -66,7 +66,6 @@
 		<module>../buession-lang</module>
 		<module>../buession-net</module>
 		<module>../buession-redis</module>
-		<module>../buession-thesaurus</module>
 		<module>../buession-web</module>
 	</modules>
 

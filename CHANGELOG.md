@@ -14,6 +14,7 @@ Buession Framework Changelog
 - maxmind 数据库从代码中移除
 - geoip model 类型从 class 变更未 record
 - 删除模块 buession-beans
+- 删除模块 buession-thesaurus
 
 ### 🐞 Bug 修复
 
