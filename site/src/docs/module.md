@@ -4,9 +4,6 @@
 ### buession-aop
 * AOP 封装，方便实现自定义注解
 
-### buession-beans
-* Bean 工具类封
-
 ### buession-core
 * 一些继承 apache lang3、apache collections4 的对字符串、集合、List、Map、Class、Object、Enum、Number等工具类封装和扩展
 * 汉字拼音工具类
@@ -55,15 +52,6 @@
 ### buession-redis
 * Redis 操作类，基于 jedis 实现，RedisTemplate 方法名、参数几乎同 redis 命令保持一致
 * 对对象读写 redis 进行了扩展，支持二进制、json方式序列化和反序列化，例如：通过 RedisTemplate.getObject(“key”, Class) 可以将 redis 中的数据读取出来后，直接反序列化成一个对象
-
-### buession-session
-* ...
-
-### buession-thesaurus
-* 对词库的解析，目前仅支持搜狗词条
-
-### buession-velocity
-* spring mvc 不再支持 velocity，这里主要是把原来 spring mvc 中关于 velocity 的实现迁移过来，让喜欢 velocity 的 coder 继续在高版本的 springframework 中继续使用 velocity
 
 ### buession-web
 * web 相关的功能封装，支持 servlet 和 reactive
