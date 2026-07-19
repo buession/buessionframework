@@ -56,8 +56,14 @@ public class File extends java.io.File {
 
 	private static MimeTypeDetector mimeTypeDetector;
 
+	/**
+	 * 文件 MimeType
+	 */
 	private MimeType mimeType;
 
+	/**
+	 * 文件扩展名
+	 */
 	private String extension;
 
 	/**

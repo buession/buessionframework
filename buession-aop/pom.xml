@@ -65,15 +65,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>aopalliance</groupId>
-			<artifactId>aopalliance</artifactId>
-			<version>1.0</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<optional>true</optional>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
 		</dependency>
 
 		<dependency>
