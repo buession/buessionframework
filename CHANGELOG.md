@@ -15,6 +15,7 @@ Buession Framework Changelog
 - geoip model 类型从 class 变更未 record
 - 删除模块 buession-beans
 - 删除模块 buession-thesaurus
+- 模块 buession-net 整合至 buession-core 中
 
 ### 🐞 Bug 修复
 

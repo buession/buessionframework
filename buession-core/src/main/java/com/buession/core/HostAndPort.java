@@ -19,107 +19,134 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
+package com.buession.core;
+
+import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 
 import java.io.Serializable;
-import java.net.URI;
+import java.util.Objects;
 
 /**
+ * 网络服务地址
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractURI implements Serializable {
+public class HostAndPort implements Serializable {
 
-	private final static long serialVersionUID = -1695251022185424158L;
+	private final static long serialVersionUID = 856989636316530989L;
 
 	/**
-	 * URI Scheme
+	 * 主机地址
 	 */
-	protected String scheme;
+	private String host;
 
 	/**
-	 * URI 主机地址
+	 * 端口
 	 */
-	protected String host;
+	private int port;
 
 	/**
-	 * URI 端口
-	 */
-	protected int port;
-
-	/**
-	 * 返回 URI Scheme
+	 * 构造函数
 	 *
-	 * @return URI Scheme
+	 * @param host
+	 * 		主机地址
 	 */
-	public String getScheme() {
-		return scheme;
+	public HostAndPort(String host) {
+		this.host = host;
 	}
 
 	/**
-	 * 设置 URI Scheme
+	 * 构造函数
 	 *
-	 * @param scheme
-	 * 		URI Scheme
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
 	 */
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
+	public HostAndPort(String host, int port) {
+		this(host);
+		setPort(port);
 	}
 
 	/**
-	 * 返回 URI 主机地址
+	 * 获取主机地址
 	 *
-	 * @return URI 主机地址
+	 * @return 主机地址
 	 */
 	public String getHost() {
 		return host;
 	}
 
 	/**
-	 * 设置 URI 主机地址
+	 * 设置主机地址
 	 *
 	 * @param host
-	 * 		URI 主机地址
+	 * 		主机地址
 	 */
 	public void setHost(String host) {
 		this.host = host;
 	}
 
 	/**
-	 * 返回 URI 端口
+	 * 获取端口
 	 *
-	 * @return URI 端口
+	 * @return 端口
 	 */
 	public int getPort() {
 		return port;
 	}
 
 	/**
-	 * 设置 URI 端口
+	 * 设置端口
 	 *
 	 * @param port
-	 * 		URI 端口
+	 * 		端口
 	 */
 	public void setPort(int port) {
+		Assert.isFalse(Validate.isPort(port), String.format("Port out of range: %s", port));
 		this.port = port;
 	}
 
 	/**
-	 * 返回是否为 SSL
+	 * 从字符串主机端口中创建 {@link HostAndPort}
 	 *
-	 * @return true/false
+	 * @param addr
+	 * 		字符串主机端口
+	 *
+	 * @return {@link HostAndPort}
+	 *
+	 * @since 4.0.0
 	 */
-	public boolean isSsl() {
-		return false;
+	public static HostAndPort create(final String addr) {
+		int ci = addr.indexOf(':');
+		return new HostAndPort(addr.substring(0, ci), Integer.parseInt(addr.substring(ci + 1)));
 	}
 
-	/**
-	 * 转换为 {@link URI}
-	 *
-	 * @return {@link URI} 实例
-	 */
-	public abstract URI toURI();
+	@Override
+	public String toString() {
+		return host + ':' + port;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(host, port);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o){
+			return true;
+		}
+
+		if(o instanceof HostAndPort that){
+			return Objects.equals(host, that.host) && Objects.equals(port, that.port);
+		}
+
+		return false;
+	}
 
 }

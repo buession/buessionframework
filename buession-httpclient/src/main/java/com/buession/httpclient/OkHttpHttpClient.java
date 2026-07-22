@@ -37,7 +37,7 @@ import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.okhttp.OkHttpRequest;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 import okhttp3.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +142,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						 List<Header> headers) throws IOException, RequestException {
+	                     List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), readTimeout);
 	}
 
@@ -154,7 +154,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						List<Header> headers) throws IOException, RequestException {
+	                    List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), readTimeout);
 	}
 
@@ -166,7 +166,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  List<Header> headers) throws IOException, RequestException {
+	                      List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout);
 	}
 
@@ -334,7 +334,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							  List<Header> headers) throws IOException, RequestException {
+	                          List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout);
 	}
 
@@ -346,7 +346,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						   List<Header> headers) throws IOException, RequestException {
+	                       List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), readTimeout);
 	}
 

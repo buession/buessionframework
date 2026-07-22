@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.core;
 
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 
 import java.net.InetAddress;
 import java.util.Collection;

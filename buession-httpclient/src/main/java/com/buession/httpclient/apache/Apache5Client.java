@@ -37,7 +37,7 @@ import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.*;

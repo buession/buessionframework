@@ -19,36 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
+package com.buession.core.ssl;
 
 /**
+ * SSL 初始化异常
+ *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractUserInfoURI extends AbstractURI {
+public class SSLInitializationException extends IllegalStateException {
 
-	private final static long serialVersionUID = 1436152521536810273L;
-
-	protected String username;
-
-	protected String password;
-
-	public String getUsername(){
-		return username;
-	}
-
-	public void setUsername(String username){
-		this.username = username;
-	}
-
-	public String getPassword(){
-		return password;
-	}
-
-	public void setPassword(String password){
-		this.password = password;
+	public SSLInitializationException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
 }

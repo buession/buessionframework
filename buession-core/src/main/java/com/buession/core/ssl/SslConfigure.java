@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.ssl;
+package com.buession.core.ssl;
 
 import java.io.Serializable;
 import java.util.Set;

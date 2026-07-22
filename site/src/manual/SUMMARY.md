@@ -46,8 +46,6 @@
       * [安装](5.0/json/index.md#安装)
     * [buession-lang](5.0/lang/index.md)
       * [安装](5.0/lang/index.md#安装)
-    * [buession-net](5.0/net/index.md)
-      * [安装](5.0/net/index.md#安装)
     * [buession-redis](5.0/redis/index.md)
       * [安装](5.0/redis/index.md#安装)
       * [介绍](5.0/redis/index.md#介绍)

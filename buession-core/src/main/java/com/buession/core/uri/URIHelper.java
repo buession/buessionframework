@@ -22,14 +22,15 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
+package com.buession.core.uri;
 
+import com.buession.core.HostAndPort;
 import com.buession.core.utils.StringUtils;
 
 import java.net.URI;
 
 /**
- *
+ * URI 工具类
  *
  * @author Yong.Teng
  * @since 4.0.0

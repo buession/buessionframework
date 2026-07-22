@@ -19,35 +19,69 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
+package com.buession.core.uri;
+
+import java.nio.charset.StandardCharsets;
 
 /**
+ * 含用户信息的 URI 构建器
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public enum Multiplexing {
+public abstract class AbstractUserInfoURIBuilder<T extends AbstractURI> extends AbstractURIBuilder<T> {
 
-	SELECT("select"),
+	protected String username;
 
-	EPOLL("epoll"),
+	protected String password;
 
-	KQUEUE("kqueue");
-
-	private final String value;
-
-	Multiplexing(final String value){
-		this.value = value;
+	/**
+	 * 构造函数
+	 */
+	protected AbstractUserInfoURIBuilder() {
+		super();
 	}
 
-	public String getValue(){
-		return value;
+	/**
+	 * 设置 URI 用户名
+	 *
+	 * @param username
+	 * 		URI 用户名
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder username(final String username) {
+		this.username = username;
+		return this;
 	}
 
-	@Override
-	public String toString(){
-		return getValue();
+	/**
+	 * 设置 URI 密码
+	 *
+	 * @param password
+	 * 		URI 密码
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder password(final String password) {
+		this.password = password;
+		return this;
+	}
+
+	/**
+	 * 设置 URI 密码
+	 *
+	 * @param password
+	 * 		URI 密码
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder password(final byte[] password) {
+		this.password = new String(password, StandardCharsets.UTF_8);
+		return this;
 	}
 
 }

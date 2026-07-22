@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.ssl;
+package com.buession.core.ssl;
 
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
@@ -41,7 +41,7 @@ public class SSLContexts {
 	 *
 	 * @return the default SSL socket factory
 	 */
-	public static SSLContext createDefault() throws SSLInitializationException{
+	public static SSLContext createDefault() throws SSLInitializationException {
 		try{
 			final SSLContext sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(null, null, null);
@@ -62,7 +62,7 @@ public class SSLContexts {
 	 *
 	 * @return default system SSL context
 	 */
-	public static SSLContext createSystemDefault() throws SSLInitializationException{
+	public static SSLContext createSystemDefault() throws SSLInitializationException {
 		try{
 			return SSLContext.getDefault();
 		}catch(final NoSuchAlgorithmException ex){

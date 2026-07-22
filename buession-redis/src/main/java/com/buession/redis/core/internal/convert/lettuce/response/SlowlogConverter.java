@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.net.HostAndPort;
+import com.buession.core.HostAndPort;
 import com.buession.redis.core.SlowLog;
 
 import java.util.List;

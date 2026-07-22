@@ -35,7 +35,7 @@ import com.buession.httpclient.jdk.JdkHttpRequestBuilder;
 import com.buession.httpclient.jdk.JdkHttpResponseBuilder;
 import com.buession.httpclient.jdk.JdkNioHttpClientConnectionManager;
 import com.buession.httpclient.jdk.nio.DefaultCallback;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

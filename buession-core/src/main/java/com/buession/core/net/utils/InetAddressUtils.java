@@ -22,51 +22,81 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.core.net.utils;
 
-import com.buession.core.HostAndPort;
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * Redis 节点
+ * 网络地址工具
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class RedisNode extends HostAndPort {
+public class InetAddressUtils {
 
-	private final static long serialVersionUID = 5460272093066382186L;
-
-	public final static String DEFAULT_HOST = com.buession.redis.core.RedisNode.DEFAULT_HOST;
-
-	public final static int DEFAULT_PORT = com.buession.redis.core.RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 构造函数，设置 Redis 默认地址和默认端口
-	 */
-	public RedisNode() {
-		super(DEFAULT_HOST, DEFAULT_PORT);
+	private InetAddressUtils() {
 	}
 
 	/**
-	 * 构造函数，设置默认端口
+	 * 将长整型转化为字符串形式带点的 IPV4 地址
 	 *
-	 * @param host
-	 * 		Redis 地址
+	 * @param l
+	 * 		合格的地址的长整型的表达形式
+	 *
+	 * @return IPV4 地址
 	 */
-	public RedisNode(String host) {
-		super(host, DEFAULT_PORT);
+	public static String long2ip(long l) {
+		long[] result = new long[4];
+		for(int i = 4; i > 0; i--){
+			result[i - 1] = (l & 0xff);
+			l = l >> 8;
+		}
+
+		return StringUtils.join(result, '.');
 	}
 
 	/**
-	 * 构造函数
+	 * 将长整型转化为字符串形式带点的 IPV4 地址的 InetAddress 对象
 	 *
-	 * @param host
-	 * 		Redis 地址
-	 * @param port
-	 * 		Redis 端口
+	 * @param l
+	 * 		合格的地址的长整型的表达形式
+	 *
+	 * @return IPV4 地址的 InetAddress 对象
 	 */
-	public RedisNode(String host, int port) {
-		super(host, port);
+	public static InetAddress long2InetAddress(long l) {
+		String ip = long2ip(l);
+
+		try{
+			return InetAddress.getByName(ip);
+		}catch(UnknownHostException e){
+			return null;
+		}
+	}
+
+	/**
+	 * 将字符串形式带点的 IPV4 地址转化为长整型
+	 *
+	 * @param ip
+	 * 		字符串形式带点的 IPV4 地址
+	 *
+	 * @return IPV4 地址的长整型
+	 */
+	public static long ip2long(String ip) {
+		Assert.isFalse(Validate.isIpV4(ip), "Illegal ip: " + ip + ", must be ipv4.");
+
+		String[] numbers = StringUtils.splitByWholeSeparatorPreserveAllTokens(ip, ".");
+		long result = 0L;
+
+		for(int i = 0; i < 4; ++i){
+			result = result << 8 | Integer.parseInt(numbers[i]);
+		}
+
+		return result;
 	}
 
 }

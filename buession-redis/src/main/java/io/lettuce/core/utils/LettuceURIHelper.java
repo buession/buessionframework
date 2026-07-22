@@ -26,7 +26,7 @@ package io.lettuce.core.utils;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.net.HostAndPort;
+import com.buession.core.HostAndPort;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.RedisURI;
 

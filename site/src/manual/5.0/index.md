@@ -16,6 +16,5 @@ Buession Framework API 包含以下目录：
 | buession-jdbc        | [使用帮助](jdbc/index.md)       | [API 手册](https://javadoc.io/static/com.buession/buession-jdbc/5.0.0/)       |
 | buession-json        | [使用帮助](json/index.md)       | [API 手册](https://javadoc.io/static/com.buession/buession-json/5.0.0/)       |
 | buession-lang        | [使用帮助](lang/index.md)       | [API 手册](https://javadoc.io/static/com.buession/buession-lang/5.0.0/)       |
-| buession-net         | [使用帮助](net/index.md)        | [API 手册](https://javadoc.io/static/com.buession/buession-net/5.0.0/)        |
 | buession-redis       | [使用帮助](redis/index.md)      | [API 手册](https://javadoc.io/static/com.buession/buession-redis/5.0.0/)      |
 | buession-web         | [使用帮助](web/index.md)        | [API 手册](https://javadoc.io/static/com.buession/buession-web/5.0.0/)        |

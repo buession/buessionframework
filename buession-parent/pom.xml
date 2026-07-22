@@ -64,7 +64,6 @@
 		<module>../buession-jdbc</module>
 		<module>../buession-json</module>
 		<module>../buession-lang</module>
-		<module>../buession-net</module>
 		<module>../buession-redis</module>
 		<module>../buession-web</module>
 	</modules>

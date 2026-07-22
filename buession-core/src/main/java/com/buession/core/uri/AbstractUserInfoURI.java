@@ -19,68 +19,67 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
-
-import java.nio.charset.StandardCharsets;
+package com.buession.core.uri;
 
 /**
- * 含用户信息的 URI 构建器
+ * 含用户信息 URI 基类
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public abstract class AbstractUserInfoURIBuilder<T extends AbstractURI> extends AbstractURIBuilder<T> {
+public abstract class AbstractUserInfoURI extends AbstractURI {
 
+	private final static long serialVersionUID = 1436152521536810273L;
+
+	/**
+	 * 用户名
+	 */
 	protected String username;
 
+	/**
+	 * 密码
+	 */
 	protected String password;
 
 	/**
-	 * 构造函数
+	 * 返回用户名
+	 *
+	 * @return 用户名
 	 */
-	protected AbstractUserInfoURIBuilder() {
-		super();
+	public String getUsername() {
+		return username;
 	}
 
 	/**
-	 * 设置 URI 用户名
+	 * 设置用户名
 	 *
 	 * @param username
-	 * 		URI 用户名
-	 *
-	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 * 		用户名
 	 */
-	public AbstractUserInfoURIBuilder username(final String username) {
+	public void setUsername(String username) {
 		this.username = username;
-		return this;
 	}
 
 	/**
-	 * 设置 URI 密码
+	 * 返回密码
+	 *
+	 * @return 密码
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * 设置密码
 	 *
 	 * @param password
-	 * 		URI 密码
-	 *
-	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 * 		密码
 	 */
-	public AbstractUserInfoURIBuilder password(final String password) {
+	public void setPassword(String password) {
 		this.password = password;
-		return this;
-	}
-
-	/**
-	 * 设置 URI 密码
-	 *
-	 * @param password
-	 * 		URI 密码
-	 *
-	 * @return {@link AbstractUserInfoURIBuilder} 实例
-	 */
-	public AbstractUserInfoURIBuilder password(final byte[] password) {
-		this.password = new String(password, StandardCharsets.UTF_8);
-		return this;
 	}
 
 }

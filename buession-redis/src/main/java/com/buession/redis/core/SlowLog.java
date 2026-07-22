@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.net.HostAndPort;
+import com.buession.core.HostAndPort;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;

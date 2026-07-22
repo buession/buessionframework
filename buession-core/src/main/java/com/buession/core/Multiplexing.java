@@ -19,21 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.ssl;
+package com.buession.core;
 
 /**
- * SSL 初始化异常
- *
  * @author Yong.Teng
- * @since 2.3.0
  */
-public class SSLInitializationException extends IllegalStateException {
+public enum Multiplexing {
 
-	public SSLInitializationException(final String message, final Throwable cause){
-		super(message, cause);
+	SELECT("select"),
+
+	EPOLL("epoll"),
+
+	KQUEUE("kqueue");
+
+	private final String value;
+
+	Multiplexing(final String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

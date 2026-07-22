@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.ssl;
+package com.buession.core.ssl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -62,7 +62,7 @@ public class SslConfiguration {
 	/**
 	 * 构造函数
 	 */
-	public SslConfiguration(){
+	public SslConfiguration() {
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SslConfiguration {
 	 *        {@link HostnameVerifier}
 	 */
 	public SslConfiguration(SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-							HostnameVerifier hostnameVerifier){
+	                        HostnameVerifier hostnameVerifier) {
 		this.sslSocketFactory = sslSocketFactory;
 		this.sslParameters = sslParameters;
 		this.hostnameVerifier = hostnameVerifier;
@@ -97,7 +97,7 @@ public class SslConfiguration {
 	 * @since 2.3.0
 	 */
 	public SslConfiguration(SSLContext sslContext, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-							HostnameVerifier hostnameVerifier){
+	                        HostnameVerifier hostnameVerifier) {
 		this(sslSocketFactory, sslParameters, hostnameVerifier);
 		this.sslContext = sslContext;
 	}
@@ -109,7 +109,7 @@ public class SslConfiguration {
 	 *
 	 * @since 2.3.0
 	 */
-	public SSLContext getSslContext(){
+	public SSLContext getSslContext() {
 		return sslContext;
 	}
 
@@ -121,7 +121,7 @@ public class SslConfiguration {
 	 *
 	 * @since 2.3.0
 	 */
-	public void setSslContext(SSLContext sslContext){
+	public void setSslContext(SSLContext sslContext) {
 		this.sslContext = sslContext;
 	}
 
@@ -130,7 +130,7 @@ public class SslConfiguration {
 	 *
 	 * @return {@link SSLSocketFactory}
 	 */
-	public SSLSocketFactory getSslSocketFactory(){
+	public SSLSocketFactory getSslSocketFactory() {
 		return sslSocketFactory;
 	}
 
@@ -140,7 +140,7 @@ public class SslConfiguration {
 	 * @param sslSocketFactory
 	 *        {@link SSLSocketFactory}
 	 */
-	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory){
+	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory) {
 		this.sslSocketFactory = sslSocketFactory;
 	}
 
@@ -149,7 +149,7 @@ public class SslConfiguration {
 	 *
 	 * @return {@link SSLParameters}
 	 */
-	public SSLParameters getSslParameters(){
+	public SSLParameters getSslParameters() {
 		return sslParameters;
 	}
 
@@ -159,7 +159,7 @@ public class SslConfiguration {
 	 * @param sslParameters
 	 *        {@link SSLParameters}
 	 */
-	public void setSslParameters(final SSLParameters sslParameters){
+	public void setSslParameters(final SSLParameters sslParameters) {
 		this.sslParameters = sslParameters;
 	}
 
@@ -168,7 +168,7 @@ public class SslConfiguration {
 	 *
 	 * @return {@link HostnameVerifier}
 	 */
-	public HostnameVerifier getHostnameVerifier(){
+	public HostnameVerifier getHostnameVerifier() {
 		return hostnameVerifier;
 	}
 
@@ -178,7 +178,7 @@ public class SslConfiguration {
 	 * @param hostnameVerifier
 	 *        {@link HostnameVerifier}
 	 */
-	public void setHostnameVerifier(final HostnameVerifier hostnameVerifier){
+	public void setHostnameVerifier(final HostnameVerifier hostnameVerifier) {
 		this.hostnameVerifier = hostnameVerifier;
 	}
 

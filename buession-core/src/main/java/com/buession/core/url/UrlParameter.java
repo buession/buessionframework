@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;
+package com.buession.core.url;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
@@ -37,7 +37,7 @@ import java.util.Optional;
  * URL 参数
  *
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 4.0.0
  */
 public class UrlParameter extends NameValue<String, String> {
 
