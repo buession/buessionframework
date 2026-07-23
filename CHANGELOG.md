@@ -8,6 +8,10 @@ Buession Framework Changelog
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v5.0.0)
 
+### ⭐ 新特性
+
+- com.buession.io.file.File mime 新增 HEIC 支持
+
 ### 🔔 变化
 
 - javax.validation 更换为 jakarta.validation
