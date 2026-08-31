@@ -2,7 +2,7 @@ Buession Framework Changelog
 ===========================
 
 
-## [5.0.0](https://github.com/buession/buessionframework/releases/tag/v5.0.0) (2026-07-xx)
+## [5.0.0](https://github.com/buession/buessionframework/releases/tag/v5.0.0) (2026-08-31)
 
 ### 🔨依赖升级
 
