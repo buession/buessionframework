@@ -36,7 +36,6 @@ import com.buession.httpclient.core.MultipartFormRequestBody;
  * @since 4.0.0
  */
 @FunctionalInterface
-public interface MultipartFormRequestBodyConverter<T>
-		extends RequestBodyConverter<MultipartFormRequestBody, T> {
+public interface MultipartFormRequestBodyConverter<T> extends RequestBodyConverter<MultipartFormRequestBody, T> {
 
 }

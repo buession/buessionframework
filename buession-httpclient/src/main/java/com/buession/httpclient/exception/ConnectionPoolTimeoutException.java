@@ -42,4 +42,5 @@ public class ConnectionPoolTimeoutException extends InterruptedIOException {
 	public ConnectionPoolTimeoutException(String message) {
 		super(message);
 	}
+
 }

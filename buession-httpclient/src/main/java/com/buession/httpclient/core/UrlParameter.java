@@ -133,8 +133,7 @@ public class UrlParameter {
 			return true;
 		}
 
-		if(obj instanceof UrlParameter){
-			UrlParameter that = (UrlParameter) obj;
+		if(obj instanceof UrlParameter that){
 			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
 		}
 
