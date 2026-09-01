@@ -32,7 +32,6 @@ import com.buession.core.validator.Validate;
 import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -77,7 +76,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	}
 
 	@Override
-	public Map<String, String> getHeaders() {
+	public final Map<String, String> getHeaders() {
 		Map<String, String> headers = super.getHeaders();
 
 		if(Validate.isEmpty(headers)){
@@ -87,8 +86,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 		return headers;
 	}
 
-	@Nullable
-	protected String format(@Nullable final String computerName) {
+	protected String format(final String computerName) {
 		return computerName;
 	}
 

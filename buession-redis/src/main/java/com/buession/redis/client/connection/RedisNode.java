@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.connection;
 
-import com.buession.net.HostAndPort;
+import com.buession.core.HostAndPort;
 
 /**
  * Redis 节点

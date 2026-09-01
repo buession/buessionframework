@@ -39,7 +39,7 @@ import com.buession.httpclient.core.internal.convert.RequestBodyConverter;
 import com.buession.httpclient.core.utils.HeadersBuilder;
 import com.buession.httpclient.core.utils.UriUtils;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 import org.apache.hc.client5.http.async.HttpAsyncClient;
 import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.config.RequestConfig;

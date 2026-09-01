@@ -27,7 +27,6 @@ package com.buession.redis.client.connection;
 import com.buession.core.Destroyable;
 import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.SslOptions;

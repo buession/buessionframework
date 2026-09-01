@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -46,28 +46,28 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
 			return null;
 		}
 
-		final String name = getName(subdivision.getNames(), locale);
+		final String name = getName(subdivision.names(), locale);
 		District parent = null;
 
-		if(response.getSubdivisions() != null){
-			for(Subdivision sub : response.getSubdivisions()){
+		if(response.subdivisions() != null){
+			for(Subdivision sub : response.subdivisions()){
 				parent = converter(sub, response, locale, true);
 			}
 		}
 
-		return new District(subdivision.getGeoNameId(), subdivision.getIsoCode(), subdivision.getName(), name,
-				subdivision.getConfidence(), null, parent);
+		return new District(subdivision.geonameId(), subdivision.isoCode(), subdivision.name(), name,
+				subdivision.confidence(), null, parent);
 	}
 
 	private static District converter(Subdivision subdivision, CityResponse response, Locale locale,
-									  boolean isPrivate) {
+	                                  boolean isPrivate) {
 		if(subdivision == null){
 			return null;
 		}
 
-		final String name = getName(subdivision.getNames(), locale);
-		return new District(subdivision.getGeoNameId(), subdivision.getIsoCode(), subdivision.getName(), name,
-				subdivision.getConfidence(), null, null);
+		final String name = getName(subdivision.names(), locale);
+		return new District(subdivision.geonameId(), subdivision.isoCode(), subdivision.name(), name,
+				subdivision.confidence(), null, null);
 	}
 
 }

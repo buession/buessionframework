@@ -29,7 +29,7 @@ import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.net.HostAndPort;
+import com.buession.core.HostAndPort;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Event;
 import com.buession.redis.core.command.RedisCommand;

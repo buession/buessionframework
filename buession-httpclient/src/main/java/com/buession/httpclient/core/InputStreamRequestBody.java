@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -38,7 +38,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	/**
 	 * 构造函数，ContentType 为 application/octet-stream
 	 */
-	public InputStreamRequestBody(){
+	public InputStreamRequestBody() {
 		this(null);
 	}
 
@@ -48,7 +48,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param content
 	 * 		请求流
 	 */
-	public InputStreamRequestBody(InputStream content){
+	public InputStreamRequestBody(InputStream content) {
 		this(ContentType.APPLICATION_OBJECT_STREAM, content);
 	}
 
@@ -60,7 +60,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param contentLength
 	 * 		请求体大小
 	 */
-	public InputStreamRequestBody(InputStream content, long contentLength){
+	public InputStreamRequestBody(InputStream content, long contentLength) {
 		super(ContentType.APPLICATION_OBJECT_STREAM, content, contentLength);
 	}
 
@@ -72,7 +72,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param charset
 	 * 		请求体字符集
 	 */
-	public InputStreamRequestBody(InputStream content, Charset charset){
+	public InputStreamRequestBody(InputStream content, Charset charset) {
 		super(new ContentType(ContentType.APPLICATION_OBJECT_STREAM.getMimeType(), charset), content);
 		setContentLength(content);
 	}
@@ -87,7 +87,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param charset
 	 * 		请求体字符集
 	 */
-	public InputStreamRequestBody(InputStream content, long contentLength, Charset charset){
+	public InputStreamRequestBody(InputStream content, long contentLength, Charset charset) {
 		super(new ContentType(ContentType.APPLICATION_OBJECT_STREAM.getMimeType(), charset), content);
 		setContentLength(contentLength);
 	}
@@ -100,7 +100,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param content
 	 * 		请求流
 	 */
-	public InputStreamRequestBody(ContentType contentType, InputStream content){
+	public InputStreamRequestBody(ContentType contentType, InputStream content) {
 		super(contentType, content);
 		setContentLength(content);
 	}
@@ -115,7 +115,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param contentLength
 	 * 		请求体大小
 	 */
-	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
+	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength) {
 		super(contentType, content, contentLength);
 	}
 
@@ -131,15 +131,16 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 	 * @param charset
 	 * 		请求体字符集
 	 */
-	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength, Charset charset){
+	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength, Charset charset) {
 		super(new ContentType(contentType.getMimeType(), charset), content);
 		setContentLength(contentLength);
 	}
 
-	protected void setContentLength(InputStream content){
+	protected void setContentLength(InputStream content) {
 		try{
 			setContentLength(content.available());
 		}catch(IOException e){
+			//
 		}
 	}
 

@@ -33,7 +33,7 @@ import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.jdk.JdkHttpRequestBuilder;
 import com.buession.httpclient.jdk.JdkHttpResponseBuilder;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.ssl.SslConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

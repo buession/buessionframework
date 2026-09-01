@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-20226 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -27,8 +27,9 @@ package com.buession.core.validator.constraintvalidators;
 import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.Empty;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -42,7 +43,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class CharSequenceEmptyConstraintValidator extends EmptyConstraintValidator<CharSequence> {
 
 		@Override
-		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+		public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 
@@ -51,7 +52,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class ArrayEmptyConstraintValidator extends EmptyConstraintValidator<Object[]> {
 
 		@Override
-		public boolean isValid(Object[] value, ConstraintValidatorContext context){
+		public boolean isValid(Object[] value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 
@@ -60,7 +61,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class MapEmptyConstraintValidator extends EmptyConstraintValidator<Map<?, ?>> {
 
 		@Override
-		public boolean isValid(Map<?, ?> value, ConstraintValidatorContext context){
+		public boolean isValid(Map<?, ?> value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 
@@ -69,7 +70,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class CollectionEmptyConstraintValidator extends EmptyConstraintValidator<Collection<?>> {
 
 		@Override
-		public boolean isValid(Collection<?> value, ConstraintValidatorContext context){
+		public boolean isValid(Collection<?> value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 
@@ -78,7 +79,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class IteratorEmptyConstraintValidator extends EmptyConstraintValidator<Iterator<?>> {
 
 		@Override
-		public boolean isValid(Iterator<?> value, ConstraintValidatorContext context){
+		public boolean isValid(Iterator<?> value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 
@@ -87,7 +88,7 @@ public abstract class EmptyConstraintValidator<T> implements ConstraintValidator
 	public final static class EnumerationEmptyConstraintValidator extends EmptyConstraintValidator<Enumeration<?>> {
 
 		@Override
-		public boolean isValid(Enumeration<?> value, ConstraintValidatorContext context){
+		public boolean isValid(Enumeration<?> value, ConstraintValidatorContext context) {
 			return Validate.isEmpty(value);
 		}
 

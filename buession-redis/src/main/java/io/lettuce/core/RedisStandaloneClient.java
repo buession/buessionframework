@@ -161,7 +161,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 		Assert.isFalse(LettuceURIHelper.isValid(uri), "Invalid Redis URI");
 
 		LettuceClientConfig clientConfig = DefaultLettuceClientConfig.builder(uri).build();
-		com.buession.net.HostAndPort hostAndPort = LettuceURIHelper.getHostAndPort(uri);
+		com.buession.core.HostAndPort hostAndPort = LettuceURIHelper.getHostAndPort(uri);
 
 		return RedisStandaloneClient.<K, V>builder()
 				.hostAndPort(HostAndPort.of(hostAndPort.getHost(), hostAndPort.getPort()))

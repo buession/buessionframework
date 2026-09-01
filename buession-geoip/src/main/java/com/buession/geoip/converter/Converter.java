@@ -21,13 +21,10 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
-
-import com.maxmind.geoip2.model.AbstractResponse;
-import com.maxmind.geoip2.record.AbstractRecord;
 
 import java.util.Locale;
 
@@ -36,54 +33,54 @@ import java.util.Locale;
  *
  * @param <M>
  * 		模型实体类
- * @param <S>
- * 		maxmind GeoIP Record {@link AbstractRecord}
  * @param <R>
- * 		maxmind Response {@link AbstractResponse}
+ * 		maxmind GeoIP Record
+ * @param <RES>
+ * 		maxmind Response
  *
  * @author Yong.Teng
  */
 @FunctionalInterface
-public interface Converter<M, S extends AbstractRecord, R extends AbstractResponse> {
+public interface Converter<M, R, RES> {
 
 	/**
 	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
-	 * @param s
-	 * 		maxmind GeoIP Record {@link AbstractRecord}
+	 * @param record
+	 * 		maxmind GeoIP Record
 	 *
 	 * @return 模型实体类
 	 */
-	default M converter(S s) {
-		return converter(s, null, null);
+	default M converter(R record) {
+		return converter(record, null, null);
 	}
 
 	/**
 	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
-	 * @param s
-	 * 		maxmind GeoIP Record {@link AbstractRecord}
+	 * @param record
+	 * 		maxmind GeoIP Record
 	 * @param locale
 	 *        {@link Locale} 实例
 	 *
 	 * @return 模型实体类
 	 */
-	default M converter(S s, Locale locale) {
-		return converter(s, null, locale);
+	default M converter(R record, Locale locale) {
+		return converter(record, null, locale);
 	}
 
 	/**
 	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
-	 * @param s
-	 * 		maxmind GeoIP Record {@link AbstractRecord}
+	 * @param record
+	 * 		maxmind GeoIP Record
 	 * @param response
-	 * 		maxmind Response  {@link AbstractResponse}
+	 * 		maxmind Response
 	 * @param locale
 	 *        {@link Locale} 实例
 	 *
 	 * @return 模型实体类
 	 */
-	M converter(S s, R response, Locale locale);
+	M converter(R record, RES response, Locale locale);
 
 }

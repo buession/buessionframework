@@ -1,6 +1,38 @@
 Buession Framework Changelog
 ===========================
 
+
+## [5.0.0](https://github.com/buession/buessionframework/releases/tag/v5.0.0) (2026-08-31)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v5.0.0)
+
+### ⭐ 新特性
+
+- com.buession.io.file.File mime 新增 HEIC 支持
+
+### 🔔 变化
+
+- javax.validation 更换为 jakarta.validation
+- maxmind 数据库从代码中移除
+- geoip model 类型从 class 变更未 record
+- 删除模块 buession-beans
+- 删除模块 buession-thesaurus
+- 模块 buession-net 整合至 buession-core 中
+
+### 🐞 Bug 修复
+
+- 修复 File 文件扩展名为大写时，无法获取 MimeType 的 BUG
+
+### 📔 文档
+
+- 完善代码注释
+
+
+---
+
+
 ## [4.0.0](https://github.com/buession/buessionframework/releases/tag/v4.0.0) (2026-07-15)
 
 ### 🔨依赖升级

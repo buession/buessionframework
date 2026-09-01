@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -28,8 +28,8 @@ import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.Ip;
 import com.buession.lang.IpType;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
@@ -40,12 +40,12 @@ public abstract class IpConstraintValidator implements ConstraintValidator<Ip, C
 	protected IpType type;
 
 	@Override
-	public void initialize(Ip ip){
+	public void initialize(Ip ip) {
 		this.type = ip.type();
 	}
 
 	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
 		if(type == IpType.IP_V4){
 			return Validate.isIpV4(value);
 		}else if(type == IpType.IP_V6){

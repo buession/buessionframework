@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -32,92 +32,33 @@ import java.util.Objects;
 /**
  * 包含与 IP 地址关联的国家记录的数据。
  *
+ * @param geoNameId
+ * 		国家名称 ID
+ * @param isoCode
+ * 		国家 ISO Code
+ * @param originalName
+ * 		国家原始名称
+ * @param name
+ * 		国家名称
+ * @param fullName
+ * 		国家名称全称
+ * @param confidence
+ * 		A value from 0-100 indicating MaxMind's confidence that the country is correct.
+ * @param isInEuropeanUnion
+ * 		IP 地址是否在欧盟
+ *
  * @author Yong.Teng
  */
-public final class Country extends AbstractConfidenceRecord implements Serializable {
+public record Country(Long geoNameId, String isoCode, String originalName, String name, String fullName,
+                      Integer confidence, boolean isInEuropeanUnion)
+		implements NameRecord, ConfidenceRecord, Serializable {
 
 	private final static long serialVersionUID = -7665239490542479833L;
 
-	/**
-	 * 国家名称全称
-	 */
-	private final String fullName;
-
-	/**
-	 * 国家 ISO Code
-	 *
-	 * @since 4.0.0
-	 */
-	private final String isoCode;
-
-	/**
-	 * IP 地址是否在欧盟
-	 *
-	 * @since 1.3.0
-	 */
-	private final boolean isInEuropeanUnion;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param geoNameId
-	 * 		国家名称 ID
-	 * @param isoCode
-	 * 		国家 ISO Code
-	 * @param originalName
-	 * 		国家原始名称
-	 * @param name
-	 * 		国家名称
-	 * @param fullName
-	 * 		国家名称全称
-	 * @param confidence
-	 * 		A value from 0-100 indicating MaxMind's confidence that the country is correct.
-	 * @param isInEuropeanUnion
-	 * 		IP 地址是否在欧盟
-	 */
-	public Country(final Long geoNameId, final String isoCode, final String originalName, final String name,
-				   final String fullName, final Integer confidence, final boolean isInEuropeanUnion) {
-		super(geoNameId, originalName, name, confidence);
-		this.isoCode = isoCode;
-		this.fullName = fullName;
-		this.isInEuropeanUnion = isInEuropeanUnion;
-	}
-
-	/**
-	 * 返回国家 ISO Code
-	 *
-	 * @return 国家 ISO Code
-	 *
-	 * @since 4.0.0
-	 */
-	public String getIsoCode() {
-		return isoCode;
-	}
-
-	/**
-	 * 返回国家名称全称
-	 *
-	 * @return 国家名称全称
-	 */
-	public String getFullName() {
-		return fullName;
-	}
-
-	/**
-	 * 返回 IP 地址是否在欧盟
-	 *
-	 * @return IP 在欧盟，返回 true；否则，返回 false
-	 *
-	 * @since 1.3.0
-	 */
-	public boolean isInEuropeanUnion() {
-		return isInEuropeanUnion;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(getGeoNameId(), getIsoCode(), getConfidence(), getOriginalName(), getName(), fullName,
-				isInEuropeanUnion);
+		return Objects.hash(geoNameId(), isoCode(), confidence(), originalName(), name(), fullName(),
+				isInEuropeanUnion());
 	}
 
 	@Override
@@ -126,13 +67,9 @@ public final class Country extends AbstractConfidenceRecord implements Serializa
 			return true;
 		}
 
-		if(obj instanceof Country){
-			Country that = (Country) obj;
-			return Objects.equals(getGeoNameId(), that.getGeoNameId()) &&
-					Objects.equals(getIsoCode(), that.getIsoCode()) &&
-					Objects.equals(getConfidence(), that.getConfidence()) &&
-					Objects.equals(getOriginalName(), that.getOriginalName()) &&
-					Objects.equals(getName(), that.getName());
+		if(obj instanceof Country that){
+			return Objects.equals(geoNameId(), that.geoNameId()) &&
+					Objects.equals(isoCode(), that.isoCode());
 		}
 
 		return false;
@@ -140,9 +77,9 @@ public final class Country extends AbstractConfidenceRecord implements Serializa
 
 	@Override
 	public String toString() {
-		return "Country{" + "geoNameId=" + getGeoNameId() + ", ISO code=" + getIsoCode() + ", confidence=" +
-				getConfidence() + ", originalName=" + getOriginalName() + ", name=" + getName() + ", fullName=" +
-				fullName + ", isInEuropeanUnion=" + isInEuropeanUnion + '}';
+		return "Country{" + "geoNameId=" + geoNameId() + ", ISO code=" + isoCode() + ", confidence=" +
+				confidence() + ", originalName=" + originalName() + ", name=" + name() + ", fullName=" +
+				fullName() + ", isInEuropeanUnion=" + isInEuropeanUnion() + '}';
 	}
 
 }

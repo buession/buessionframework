@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
@@ -28,8 +28,6 @@ import com.buession.core.utils.Assert;
 import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-
-import javax.validation.constraints.NotEmpty;
 
 /**
  * MimeType
@@ -57,7 +55,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String mimeType) {
+	public MimeType(String mimeType) {
 		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
 
 		if(Validate.isMimeType(mimeType)){
@@ -78,7 +76,7 @@ public final class MimeType {
 	 * @param subtype
 	 * 		子 Type
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype) {
+	public MimeType(String type, String subtype) {
 		this.type = type.toLowerCase();
 		this.subtype = subtype.toLowerCase();
 	}
@@ -95,7 +93,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype, String description) {
+	public MimeType(String type, String subtype, String description) {
 		this(type, subtype);
 		this.description = description;
 	}
@@ -154,8 +152,7 @@ public final class MimeType {
 			return true;
 		}
 
-		if(object instanceof MimeType){
-			MimeType that = (MimeType) object;
+		if(object instanceof MimeType that){
 			return StringUtils.equalsIgnoreCase(type, that.type) && StringUtils.equalsIgnoreCase(subtype, that.subtype);
 		}
 

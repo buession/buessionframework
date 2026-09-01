@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -27,8 +27,9 @@ package com.buession.core.validator.constraintvalidators;
 import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.IDCard;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class IDCardConstraintValidator implements ConstraintValidator<IDCard, Ch
 	protected Date birthday;
 
 	@Override
-	public void initialize(IDCard idCard){
+	public void initialize(IDCard idCard) {
 		this.strict = idCard.strict();
 		try{
 			this.birthday = idCard.birthday() == null ? null : (new SimpleDateFormat()).parse(idCard.birthday());
@@ -53,7 +54,7 @@ public class IDCardConstraintValidator implements ConstraintValidator<IDCard, Ch
 	}
 
 	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
 		return Validate.isIDCard(value, strict, birthday);
 	}
 

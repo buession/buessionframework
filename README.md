@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/buession/buessionframework.svg?branch=master)](https://travis-ci.org/buession/buessionframework)
 [![Coverage Status](https://img.shields.io/codecov/c/github/buession/buessionframework/master.svg)](https://codecov.io/github/buession/buessionframework?branch=master&view=all#sort=coverage&dir=asc)
 [![Maven Central](https://img.shields.io/maven-central/v/com.buession/buession-core.svg)](https://search.maven.org/search?q=g:com.buession)
+[![MvnRepository](https://badges.mvnrepository.com/badge/com.buession/buession-core/badge.svg?label=MvnRepository&color=green)](https://mvnrepository.com/artifact/com.buession)
 [![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Java support](https://img.shields.io/badge/Java-17+-green?logo=java&logoColor=white)](https://openjdk.java.net/)
@@ -15,12 +16,12 @@
 2. 常用 DAO 层操作，如：插入、替换、根据主键获取记录、获取单条记录、获取多条记录
 3. 应用层实现数据库读写分离
 4. redis 操作兼容原生 API 的前提下，同时实现了 redis 中的值反序列化成对象
-5. 词库解析（目前仅支持搜狗词库）
-6. 使用 WEB 功能，如：响应头注解、缓存头注解、兼容性获取用户端真实 IP、获取用户真实 IP 注解
-7. 替代 springfamework 5，支持 apache velocity
-8. 基于 maxmind geoip 的 IP 信息解析
-9. 基于标准的 HTTP 请求方法的 HttpClient
-10. 文件操作，如：写文件、设置文件所属用户或组、文件 MimeType 解析
+5. 使用 WEB 功能，如：响应头注解、缓存头注解、兼容性获取用户端真实 IP、获取用户真实 IP 注解
+6. 替代 springfamework 5，支持 apache velocity
+7. 基于 maxmind geoip 的 IP 信息解析
+8. 基于标准的 HTTP 请求方法的 HttpClient
+9. 文件操作，如：写文件、设置文件所属用户或组、文件 MimeType 解析
+10. 更丰富的 jackson 序列化和反序列化注解
 
 ... ...
 

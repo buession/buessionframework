@@ -21,13 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Continent;
-import com.maxmind.geoip2.model.AbstractResponse;
 
 import java.util.Locale;
 
@@ -37,17 +36,17 @@ import java.util.Locale;
  * @author Yong.Teng
  */
 public class ContinentConverter extends AbstractConverter<Continent, com.maxmind.geoip2.record.Continent,
-		AbstractResponse> {
+		Object> {
 
 	@Override
-	public Continent converter(com.maxmind.geoip2.record.Continent continent, AbstractResponse response,
-							   Locale locale){
+	public Continent converter(com.maxmind.geoip2.record.Continent continent, Object response,
+	                           Locale locale) {
 		if(continent == null){
 			return null;
 		}
 
-		final String name = getName(continent.getNames(), locale);
-		return new Continent(continent.getGeoNameId(), continent.getCode(), continent.getName(), name);
+		final String name = getName(continent.names(), locale);
+		return new Continent(continent.geonameId(), continent.code(), continent.name(), name);
 	}
 
 }

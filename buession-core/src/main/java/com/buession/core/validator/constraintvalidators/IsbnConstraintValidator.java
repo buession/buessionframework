@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -28,8 +28,8 @@ import com.buession.core.validator.Validate;
 import com.buession.core.validator.annotation.Isbn;
 import com.buession.lang.ISBNType;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
@@ -41,13 +41,13 @@ public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSe
 	protected char separator;
 
 	@Override
-	public void initialize(Isbn isbn){
+	public void initialize(Isbn isbn) {
 		this.type = isbn.type();
 		this.separator = isbn.separator();
 	}
 
 	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
 		if(type == ISBNType.ISBN_TYPE_10){
 			return Validate.isIsbn10(value, separator);
 		}else if(type == ISBNType.ISBN_TYPE_13){

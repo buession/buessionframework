@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -39,6 +39,8 @@ import okhttp3.StreamRequestBody;
  */
 public class OkHttpMultipartFormRequestBodyConverter implements OkHttpRequestBodyConverter<MultipartFormRequestBody>,
 		MultipartFormRequestBodyConverter<RequestBody> {
+
+	private final static MediaType APPLICATION_OCTECT_STREAM = MediaType.parse("application/octet-stream");
 
 	@Override
 	public RequestBody convert(final MultipartFormRequestBody source) {
@@ -66,7 +68,7 @@ public class OkHttpMultipartFormRequestBodyConverter implements OkHttpRequestBod
 			builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
 		}else if(element.getInputStream() != null){
 			builder.addFormDataPart(element.getName(), element.getFileName(),
-					StreamRequestBody.create(element.getInputStream(), MediaType.parse("application/octet-stream")));
+					StreamRequestBody.create(element.getInputStream(), APPLICATION_OCTECT_STREAM));
 		}else{
 			builder.addFormDataPart(element.getName(), element.getValue());
 		}
@@ -74,7 +76,7 @@ public class OkHttpMultipartFormRequestBodyConverter implements OkHttpRequestBod
 
 	private static MediaType parseMultipartElementMimeType(final File file) {
 		MimeType mimeType = file.getMimeType();
-		return mimeType == null ? MediaType.parse("application/octet-stream") : MediaType.parse(mimeType.toString());
+		return mimeType == null ? APPLICATION_OCTECT_STREAM : MediaType.parse(mimeType.toString());
 	}
 
 }

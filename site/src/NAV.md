@@ -9,7 +9,6 @@
   * [Buession Framework](https://wwww.buession.com/)
   * [Buession Security](https://security.buession.com/)
   * [Buession Logging](https://logging.buession.com/)
-  * [Buession Canal](https://canal.buession.com/)
   * [Buession SpringBoot](https://springboot.buession.com/)
   * [Buession SpringCloud](https://springcloud.buession.com/)
   * [Buession Cas](https://cas.buession.com/)

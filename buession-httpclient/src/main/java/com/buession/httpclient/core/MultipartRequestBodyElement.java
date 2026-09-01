@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -41,63 +41,63 @@ public class MultipartRequestBodyElement extends RequestBodyElement {
 
 	private String fileName;
 
-	public MultipartRequestBodyElement(final String name, final short value){
+	public MultipartRequestBodyElement(final String name, final short value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final int value){
+	public MultipartRequestBodyElement(final String name, final int value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final long value){
+	public MultipartRequestBodyElement(final String name, final long value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final float value){
+	public MultipartRequestBodyElement(final String name, final float value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final double value){
+	public MultipartRequestBodyElement(final String name, final double value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final boolean value){
+	public MultipartRequestBodyElement(final String name, final boolean value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final String value){
+	public MultipartRequestBodyElement(final String name, final String value) {
 		super(name, value);
 	}
 
-	public MultipartRequestBodyElement(final String name, final File file){
+	public MultipartRequestBodyElement(final String name, final File file) {
 		super(name, null);
 		this.file = file;
 	}
 
-	public MultipartRequestBodyElement(final String name, final InputStream inputStream){
+	public MultipartRequestBodyElement(final String name, final InputStream inputStream) {
 		super(name, null);
 		this.inputStream = inputStream;
 	}
 
-	public MultipartRequestBodyElement(final String name, final InputStream inputStream, final String fileName){
+	public MultipartRequestBodyElement(final String name, final InputStream inputStream, final String fileName) {
 		this(name, inputStream);
 		this.fileName = fileName;
 	}
 
-	public File getFile(){
+	public File getFile() {
 		return file;
 	}
 
-	public InputStream getInputStream(){
+	public InputStream getInputStream() {
 		return inputStream;
 	}
 
-	public String getFileName(){
+	public String getFileName() {
 		return fileName;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder(getName().length() + 1);
 
 		sb.append(getName()).append('=');
@@ -113,13 +113,12 @@ public class MultipartRequestBodyElement extends RequestBodyElement {
 	}
 
 	@Override
-	public boolean equals(final Object object){
+	public boolean equals(final Object object) {
 		if(this == object){
 			return true;
 		}
 
-		if(object instanceof MultipartRequestBodyElement){
-			final MultipartRequestBodyElement that = (MultipartRequestBodyElement) object;
+		if(object instanceof MultipartRequestBodyElement that){
 			return Objects.equals(getName(), that.getName()) && Objects.equals(getValue(), that.getValue()) &&
 					Objects.equals(getFile(), that.getFile()) &&
 					Objects.equals(getInputStream(), that.getInputStream()) &&
@@ -130,7 +129,7 @@ public class MultipartRequestBodyElement extends RequestBodyElement {
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		int hash = super.hashCode();
 
 		hash = hashCode(hash, getFile());

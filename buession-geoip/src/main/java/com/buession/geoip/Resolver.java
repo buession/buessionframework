@@ -29,7 +29,7 @@ package com.buession.geoip;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Location;
-import com.buession.net.utils.InetAddressUtils;
+import com.buession.core.net.utils.InetAddressUtils;
 import com.maxmind.db.Metadata;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 

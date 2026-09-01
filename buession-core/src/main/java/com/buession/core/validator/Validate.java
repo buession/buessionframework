@@ -1006,27 +1006,29 @@ public class Validate {
 			return false;
 		}
 
-		if("text".equals(sg[0]) == false && "image".equals(sg[0]) == false && "audio".equals(sg[0]) == false &&
-				"video".equals(sg[0]) == false && "message".equals(sg[0]) == false && "model".equals(sg[0]) == false &&
-				"application".equals(sg[0]) == false){
+		if("font".equals(sg[0]) == false && "text".equals(sg[0]) == false && "image".equals(sg[0]) == false &&
+				"audio".equals(sg[0]) == false && "video".equals(sg[0]) == false && "message".equals(sg[0]) == false &&
+				"model".equals(sg[0]) == false && "application".equals(sg[0]) == false){
 			return false;
 		}
 
 		char first = sg[1].charAt(0);
 		char last = sg[1].charAt(sg[1].length() - 1);
-		if(first == '.' || first == '-' || first == '+' || last == '.' || last == '-' || last == '+'){
+		if(first == '.' || first == '-' || first == '_' || first == '+' || last == '.' || last == '-' || last == '_' ||
+				last == '+'){
 			return false;
 		}
 
 		int i = 0;
 		for(char c : sg[1].toCharArray()){
-			if(Character.isLetterOrDigit(c) == false && c != '.' && c != '-' && c != '+'){
+			if(Character.isLetterOrDigit(c) == false && c != '.' && c != '-' && c != '_' && c != '+'){
 				return false;
 			}
 
 			if(i > 0){
 				char prev = sg[1].charAt(i - 1);
-				if((c == '.' || c == '-' || c == '+') && (prev == '.' || prev == '-' || prev == '+')){
+				if((c == '.' || c == '-' || c == '_' || c == '+') &&
+						(prev == '.' || prev == '-' || prev == '_' || prev == '+')){
 					return false;
 				}
 			}

@@ -21,14 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
 
 import com.buession.core.validator.Validate;
-import com.maxmind.geoip2.model.AbstractResponse;
-import com.maxmind.geoip2.record.AbstractRecord;
 
 import java.util.Locale;
 import java.util.Map;
@@ -38,15 +36,14 @@ import java.util.Map;
  *
  * @param <M>
  * 		模型实体类
- * @param <S>
- * 		maxmind geoip Record {@link AbstractRecord}
  * @param <R>
- * 		maxmind Response {@link AbstractResponse}
+ * 		maxmind GeoIP Record
+ * @param <RES>
+ * 		maxmind Response
  *
  * @author Yong.Teng
  */
-public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse>
-		implements Converter<M, S, R> {
+public abstract class AbstractConverter<M, R, RES> implements Converter<M, R, RES> {
 
 	protected static String getName(final Map<String, String> names, Locale locale) {
 		if(Validate.isEmpty(names)){

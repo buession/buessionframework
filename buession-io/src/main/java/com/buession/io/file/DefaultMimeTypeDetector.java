@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -45,6 +45,9 @@ import java.util.regex.Pattern;
  */
 public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 
+	private final static Pattern TYPE_PATTERN = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p" +
+			"{Graph}+\\b)");
+
 	private final static Logger logger = LoggerFactory.getLogger(DefaultMimeTypeDetector.class);
 
 	/**
@@ -69,6 +72,8 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		if(extension.isEmpty()){
 			return null;
 		}
+
+		extension = extension.toLowerCase();
 
 		loadMimetypes();
 
@@ -109,22 +114,22 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 					try{
 						br = new BufferedReader(new InputStreamReader(is));
 						String line = null;
-						String entry = "";
+						StringBuilder entry = new StringBuilder();
 
 						while((line = br.readLine()) != null){
-							entry += line;
+							entry.append(line);
 
-							if(entry.endsWith("\\")){
-								entry = entry.substring(0, entry.length() - 1);
+							if(entry.toString().endsWith("\\")){
+								entry = new StringBuilder(entry.substring(0, entry.length() - 1));
 								continue;
 							}
 
-							parseMimeEntry(entry);
-							entry = "";
+							parseMimeEntry(entry.toString());
+							entry = new StringBuilder();
 						}
 
-						if(entry.isEmpty() == false){
-							parseMimeEntry(entry);
+						if((entry.length() == 0) == false){
+							parseMimeEntry(entry.toString());
 						}
 					}catch(Exception e){
 						logger.error("Load mimetype error: {}", e.getMessage(), e);
@@ -133,6 +138,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 							try{
 								is.close();
 							}catch(IOException e){
+								//
 							}
 						}
 
@@ -140,6 +146,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 							try{
 								br.close();
 							}catch(IOException e){
+								//
 							}
 						}
 					}
@@ -159,10 +166,8 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		entry = entry.replaceAll("\\s*#.*", "");
 		int equalIdx = entry.indexOf('=');
 		if(equalIdx > 0){
-			Pattern typePattern = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p{Graph" + "}+\\b)");
-
 			// Parse a mime-types command having the key-value pair format
-			Matcher typeMatcher = typePattern.matcher(entry);
+			Matcher typeMatcher = TYPE_PATTERN.matcher(entry);
 
 			if(typeMatcher.find()){
 				String type = typeMatcher.group();

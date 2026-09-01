@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -116,8 +116,7 @@ public class MessageObject implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof MessageObject){
-			MessageObject that = (MessageObject) obj;
+		if(obj instanceof MessageObject that){
 			return code == that.code;
 		}
 

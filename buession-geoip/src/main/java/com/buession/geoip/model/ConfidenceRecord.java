@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -37,6 +37,6 @@ public interface ConfidenceRecord {
 	 *
 	 * @return A value from 0-100 indicating MaxMind's confidence that the item is correct.
 	 */
-	Integer getConfidence();
-	
+	Integer confidence();
+
 }
