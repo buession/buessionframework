@@ -16,6 +16,7 @@ Buession Framework Changelog
 
 - 优化 File 对象对文件的操作
 - httpclient 优化
+- Dao 优化
 
 
 

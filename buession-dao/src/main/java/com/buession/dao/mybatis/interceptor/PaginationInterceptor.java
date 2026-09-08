@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao.mybatis.interceptor;
@@ -43,8 +43,6 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import java.util.Properties;
-
 /**
  * 分页拦截器
  *
@@ -64,12 +62,11 @@ public class PaginationInterceptor extends AbstractInterceptor {
 		Object target = invocation.getTarget();
 		Object[] args = invocation.getArgs();
 
-		if(target instanceof Executor){
+		if(target instanceof Executor executor){
 			final MappedStatement statement = (MappedStatement) args[0];
 			RowBounds rowBounds = (RowBounds) args[2];
 
 			if(statement.getSqlCommandType() == SqlCommandType.SELECT && rowBounds instanceof PageRowBounds){
-				final Executor executor = (Executor) target;
 				final Object parameter = args[1];
 
 				BoundSql boundSql = args.length == 6 ? (BoundSql) args[5] : statement.getBoundSql(parameter);
@@ -104,10 +101,6 @@ public class PaginationInterceptor extends AbstractInterceptor {
 		}
 
 		return target;
-	}
-
-	@Override
-	public void setProperties(Properties properties) {
 	}
 
 	private static MappedStatement copyMappedStatement(final MappedStatement statement, final SqlSource newSqlSource) {

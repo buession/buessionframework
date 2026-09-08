@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2025 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -31,7 +31,6 @@ import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.dao.mongodb.MongoDBOperatorUtils;
-import com.buession.dao.mongodb.OrderToMongoDBSortDirectionConverter;
 import com.buession.lang.Order;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.DeleteResult;
@@ -286,19 +285,19 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	protected void buildSort(final Query query, final Map<String, Order> orders) {
 		if(Validate.isNotEmpty(orders)){
-			final OrderToMongoDBSortDirectionConverter orderToMongoDBSortDirectionConverter =
-					new OrderToMongoDBSortDirectionConverter();
 			final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
 
 			orders.forEach((field, order)->{
-				Sort.Direction direction = orderToMongoDBSortDirectionConverter.convert(order);
-
-				if(direction != null){
-					sortOrders.add(new Sort.Order(direction, field));
+				if(order == Order.ASC){
+					sortOrders.add(new Sort.Order(Sort.Direction.ASC, field));
+				}else if(order == Order.DESC){
+					sortOrders.add(new Sort.Order(Sort.Direction.DESC, field));
 				}
 			});
 
-			query.with(Sort.by(sortOrders));
+			if(sortOrders.isEmpty() == false){
+				query.with(Sort.by(sortOrders));
+			}
 		}
 	}
 
