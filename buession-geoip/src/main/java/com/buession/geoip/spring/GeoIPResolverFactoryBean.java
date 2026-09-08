@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -65,7 +65,10 @@ public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements Fa
 
 	@Override
 	public void close() throws IOException {
-		resolver.close();
+		super.close();
+		if(resolver != null){
+			resolver.close();
+		}
 	}
 
 }

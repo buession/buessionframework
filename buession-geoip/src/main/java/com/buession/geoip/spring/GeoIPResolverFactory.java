@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -29,6 +29,7 @@ import com.buession.geoip.DatabaseResolver;
 import com.buession.geoip.Resolver;
 import org.springframework.core.io.Resource;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ import java.nio.file.Path;
  *
  * @author Yong.Teng
  */
-public class GeoIPResolverFactory {
+public class GeoIPResolverFactory implements Closeable {
 
 	/**
 	 * IP 库文件路径
@@ -293,6 +294,16 @@ public class GeoIPResolverFactory {
 	 */
 	public void setEnableCache(boolean enableCache) {
 		this.enableCache = enableCache;
+	}
+
+	@Override
+	public void close() throws IOException {
+		if(stream != null){
+			stream.close();
+		}
+		if(asnStream != null){
+			asnStream.close();
+		}
 	}
 
 	/**
