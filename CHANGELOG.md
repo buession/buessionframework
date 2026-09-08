@@ -8,9 +8,14 @@ Buession Framework Changelog
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v5.0.1)
 
+### ⭐ 新特性
+
+- File Mime 新增 md 支持
+
 ### ⏪ 优化
 
 - 优化 File 对象对文件的操作
+- httpclient 优化
 
 
 

@@ -89,8 +89,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	private boolean isRunning = false;
 
 	public Apache5AsyncClient(final HttpAsyncClient httpClient,
-	                          final Apache5NioClientConnectionManager connectionManager,
-	                          final ProtocolVersion protocolVersion) {
+							  final Apache5NioClientConnectionManager connectionManager,
+							  final ProtocolVersion protocolVersion) {
 		super();
 		this.requestConfig = createRequestConfig(connectionManager.getConfiguration());
 		this.httpClient = httpClient;
@@ -98,7 +98,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	public Apache5AsyncClient(final HttpAsyncClient httpClient, final RequestConfig requestConfig,
-	                          final ProtocolVersion protocolVersion) {
+							  final ProtocolVersion protocolVersion) {
 		super();
 		this.requestConfig = requestConfig;
 		this.httpClient = httpClient;
@@ -106,7 +106,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	public Apache5AsyncClient(final Apache5NioClientConnectionManager connectionManager,
-	                          final ProtocolVersion protocolVersion) {
+							  final ProtocolVersion protocolVersion) {
 		super();
 		this.requestConfig = createRequestConfig(connectionManager.getConfiguration());
 		this.httpClient = createHttpClient(connectionManager);
@@ -114,8 +114,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	public Apache5AsyncClient(final RequestConfig requestConfig,
-	                          final Apache5NioClientConnectionManager connectionManager,
-	                          final ProtocolVersion protocolVersion) {
+							  final Apache5NioClientConnectionManager connectionManager,
+							  final ProtocolVersion protocolVersion) {
 		super();
 		this.requestConfig = requestConfig;
 		this.httpClient = createHttpClient(connectionManager);
@@ -124,26 +124,26 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void get(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                final Callback callback) throws IOException, RequestException {
+					final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpGet(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void get(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpGet(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void post(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
+					 final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPost(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, body, callback);
 	}
 
 	@Override
 	public void post(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final RequestBody<?> body, final Callback callback)
+					 final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		doRequest(new HttpPost(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				body, callback);
@@ -151,13 +151,13 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void patch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                  final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
+					  final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPatch(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, body, callback);
 	}
 
 	@Override
 	public void patch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                  final List<Header> headers, final RequestBody<?> body, final Callback callback)
+					  final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		doRequest(new HttpPatch(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				body, callback);
@@ -165,13 +165,13 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void put(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
+					final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPut(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, body, callback);
 	}
 
 	@Override
 	public void put(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                final List<Header> headers, final RequestBody<?> body, final Callback callback)
+					final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		doRequest(new HttpPut(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers, body,
 				callback);
@@ -179,183 +179,183 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void delete(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                   final Callback callback) throws IOException, RequestException {
+					   final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpDelete(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void delete(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                   final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					   final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpDelete(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void connect(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                    final Callback callback) throws IOException, RequestException {
+						final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpConnect(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void connect(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                    final List<Header> headers, final Callback callback) throws IOException, RequestException {
+						final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpConnect(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void trace(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                  final Callback callback) throws IOException, RequestException {
+					  final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpTrace(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void trace(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                  final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					  final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpTrace(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void copy(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpCopy(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void copy(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpCopy(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void move(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpMove(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void move(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpMove(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void head(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpHead(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void head(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpHead(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void options(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                    final Callback callback) throws IOException, RequestException {
+						final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpOptions(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void options(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                    final List<Header> headers, final Callback callback) throws IOException, RequestException {
+						final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpOptions(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void link(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpLink(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void link(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpLink(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void unlink(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                   final Callback callback) throws IOException, RequestException {
+					   final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpUnlink(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void unlink(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                   final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					   final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpUnlink(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void purge(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                  final Callback callback) throws IOException, RequestException {
+					  final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPurge(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void purge(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                  final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					  final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPurge(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void lock(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpLock(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void lock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpLock(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void unlock(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                   final Callback callback) throws IOException, RequestException {
+					   final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpUnlock(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void unlock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                   final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					   final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpUnlock(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void propfind(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                     final Callback callback) throws IOException, RequestException {
+						 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPropfind(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void propfind(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                     final List<Header> headers, final Callback callback) throws IOException, RequestException {
+						 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPropfind(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void proppatch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                      final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
+						  final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpPropPatch(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, body,
 				callback);
 	}
 
 	@Override
 	public void proppatch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                      final List<Header> headers, final RequestBody<?> body, final Callback callback)
+						  final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		doRequest(new HttpPropPatch(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				body, callback);
@@ -363,14 +363,14 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void report(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                   final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
+					   final RequestBody<?> body, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpReport(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, body,
 				callback);
 	}
 
 	@Override
 	public void report(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                   final List<Header> headers, final RequestBody<?> body, final Callback callback)
+					   final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		doRequest(new HttpReport(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				body, callback);
@@ -378,26 +378,26 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 	@Override
 	public void view(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                 final Callback callback) throws IOException, RequestException {
+					 final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpView(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void view(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                 final List<Header> headers, final Callback callback) throws IOException, RequestException {
+					 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpView(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
 
 	@Override
 	public void wrapped(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-	                    final Callback callback) throws IOException, RequestException {
+						final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpWrapped(UriUtils.determineRequestUri(uri, parameters)), requestConfig, headers, callback);
 	}
 
 	@Override
 	public void wrapped(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-	                    final List<Header> headers, final Callback callback) throws IOException, RequestException {
+						final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		doRequest(new HttpWrapped(UriUtils.determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
 				callback);
 	}
@@ -487,7 +487,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
-	                         final List<Header> headers, final Callback callback) throws IOException, RequestException {
+							 final List<Header> headers, final Callback callback) throws IOException, RequestException {
 		if(headers != null){
 			for(Header header : headers){
 				request.setHeader(header.getName(), header.getValue());
@@ -501,7 +501,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
-	                         final int readTimeout, final List<Header> headers, final Callback callback)
+							 final int readTimeout, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException {
 		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(requestConfig)
 				.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
@@ -509,7 +509,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
-	                         final List<Header> headers, final RequestBody<?> body, final Callback callback)
+							 final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
 		final HeadersBuilder headersBuilder = new HeadersBuilder();
@@ -525,8 +525,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
-	                         final int readTimeout, final List<Header> headers, final RequestBody<?> body,
-	                         final Callback callback) throws IOException, RequestException {
+							 final int readTimeout, final List<Header> headers, final RequestBody<?> body,
+							 final Callback callback) throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
 		final HeadersBuilder headersBuilder = new HeadersBuilder();
 
@@ -544,9 +544,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 			RequestException {
 		final AsyncRequestProducer httpAsyncRequestProducer = new BasicRequestProducer(request, null);
 
-		if(httpClient instanceof CloseableHttpAsyncClient){
-			CloseableHttpAsyncClient closeableHttpAsyncClient = (CloseableHttpAsyncClient) httpClient;
-
+		if(httpClient instanceof CloseableHttpAsyncClient closeableHttpAsyncClient){
 			if(isRunning == false){
 				closeableHttpAsyncClient.start();
 				isRunning = true;
@@ -557,9 +555,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 			Future<Response> future = httpClient.execute(httpAsyncRequestProducer, new BinaryAsyncResponseConsumer(),
 					null, null, new Default5Callback(callback));
 			future.get();
-		}catch(ExecutionException e){
-			throw new RequestException(e.getMessage(), e);
-		}catch(InterruptedException e){
+		}catch(ExecutionException | InterruptedException e){
 			throw new RequestException(e.getMessage(), e);
 		}finally{
 			//request.releaseConnection();
@@ -579,7 +575,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 
 		@Override
 		protected Response buildResult(final HttpResponse httpResponse, final byte[] entity,
-		                               final ContentType contentType) {
+									   final ContentType contentType) {
 			Apache5ResponseBuilder responseBuilder = new Apache5ResponseBuilder();
 			Response response = responseBuilder.build(httpResponse);
 

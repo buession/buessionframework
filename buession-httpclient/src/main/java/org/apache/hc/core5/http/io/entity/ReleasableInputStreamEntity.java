@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.hc.core5.http.io.entity;
@@ -129,7 +129,7 @@ public class ReleasableInputStreamEntity extends AbstractHttpEntity implements R
 		try{
 			this.doRelease();
 		}catch(IOException e){
-
+			//
 		}
 	}
 

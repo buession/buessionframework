@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -28,13 +28,8 @@ import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
-import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
-import org.apache.hc.core5.http.URIScheme;
-import org.apache.hc.core5.http.config.Lookup;
-import org.apache.hc.core5.http.config.RegistryBuilder;
-import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
-import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
 import org.apache.hc.core5.util.Timeout;
 
 import java.util.concurrent.ThreadFactory;
@@ -59,7 +54,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 */
 	public Apache5NioClientConnectionManager() {
-		this(new IOReactorConfig());
+		this(IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -69,7 +64,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 		配置
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration) {
-		this(configuration, new IOReactorConfig());
+		this(configuration, IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -79,7 +74,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 		原生连接管理器
 	 */
 	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager) {
-		this(clientConnectionManager, new IOReactorConfig());
+		this(clientConnectionManager, IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -92,7 +87,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration,
 											 AsyncClientConnectionManager clientConnectionManager) {
-		this(configuration, clientConnectionManager, new IOReactorConfig());
+		this(configuration, clientConnectionManager, IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -306,12 +301,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 */
 	@Override
 	protected AsyncClientConnectionManager createDefaultClientConnectionManager() {
-		final PoolingAsyncClientConnectionManager connectionManager =
-				getConfiguration().getConnectionTimeToLive() != null ?
-						new PoolingAsyncClientConnectionManager(getDefaultLookup(), PoolConcurrencyPolicy.STRICT,
-								Timeout.ofMilliseconds(
-										getConfiguration().getConnectionTimeToLive())) : new PoolingAsyncClientConnectionManager(
-						getDefaultLookup());
+		final PoolingAsyncClientConnectionManagerBuilder builder = PoolingAsyncClientConnectionManagerBuilder.create()
+				.setDefaultConnectionConfig(createDefaultConnectionConfig());
+		final PoolingAsyncClientConnectionManager connectionManager = builder.build();
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
@@ -320,8 +312,6 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 		// 空闲连接存活时长
 		propertyMapper.from(getConfiguration().getIdleConnectionTime()).as(Timeout::ofMilliseconds)
 				.to(connectionManager::closeIdle);
-
-		connectionManager.setDefaultConnectionConfig(createDefaultConnectionConfig());
 
 		return connectionManager;
 	}
@@ -337,12 +327,6 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 				.to(connectionConfigBuilder::setTimeToLive);
 
 		return connectionConfigBuilder.build();
-	}
-
-	private static Lookup<TlsStrategy> getDefaultLookup() {
-		return RegistryBuilder.<TlsStrategy>create()
-				.register(URIScheme.HTTPS.getId(), DefaultClientTlsStrategy.createDefault())
-				.build();
 	}
 
 }

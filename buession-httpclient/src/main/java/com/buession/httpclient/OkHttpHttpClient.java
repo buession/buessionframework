@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -103,13 +103,13 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 					.to(builder::setReadTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())
 					.to(builder::setWriteTimeout);
-			propertyMapper.from(configuration.getRetryOnConnectionFailure()).to(builder::setRetryOnConnectionFailure);
-			propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
+			builder.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure());
+			builder.setFollowRedirects(configuration.isAllowRedirects());
 
 			if(sslConfiguration != null){
-				propertyMapper.from(sslConfiguration.getSslSocketFactory()).to(builder::setSSLSocketFactory);
-				propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
-				propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
+				builder.setSSLSocketFactory(sslConfiguration.getSslSocketFactory());
+				builder.setSSLHostnameVerifier(sslConfiguration.getHostnameVerifier());
+				builder.setSSLContext(sslConfiguration.getSslContext());
 			}
 
 			httpClient = builder.build();
@@ -142,7 +142,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                     List<Header> headers) throws IOException, RequestException {
+						 List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), readTimeout);
 	}
 
@@ -154,7 +154,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                    List<Header> headers) throws IOException, RequestException {
+						List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), readTimeout);
 	}
 
@@ -166,7 +166,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                      List<Header> headers) throws IOException, RequestException {
+						  List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout);
 	}
 
@@ -334,7 +334,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                          List<Header> headers) throws IOException, RequestException {
+							  List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout);
 	}
 
@@ -346,7 +346,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	@Override
 	public Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                       List<Header> headers) throws IOException, RequestException {
+						   List<Header> headers) throws IOException, RequestException {
 		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), readTimeout);
 	}
 

@@ -19,31 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.utils;
 
-import com.buession.httpclient.apache.convert.ApacheChunkedInputStreamRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheEncodedFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheHtmlRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheInputStreamRequestBodyConvert;
-import com.buession.httpclient.apache.convert.ApacheJavaScriptRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheJsonRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheMultipartFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheRepeatableInputStreamRequestBodyConvert;
-import com.buession.httpclient.apache.convert.ApacheTextRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheXmlRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5ChunkedInputStreamRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5EncodedFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5HtmlRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5InputStreamRequestBodyConvert;
-import com.buession.httpclient.apache.convert.h5.Apache5JavaScriptRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5JsonRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5MultipartFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5RepeatableInputStreamRequestBodyConvert;
-import com.buession.httpclient.apache.convert.h5.Apache5TextRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.h5.Apache5XmlRawRequestBodyConverter;
+import com.buession.httpclient.apache.convert.*;
+import com.buession.httpclient.apache.convert.h5.*;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.HtmlRawRequestBody;
@@ -66,58 +48,69 @@ import java.util.Map;
  */
 public class ApacheRequestBodyConverterUtils {
 
+	private static Map<Class<? extends RequestBody>, RequestBodyConverter> APACHE4_CLIENT_REQUEST_BODY_CONVERTER =
+			null;
+
+	private static Map<Class<? extends RequestBody>, RequestBodyConverter> APACHE5_CLIENT_REQUEST_BODY_CONVERTER = null;
+
 	private ApacheRequestBodyConverterUtils() {
 
 	}
 
 	public static Map<Class<? extends RequestBody>, RequestBodyConverter> createApache4ClientRequestBodyConverter() {
-		final Map<Class<? extends RequestBody>, RequestBodyConverter> result = new HashMap<>(10);
+		if(APACHE4_CLIENT_REQUEST_BODY_CONVERTER == null){
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER = new HashMap<>(Math.max((int) (10 / 0.75F) + 1, 16));
 
-		result.put(ChunkedInputStreamRequestBody.class,
-				new ApacheChunkedInputStreamRequestBodyConverter());
-		result.put(EncodedFormRequestBody.class,
-				new ApacheEncodedFormRequestBodyConverter());
-		result.put(HtmlRawRequestBody.class, new ApacheHtmlRawRequestBodyConverter());
-		result.put(InputStreamRequestBody.class,
-				new ApacheInputStreamRequestBodyConvert());
-		result.put(JavaScriptRawRequestBody.class,
-				new ApacheJavaScriptRawRequestBodyConverter());
-		result.put(JsonRawRequestBody.class, new ApacheJsonRawRequestBodyConverter());
-		result.put(MultipartFormRequestBody.class,
-				new ApacheMultipartFormRequestBodyConverter());
-		result.put(RepeatableInputStreamRequestBody.class,
-				new ApacheRepeatableInputStreamRequestBodyConvert());
-		result.put(TextRawRequestBody.class, new ApacheTextRawRequestBodyConverter());
-		result.put(XmlRawRequestBody.class, new ApacheXmlRawRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(ChunkedInputStreamRequestBody.class,
+					new ApacheChunkedInputStreamRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(EncodedFormRequestBody.class,
+					new ApacheEncodedFormRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(HtmlRawRequestBody.class,
+					new ApacheHtmlRawRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(InputStreamRequestBody.class,
+					new ApacheInputStreamRequestBodyConvert());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(JavaScriptRawRequestBody.class,
+					new ApacheJavaScriptRawRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(JsonRawRequestBody.class,
+					new ApacheJsonRawRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(MultipartFormRequestBody.class,
+					new ApacheMultipartFormRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(RepeatableInputStreamRequestBody.class,
+					new ApacheRepeatableInputStreamRequestBodyConvert());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(TextRawRequestBody.class,
+					new ApacheTextRawRequestBodyConverter());
+			APACHE4_CLIENT_REQUEST_BODY_CONVERTER.put(XmlRawRequestBody.class, new ApacheXmlRawRequestBodyConverter());
+		}
 
-		return result;
+		return APACHE4_CLIENT_REQUEST_BODY_CONVERTER;
 	}
 
 	public static Map<Class<? extends RequestBody>, RequestBodyConverter> createApache5ClientRequestBodyConverter() {
-		final Map<Class<? extends RequestBody>, RequestBodyConverter> result = new HashMap<>(10);
+		if(APACHE5_CLIENT_REQUEST_BODY_CONVERTER == null){
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER = new HashMap<>(Math.max((int) (10 / 0.75F) + 1, 16));
 
-		result.put(ChunkedInputStreamRequestBody.class,
-				new Apache5ChunkedInputStreamRequestBodyConverter());
-		result.put(EncodedFormRequestBody.class,
-				new Apache5EncodedFormRequestBodyConverter());
-		result.put(HtmlRawRequestBody.class,
-				new Apache5HtmlRawRequestBodyConverter());
-		result.put(InputStreamRequestBody.class,
-				new Apache5InputStreamRequestBodyConvert());
-		result.put(JavaScriptRawRequestBody.class,
-				new Apache5JavaScriptRawRequestBodyConverter());
-		result.put(JsonRawRequestBody.class,
-				new Apache5JsonRawRequestBodyConverter());
-		result.put(MultipartFormRequestBody.class,
-				new Apache5MultipartFormRequestBodyConverter());
-		result.put(RepeatableInputStreamRequestBody.class,
-				new Apache5RepeatableInputStreamRequestBodyConvert());
-		result.put(TextRawRequestBody.class,
-				new Apache5TextRawRequestBodyConverter());
-		result.put(XmlRawRequestBody.class,
-				new Apache5XmlRawRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(ChunkedInputStreamRequestBody.class,
+					new Apache5ChunkedInputStreamRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(EncodedFormRequestBody.class,
+					new Apache5EncodedFormRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(HtmlRawRequestBody.class,
+					new Apache5HtmlRawRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(InputStreamRequestBody.class,
+					new Apache5InputStreamRequestBodyConvert());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(JavaScriptRawRequestBody.class,
+					new Apache5JavaScriptRawRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(JsonRawRequestBody.class,
+					new Apache5JsonRawRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(MultipartFormRequestBody.class,
+					new Apache5MultipartFormRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(RepeatableInputStreamRequestBody.class,
+					new Apache5RepeatableInputStreamRequestBodyConvert());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(TextRawRequestBody.class,
+					new Apache5TextRawRequestBodyConverter());
+			APACHE5_CLIENT_REQUEST_BODY_CONVERTER.put(XmlRawRequestBody.class, new Apache5XmlRawRequestBodyConverter());
+		}
 
-		return result;
+		return APACHE5_CLIENT_REQUEST_BODY_CONVERTER;
 
 	}
 

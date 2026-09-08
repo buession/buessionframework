@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn.nio;
@@ -30,7 +30,7 @@ package com.buession.httpclient.conn.nio;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public final class IOReactorConfig implements Cloneable {
+public final class IOReactorConfig {
 
 	public final static IOReactorConfig DEFAULT = new IOReactorConfig();
 
