@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
@@ -29,6 +29,8 @@ import com.buession.aop.handler.AbstractAnnotationHandler;
 import com.buession.core.validator.Validate;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.mvc.view.document.MetaData;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 import org.springframework.util.StringValueResolver;
 
@@ -78,27 +80,17 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 	}
 
 	private MetaData metaDataConvert(final DocumentMetaData documentMetaData) {
-		final MetaData metaData = new MetaData();
-
 		if(stringValueResolver == null){
-			metaData.setTitle(documentMetaData.title());
-			metaData.setAuthor(documentMetaData.author());
-			metaData.setCharset(documentMetaData.charset());
-			metaData.setKeywords(documentMetaData.keywords());
-			metaData.setDescription(documentMetaData.description());
-			metaData.setAuthor(documentMetaData.author());
-			metaData.setCopyright(documentMetaData.copyright());
+			return new MetaData(documentMetaData.title(), documentMetaData.charset(), documentMetaData.keywords(),
+					documentMetaData.description(), documentMetaData.author(), documentMetaData.copyright());
 		}else{
-			metaData.setTitle(stringValueResolver.resolveStringValue(documentMetaData.title()));
-			metaData.setAuthor(stringValueResolver.resolveStringValue(documentMetaData.author()));
-			metaData.setCharset(stringValueResolver.resolveStringValue(documentMetaData.charset()));
-			metaData.setKeywords(stringValueResolver.resolveStringValue(documentMetaData.keywords()));
-			metaData.setDescription(stringValueResolver.resolveStringValue(documentMetaData.description()));
-			metaData.setAuthor(stringValueResolver.resolveStringValue(documentMetaData.author()));
-			metaData.setCopyright(stringValueResolver.resolveStringValue(documentMetaData.copyright()));
+			return new MetaData(stringValueResolver.resolveStringValue(documentMetaData.title()),
+					stringValueResolver.resolveStringValue(documentMetaData.charset()),
+					stringValueResolver.resolveStringValue(documentMetaData.keywords()),
+					stringValueResolver.resolveStringValue(documentMetaData.description()),
+					stringValueResolver.resolveStringValue(documentMetaData.author()),
+					stringValueResolver.resolveStringValue(documentMetaData.copyright()));
 		}
-
-		return metaData;
 	}
 
 }

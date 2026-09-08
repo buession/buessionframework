@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.view.document;
@@ -33,59 +33,33 @@ import java.io.Serializable;
 /**
  * 页面元信息
  *
+ * @param title
+ * 		标题
+ * @param charset
+ * 		编码
+ * @param keywords
+ * 		关键字
+ * @param description
+ * 		描述信息
+ * @param author
+ * 		作者
+ * @param copyright
+ * 		版权
+ *
  * @author Yong.Teng
  */
-public class MetaData implements Serializable {
+public record MetaData(String title, String charset, String keywords, String description, String author,
+					   String copyright) implements Serializable {
 
 	private final static long serialVersionUID = -2362098929099645692L;
-
-	/**
-	 * 标题
-	 */
-	private String title;
-
-	/**
-	 * 编码
-	 */
-	private String charset;
-
-	/**
-	 * 关键字
-	 */
-	private String keywords;
-
-	/**
-	 * 描述信息
-	 */
-	private String description;
-
-	/**
-	 * 作者
-	 */
-	private String author;
-
-	/**
-	 * 版权
-	 */
-	private String copyright;
 
 	/**
 	 * 返回页面标题
 	 *
 	 * @return 页面标题
 	 */
-	public String getTitle(){
+	public String getTitle() {
 		return title;
-	}
-
-	/**
-	 * 设置页面标题
-	 *
-	 * @param title
-	 * 		标题
-	 */
-	public void setTitle(String title){
-		this.title = title;
 	}
 
 	/**
@@ -93,18 +67,8 @@ public class MetaData implements Serializable {
 	 *
 	 * @return 页面编码
 	 */
-	public String getCharset(){
+	public String getCharset() {
 		return charset;
-	}
-
-	/**
-	 * 设置页面编码
-	 *
-	 * @param charset
-	 * 		编码
-	 */
-	public void setCharset(String charset){
-		this.charset = charset;
 	}
 
 	/**
@@ -112,18 +76,8 @@ public class MetaData implements Serializable {
 	 *
 	 * @return 页面关键字
 	 */
-	public String getKeywords(){
+	public String getKeywords() {
 		return keywords;
-	}
-
-	/**
-	 * 设置页面关键字
-	 *
-	 * @param keywords
-	 * 		关键字
-	 */
-	public void setKeywords(String keywords){
-		this.keywords = keywords;
 	}
 
 	/**
@@ -131,18 +85,8 @@ public class MetaData implements Serializable {
 	 *
 	 * @return 页面描述信息
 	 */
-	public String getDescription(){
+	public String getDescription() {
 		return description;
-	}
-
-	/**
-	 * 设置页面描述信息
-	 *
-	 * @param description
-	 * 		描述信息
-	 */
-	public void setDescription(String description){
-		this.description = description;
 	}
 
 	/**
@@ -150,18 +94,8 @@ public class MetaData implements Serializable {
 	 *
 	 * @return 页面作者
 	 */
-	public String getAuthor(){
+	public String getAuthor() {
 		return author;
-	}
-
-	/**
-	 * 设置页面作者
-	 *
-	 * @param author
-	 * 		作者
-	 */
-	public void setAuthor(String author){
-		this.author = author;
 	}
 
 	/**
@@ -169,22 +103,12 @@ public class MetaData implements Serializable {
 	 *
 	 * @return 页面版权
 	 */
-	public String getCopyright(){
+	public String getCopyright() {
 		return copyright;
 	}
 
-	/**
-	 * 设置页面版权信息
-	 *
-	 * @param copyright
-	 * 		版权信息
-	 */
-	public void setCopyright(String copyright){
-		this.copyright = copyright;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		final String equalsSign = StringUtils.repeat("=", 16);
 		final StringBuilder sb = new StringBuilder(128);
 

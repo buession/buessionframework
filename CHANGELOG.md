@@ -12,12 +12,17 @@ Buession Framework Changelog
 
 - File Mime 新增 md 支持
 
+### 🔔 变化
+
+- com.buession.web.mvc.view.document.MetaData 变为 record 类
+
 ### ⏪ 优化
 
 - 优化 File 对象对文件的操作
 - httpclient 优化
 - Dao 优化
 - GeoIPResolverFactory 增加 close 方法关闭库文件流
+- 其它优化
 
 
 

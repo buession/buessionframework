@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
@@ -75,7 +75,7 @@ public class JsonGitParser extends AbstractGitParser {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		try{
-			return objectMapper.readValue(resource.getInputStream(), new TypeReference<Properties>() {
+			return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
 
 			});
 		}catch(Exception e){
