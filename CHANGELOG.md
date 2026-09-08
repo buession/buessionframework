@@ -2,6 +2,18 @@ Buession Framework Changelog
 ===========================
 
 
+## [5.0.1](https://github.com/buession/buessionframework/releases/tag/v5.0.1) (2026-xx-xx)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v5.0.1)
+
+### ⏪ 优化
+
+- 优化 File 对象对文件的操作
+
+
+
 ## [5.0.0](https://github.com/buession/buessionframework/releases/tag/v5.0.0) (2026-08-31)
 
 ### 🔨依赖升级
