@@ -16,9 +16,14 @@ Buession Framework Changelog
 
 - com.buession.web.mvc.view.document.MetaData 变为 record 类
 
+### 🐞 Bug 修复
+
+- 修复 File 获取 MiME TYpe 时，扩展名中有 _ 和 - 获取失败的问题
+
 ### ⏪ 优化
 
 - 优化 File 对象对文件的操作
+- 完善文件 Mime Type
 - httpclient 优化
 - Dao 优化
 - GeoIPResolverFactory 增加 close 方法关闭库文件流

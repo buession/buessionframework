@@ -19,43 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.io;
-
-import com.buession.io.file.File;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
-/**
+ */package com.buession.io;/**
+ * 
+ *
  * @author Yong.Teng
- * @since 1.2.2
- */
-public class FileTest {
-
-	@Test
-	public void mimeType() throws IOException {
-		File file = new File("tmp.fe_launch");
-		MimeType mimeType = file.getMimeType();
-		System.out.println(mimeType + ": " + mimeType.getDescription());
-	}
-
-	@Test
-	public void jsonEncode() throws IOException {
-		File file = new File("tmp.jpeg");
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println(objectMapper.writeValueAsString(file));
-	}
-
-	@Test
-	public void read() throws IOException {
-		File file = new File("/Users/tengyong/Downloads/sys_user_role.sql");
-
-		System.out.println(new String(file.read()));
-	}
-
+ * @since 5.0.1
+ */public class RereadableInputStream {
 }
