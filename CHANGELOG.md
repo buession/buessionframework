@@ -11,10 +11,12 @@ Buession Framework Changelog
 ### ⭐ 新特性
 
 - File Mime 新增 md 支持
+- ServerInfoFilter 支持设置前缀、后缀、删除前缀、删除后缀
 
 ### 🔔 变化
 
 - com.buession.web.mvc.view.document.MetaData 变为 record 类
+- 补充文件 MIME
 
 ### 🐞 Bug 修复
 
