@@ -59,7 +59,7 @@ public class URIHelper {
 	public static String getUser(URI uri) {
 		String userInfo = uri.getUserInfo();
 		if(userInfo != null){
-			String user = StringUtils.split(userInfo, ":")[0];
+			String user = StringUtils.split(userInfo, ':')[0];
 			if(user.isEmpty()){
 				user = null; // return null user is not specified
 			}
