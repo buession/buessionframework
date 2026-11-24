@@ -196,8 +196,8 @@ VersionUtils.compare("1.0.0", "1.0.0r"); // -1
 ```java
 import com.buession.core.utils.VersionUtils;
 
-ByteUtils.determineClassVersion(com.buession.core.utils.VersionUtils.class); // 5.0.0
+ByteUtils.determineClassVersion(com.buession.core.utils.VersionUtils.class); // 5.0.1
 ```
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.0/com/buession/core/utils/package-summary.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.1/com/buession/core/utils/package-summary.html)

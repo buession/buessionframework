@@ -14,4 +14,4 @@
 okhttp3 本身是没有类似 apache httpcomponents 的链接管理器 `org.apache.http.conn.HttpClientConnectionManager` 的，我们为了在 `buession-httpclient` 的链接管理器实现 `com.buession.httpclient.conn.OkHttpClientConnectionManager` 保持一致，人为的加了一层 okhttp3 的链接管理器 `okhttp3.HttpClientConnectionManager`（注意：命名空间为 okhttp3），主要用于初始化连接池类 `okhttp3.ConnectionPool`。
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-httpclient/5.0.0/com/buession/httpclient/conn/ConnectionManager.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-httpclient/5.0.1/com/buession/httpclient/conn/ConnectionManager.html)

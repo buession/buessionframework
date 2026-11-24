@@ -46,4 +46,4 @@ Map<String, User> data = redisTemplate.hGetAll("user", "1", new TypeReference<Ha
 ```
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-redis/5.0.0/)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-redis/5.0.1/)

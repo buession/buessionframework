@@ -14,4 +14,4 @@ Buession Framework 扩展 spring-data-mongodb 的文档。
 在对 MongoDB 的操作条件中 value 可以为 `com.buession.dao.MongoOperation`，可以通过该类的方法控制条件等于值、大于值、小于值、LIKE值 等等运算。
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-dao/5.0.0/com/buession/dao/AbstractMongoDBDao.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-dao/5.0.1/com/buession/dao/AbstractMongoDBDao.html)

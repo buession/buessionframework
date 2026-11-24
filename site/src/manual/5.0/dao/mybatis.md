@@ -75,4 +75,4 @@ MyBatis 自身提供大量优秀的类型处理器 `TypeHandler`，但任然不�
 | DefaultSetTypeHandler  | 默认 Set 类型处理器，将值以 "," 拆分转换为 Set&lt;String&gt; |
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-dao/5.0.0/com/buession/dao/AbstractMyBatisDao.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-dao/5.0.1/com/buession/dao/AbstractMyBatisDao.html)

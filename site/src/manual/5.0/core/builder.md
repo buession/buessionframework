@@ -106,4 +106,4 @@ Map、Set、Queue 同理。
 empty 与 jdk Collections.emptyList()、Collections.emptySet()、Collections.emptyMap() 的本质区别是返回的 List 实例不同，该方法创建的 List、Set、Map 实例是允许对 List、Set、Map 做操作，而 jdk Collections 创建的 List、Set、Map 则是不允许的。两个 of 方法均同理。
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.0/com/buession/core/builder/package-summary.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.1/com/buession/core/builder/package-summary.html)
