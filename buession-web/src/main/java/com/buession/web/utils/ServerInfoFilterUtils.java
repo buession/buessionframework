@@ -19,32 +19,49 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.dao.mongodb;
+package com.buession.web.utils;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import org.springframework.data.domain.Sort;
+import com.buession.core.validator.Validate;
 
 /**
- * {@link Order} 转换 MongoDB {@link Sort.Direction} 转换器
+ *
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 5.0.1
  */
-public class OrderToMongoDBSortDirectionConverter implements Converter<Order, Sort.Direction> {
+public class ServerInfoFilterUtils {
 
-	@Override
-	public Sort.Direction convert(final Order source){
-		if(source == Order.ASC){
-			return Sort.Direction.ASC;
-		}else if(source == Order.DESC){
-			return Sort.Direction.DESC;
-		}else{
-			return null;
+	private ServerInfoFilterUtils() {
+
+	}
+
+	public static String format(final String serverName, final String prefix, final String stripPrefix,
+								final String suffix, final String stripSuffix) {
+		String s = serverName;
+		final StringBuilder sb = new StringBuilder(serverName.length());
+
+		if(Validate.hasText(prefix)){
+			sb.append(prefix);
 		}
+
+		if(Validate.hasText(stripPrefix) && s.startsWith(stripPrefix)){
+			s = s.substring(stripPrefix.length());
+		}
+
+		if(Validate.hasText(stripSuffix) && s.endsWith(stripSuffix)){
+			s = s.substring(0, s.length() - stripSuffix.length());
+		}
+
+		sb.append(s);
+
+		if(Validate.hasText(suffix)){
+			sb.append(suffix);
+		}
+
+		return sb.toString();
 	}
 
 }

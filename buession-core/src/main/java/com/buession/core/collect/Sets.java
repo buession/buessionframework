@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.collect;
@@ -31,6 +31,9 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Set 工具类
@@ -43,12 +46,12 @@ public class Sets {
 	public final static String DEFAULT_GLUE = ", ";
 
 	/**
-	 * 将 O 型 Set 拼接成字符串
+	 * 将 O 型 {@link Set} 拼接成字符串
 	 *
 	 * @param data
 	 * 		需要拼接的 Set
 	 * @param <O>
-	 * 		Set 类型
+	 *        {@link Set} 元素类型
 	 *
 	 * @return 拼接后的字符串
 	 */
@@ -57,14 +60,14 @@ public class Sets {
 	}
 
 	/**
-	 * 将 O 型 Set 拼接成字符串
+	 * 将 O 型 {@link Set} 拼接成字符串
 	 *
 	 * @param data
-	 * 		需要拼接的 Set
+	 * 		需要拼接的 {@link Set}
 	 * @param glue
 	 * 		拼接字符串
 	 * @param <O>
-	 * 		Set 类型
+	 *        {@link Set} 元素类型
 	 *
 	 * @return 拼接后的字符串
 	 */
@@ -73,12 +76,12 @@ public class Sets {
 	}
 
 	/**
-	 * 将 O 型 Set 转换成 {@link List}
+	 * 将 O 型 {@link Set} 转换成 {@link List}
 	 *
 	 * @param data
-	 * 		待转换的 Set
+	 * 		待转换的 {@link Set}
 	 * @param <O>
-	 * 		Set 类型
+	 *        {@link Set} 元素类型
 	 *
 	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link List}
 	 */
@@ -90,6 +93,49 @@ public class Sets {
 		}else{
 			return new ArrayList<>(data);
 		}
+	}
+
+	/**
+	 * {@link Set} 流式操作收集
+	 *
+	 * @param data
+	 * 		待操作的 {@link Set}
+	 * @param mapper
+	 * 		A non-interfering, stateless function to apply to each element
+	 * @param <S>
+	 *        {@link Set} 元素类型
+	 * @param <T>
+	 * 		返回的 {@link Set} 元素类型
+	 *
+	 * @return 新的 {@link Set}
+	 *
+	 * @since 5.0.1
+	 */
+	public static <S, T> Set<T> streamCollect(final Set<S> data, final Function<? super S, ? extends T> mapper) {
+		return data.stream().map(mapper).collect(Collectors.toSet());
+	}
+
+	/**
+	 * {@link Set} 流式操作收集
+	 *
+	 * @param data
+	 * 		待操作的 {@link Set}
+	 * @param mapper
+	 * 		A non-interfering, stateless function to apply to each element
+	 * @param collector
+	 * 		A {@code Collector} describing the kind of result that the operation should produce
+	 * @param <S>
+	 *        {@link Set} 元素类型
+	 * @param <T>
+	 * 		返回的 {@link Set} 元素类型
+	 *
+	 * @return 新的 {@link Set}
+	 *
+	 * @since 5.0.1
+	 */
+	public static <S, T> Set<T> streamCollect(final Set<S> data, final Function<? super S, ? extends T> mapper,
+											  final Collector<T, ?, Set<T>> collector) {
+		return data.stream().map(mapper).collect(collector);
 	}
 
 }

@@ -38,7 +38,7 @@ public class FileTest {
 
 	@Test
 	public void mimeType() throws IOException {
-		File file = new File("tmp.jpeg");
+		File file = new File("tmp.fe_launch");
 		MimeType mimeType = file.getMimeType();
 		System.out.println(mimeType + ": " + mimeType.getDescription());
 	}
@@ -54,7 +54,7 @@ public class FileTest {
 	@Test
 	public void read() throws IOException {
 		File file = new File("/Users/tengyong/Downloads/sys_user_role.sql");
-		
+
 		System.out.println(new String(file.read()));
 	}
 

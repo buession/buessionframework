@@ -27,9 +27,10 @@
 package com.buession.web.reactive.filter;
 
 import com.buession.core.Framework;
-
-import java.util.Collections;
-import java.util.Map;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
 /**
  * Powered By 过滤器
@@ -44,11 +45,14 @@ public class PoweredByFilter extends ResponseHeadersFilter {
 	 */
 	public PoweredByFilter() {
 		super();
-		super.setHeaders(Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION));
 	}
 
 	@Override
-	public final void setHeaders(Map<String, String> headers) {
+	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+		HttpHeaders httpHeaders = exchange.getResponse().getHeaders();
+		httpHeaders.set("X-Powered-By", Framework.NAME + "/" + Framework.VERSION);
+
+		return chain.filter(exchange);
 	}
 
 }

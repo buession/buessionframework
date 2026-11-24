@@ -21,13 +21,16 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2026 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 /**
@@ -62,24 +65,23 @@ public class IDCardValidator {
 			sum += (c - '0') * DIVISORS[i];
 		}
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 		char checkCode = CHECK_CODES[sum % 11];
 
 		if(checkCode == charSequence.charAt(idCardLength - 1)){
-			if(strict){
-				String s = charSequence.subSequence(6, 14).toString();
-
-				try{
-					return birthday.equals(simpleDateFormat.parse(s));
-				}catch(ParseException e){
-					return false;
-				}
-			}
-
-			return true;
+			return strict == false || validBirthday(charSequence.subSequence(6, 14), birthday);
 		}
 
 		return false;
+	}
+
+	private static boolean validBirthday(final CharSequence idCardBirthday, final Date birthday) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		TemporalAccessor temporalAccessor = formatter.parse(idCardBirthday);
+		Instant birthdayInstant = birthday.toInstant();
+		LocalDate idCardBirthdayLocalDate = LocalDate.from(temporalAccessor);
+		Instant idCardBirthdayInstant = idCardBirthdayLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+		return birthdayInstant.equals(idCardBirthdayInstant);
 	}
 
 }

@@ -26,25 +26,57 @@
  */
 package com.buession.web.servlet.filter;
 
-import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
 import com.buession.web.http.response.IServerInfoFilter;
+import com.buession.web.utils.ServerInfoFilterUtils;
 import com.buession.web.utils.ServerUtils;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * Server 信息过滤器
  *
  * @author Yong.Teng
  */
-public class ServerInfoFilter extends ResponseHeadersFilter implements IServerInfoFilter {
+public class ServerInfoFilter extends OncePerRequestFilter implements IServerInfoFilter {
 
 	/**
 	 * 响应头名称
 	 */
 	private String headerName;
+
+	/**
+	 * 添加前缀
+	 *
+	 * @since 5.0.1
+	 */
+	private String prefix;
+
+	/**
+	 * 去除前缀
+	 *
+	 * @since 5.0.1
+	 */
+	private String stripPrefix;
+
+	/**
+	 * 添加后缀
+	 *
+	 * @since 5.0.1
+	 */
+	private String suffix;
+
+	/**
+	 * 去除后缀
+	 *
+	 * @since 5.0.1
+	 */
+	private String stripSuffix;
 
 	/**
 	 * 构造函数
@@ -76,18 +108,54 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	}
 
 	@Override
-	public final Map<String, String> getHeaders() {
-		Map<String, String> headers = super.getHeaders();
+	public String getPrefix() {
+		return prefix;
+	}
 
-		if(Validate.isEmpty(headers)){
-			setHeaders(MapBuilder.of(getHeaderName(), format(ServerUtils.getHostName())));
-		}
+	@Override
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
-		return headers;
+	@Override
+	public String getStripPrefix() {
+		return stripPrefix;
+	}
+
+	@Override
+	public void setStripPrefix(String stripPrefix) {
+		this.stripPrefix = stripPrefix;
+	}
+
+	@Override
+	public String getSuffix() {
+		return suffix;
+	}
+
+	@Override
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	@Override
+	public String getStripSuffix() {
+		return stripSuffix;
+	}
+
+	@Override
+	public void setStripSuffix(String stripSuffix) {
+		this.stripSuffix = stripSuffix;
+	}
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		response.setHeader(getHeaderName(), format(ServerUtils.getHostName()));
+		filterChain.doFilter(request, response);
 	}
 
 	protected String format(final String computerName) {
-		return computerName;
+		return ServerInfoFilterUtils.format(computerName, getPrefix(), getStripPrefix(), getSuffix(), getStripSuffix());
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response;
@@ -50,5 +50,81 @@ public interface IServerInfoFilter {
 	 * 		响应头名称
 	 */
 	void setHeaderName(String headerName);
+
+	/**
+	 * 返回添加前缀
+	 *
+	 * @return 添加前缀
+	 *
+	 * @since 5.0.1
+	 */
+	String getPrefix();
+
+	/**
+	 * 设置添加前缀
+	 *
+	 * @param prefix
+	 * 		添加前缀
+	 *
+	 * @since 5.0.1
+	 */
+	void setPrefix(String prefix);
+
+	/**
+	 * 返回删除前缀
+	 *
+	 * @return 删除前缀
+	 *
+	 * @since 5.0.1
+	 */
+	String getStripPrefix();
+
+	/**
+	 * 设置删除前缀
+	 *
+	 * @param prefix
+	 * 		删除前缀
+	 *
+	 * @since 5.0.1
+	 */
+	void setStripPrefix(String prefix);
+
+	/**
+	 * 返回添加后缀
+	 *
+	 * @return 添加后缀
+	 *
+	 * @since 5.0.1
+	 */
+	String getSuffix();
+
+	/**
+	 * 设置添加后缀
+	 *
+	 * @param suffix
+	 * 		添加后缀
+	 *
+	 * @since 5.0.1
+	 */
+	void setSuffix(String suffix);
+
+	/**
+	 * 返回删除后缀
+	 *
+	 * @return 删除后缀
+	 *
+	 * @since 5.0.1
+	 */
+	String getStripSuffix();
+
+	/**
+	 * 设置删除后缀
+	 *
+	 * @param suffix
+	 * 		删除后缀
+	 *
+	 * @since 5.0.1
+	 */
+	void setStripSuffix(String suffix);
 
 }

@@ -27,9 +27,13 @@
 package com.buession.web.servlet.filter;
 
 import com.buession.core.Framework;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.util.Collections;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * Powered By 过滤器
@@ -37,18 +41,21 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class PoweredByFilter extends ResponseHeadersFilter {
+public class PoweredByFilter extends OncePerRequestFilter {
 
 	/**
 	 * 构造函数
 	 */
 	public PoweredByFilter() {
 		super();
-		super.setHeaders(Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION));
 	}
 
 	@Override
-	public final void setHeaders(Map<String, String> headers) {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		response.addHeader("X-Powered-By", Framework.NAME + "/" + Framework.VERSION);
+
+		filterChain.doFilter(request, response);
 	}
 
 }

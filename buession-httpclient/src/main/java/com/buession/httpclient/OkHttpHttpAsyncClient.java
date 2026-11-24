@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -95,13 +95,13 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 					.to(builder::setReadTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())
 					.to(builder::setWriteTimeout);
-			propertyMapper.from(configuration.getRetryOnConnectionFailure()).to(builder::setRetryOnConnectionFailure);
-			propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
+			builder.setRetryOnConnectionFailure(configuration.isRetryOnConnectionFailure());
+			builder.setFollowRedirects(configuration.isAllowRedirects());
 
 			if(sslConfiguration != null){
-				propertyMapper.from(sslConfiguration.getSslSocketFactory()).to(builder::setSSLSocketFactory);
-				propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
-				propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
+				builder.setSSLSocketFactory(sslConfiguration.getSslSocketFactory());
+				builder.setSSLHostnameVerifier(sslConfiguration.getHostnameVerifier());
+				builder.setSSLContext(sslConfiguration.getSslContext());
 			}
 
 			httpClient = builder.build();
@@ -122,43 +122,43 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                Callback callback) throws IOException, RequestException {
+					Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).get(), readTimeout, callback);
 	}
 
 	@Override
 	public void post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), callback);
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                 List<Header> headers, Callback callback) throws IOException, RequestException {
+					 List<Header> headers, Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), readTimeout, callback);
 	}
 
 	@Override
 	public void put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-	                Callback callback) throws IOException, RequestException {
+					Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), callback);
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                List<Header> headers, Callback callback) throws IOException, RequestException {
+					List<Header> headers, Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), readTimeout, callback);
 	}
 
 	@Override
 	public void patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-	                  Callback callback) throws IOException, RequestException {
+					  Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), callback);
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                  List<Header> headers, Callback callback) throws IOException, RequestException {
+					  List<Header> headers, Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout, callback);
 	}
 
@@ -170,7 +170,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                   Callback callback) throws IOException, RequestException {
+					   Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).delete(), readTimeout, callback);
 	}
 
@@ -182,7 +182,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                    Callback callback) throws IOException, RequestException {
+						Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).connect(), readTimeout, callback);
 	}
 
@@ -194,7 +194,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                  Callback callback) throws IOException, RequestException {
+					  Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).trace(), readTimeout, callback);
 	}
 
@@ -206,7 +206,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).copy(), readTimeout, callback);
 	}
 
@@ -218,7 +218,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).move(), readTimeout, callback);
 	}
 
@@ -230,19 +230,19 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).head(), readTimeout, callback);
 	}
 
 	@Override
 	public void options(URI uri, Map<String, Object> parameters, List<Header> headers,
-	                    Callback callback) throws IOException, RequestException {
+						Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options(), callback);
 	}
 
 	@Override
 	public void options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                    Callback callback) throws IOException, RequestException {
+						Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options(), readTimeout, callback);
 	}
 
@@ -254,7 +254,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).link(), readTimeout, callback);
 	}
 
@@ -266,7 +266,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                   Callback callback) throws IOException, RequestException {
+					   Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlink(), readTimeout, callback);
 	}
 
@@ -278,7 +278,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                  Callback callback) throws IOException, RequestException {
+					  Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).purge(), readTimeout, callback);
 	}
 
@@ -290,7 +290,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).lock(), readTimeout, callback);
 	}
 
@@ -302,7 +302,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                   Callback callback) throws IOException, RequestException {
+					   Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlock(), readTimeout, callback);
 	}
 
@@ -314,31 +314,31 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                     Callback callback) throws IOException, RequestException {
+						 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).propfind(), readTimeout, callback);
 	}
 
 	@Override
 	public void proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-	                      Callback callback) throws IOException, RequestException {
+						  Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), callback);
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                      List<Header> headers, Callback callback) throws IOException, RequestException {
+						  List<Header> headers, Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout, callback);
 	}
 
 	@Override
 	public void report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-	                   Callback callback) throws IOException, RequestException {
+					   Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), callback);
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-	                   List<Header> headers, Callback callback) throws IOException, RequestException {
+					   List<Header> headers, Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), readTimeout, callback);
 	}
 
@@ -350,7 +350,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                 Callback callback) throws IOException, RequestException {
+					 Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).view(), readTimeout, callback);
 	}
 
@@ -362,7 +362,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	@Override
 	public void wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-	                    Callback callback) throws IOException, RequestException {
+						Callback callback) throws IOException, RequestException {
 		doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).wrapped(), readTimeout, callback);
 	}
 

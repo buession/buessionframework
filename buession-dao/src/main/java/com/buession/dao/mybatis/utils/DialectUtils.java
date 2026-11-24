@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao.mybatis.utils;
@@ -46,84 +46,46 @@ public class DialectUtils {
 	public static Dialect getDialect(final DbType dbType) {
 		Assert.isNull(dbType, "DbType cloud not be null");
 
-		switch(dbType){
-			case MYSQL:
-				return new MySQLDialect();
-			case MARIADB:
-				return new MariaDBDialect();
-			case GBASE:
-				return new GBaseDialect();
-			case GBASE_8S:
-				return new GBase8sDialect();
-			case OSCAR:
-				return new OscarDialect();
-			case XU_GU:
-				return new XuGuDialect();
-			case CLICKHOUSE:
-				return new ClickHouseDialect();
-			case OCEANBASE:
-				return new OceanBaseDialect();
-			case CUBRID:
-				return new CubridDialect();
-			case GOLDILOCKS:
-				return new GoldiLocksDialect();
-			case CSIIDB:
-				return new CsiiDBDialect();
-			case ORACLE:
-				return new OracleDialect();
-			case DM:
-				return new DmDialect();
-			case GAUSS:
-				return new GaussDialect();
-			case POSTGRESQL:
-				return new PostgreSQLDialect();
-			case H2:
-				return new H2Dialect();
-			case LEALONE:
-				return new LealoneDialect();
-			case SQLITE:
-				return new SQLLiteDialect();
-			case HSQL:
-				return new HSQLDialect();
-			case KINGBASE_ES:
-				return new KingBaseEsDialect();
-			case PHOENIX:
-				return new PhoenixDialect();
-			case SAP_HANA:
-				return new SAPHanaDialect();
-			case IMPALA:
-				return new ImpalaDialect();
-			case HIGH_GO:
-				return new HighGoDialect();
-			case VERTICA:
-				return new VerticaDialect();
-			case REDSHIFT:
-				return new RedShiftDialect();
-			case OPENGAUSS:
-				return new OpenGaussDialect();
-			case TDENGINE:
-				return new TDengineDialect();
-			case UXDB:
-				return new UxDBDialect();
-			case FIREBIRD:
-				return new FirebirdDialect();
-			case SQLSERVER_2005:
-				return new SQLServer2005Dialect();
-			case SQLSERVER:
-				return new SQLServerDialect();
-			case SINODB:
-				return new SinodbDialect();
-			case XCLOUD:
-				return new XCloudDialect();
-			case DB2:
-				return new DB2Dialect();
-			case SYBASE:
-				return new SybaseDialect();
-			case INFORMIX:
-				return new InformixDialect();
-			default:
-				return new OtherDialect();
-		}
+		return switch(dbType){
+			case MYSQL -> new MySQLDialect();
+			case MARIADB -> new MariaDBDialect();
+			case GBASE -> new GBaseDialect();
+			case GBASE_8S -> new GBase8sDialect();
+			case OSCAR -> new OscarDialect();
+			case XU_GU -> new XuGuDialect();
+			case CLICKHOUSE -> new ClickHouseDialect();
+			case OCEANBASE -> new OceanBaseDialect();
+			case CUBRID -> new CubridDialect();
+			case GOLDILOCKS -> new GoldiLocksDialect();
+			case CSIIDB -> new CsiiDBDialect();
+			case ORACLE -> new OracleDialect();
+			case DM -> new DmDialect();
+			case GAUSS -> new GaussDialect();
+			case POSTGRESQL -> new PostgreSQLDialect();
+			case H2 -> new H2Dialect();
+			case LEALONE -> new LealoneDialect();
+			case SQLITE -> new SQLLiteDialect();
+			case HSQL -> new HSQLDialect();
+			case KINGBASE_ES -> new KingBaseEsDialect();
+			case PHOENIX -> new PhoenixDialect();
+			case SAP_HANA -> new SAPHanaDialect();
+			case IMPALA -> new ImpalaDialect();
+			case HIGH_GO -> new HighGoDialect();
+			case VERTICA -> new VerticaDialect();
+			case REDSHIFT -> new RedShiftDialect();
+			case OPENGAUSS -> new OpenGaussDialect();
+			case TDENGINE -> new TDengineDialect();
+			case UXDB -> new UxDBDialect();
+			case FIREBIRD -> new FirebirdDialect();
+			case SQLSERVER_2005 -> new SQLServer2005Dialect();
+			case SQLSERVER -> new SQLServerDialect();
+			case SINODB -> new SinodbDialect();
+			case XCLOUD -> new XCloudDialect();
+			case DB2 -> new DB2Dialect();
+			case SYBASE -> new SybaseDialect();
+			case INFORMIX -> new InformixDialect();
+			default -> new OtherDialect();
+		};
 	}
 
 	/**

@@ -170,7 +170,7 @@ import com.buession.core.validator.Validate;
 boolean result = Validate.isIDCard("xxxxxxxxxxxxxxxxx", true, "2000-01-01");
 ```
 
-其它，更多方法可以[参考手册](https://javadoc.io/static/com.buession/buession-core/5.0.0/com/buession/core/validator/Validate.html)。
+其它，更多方法可以[参考手册](https://javadoc.io/static/com.buession/buession-core/5.0.1/com/buession/core/validator/Validate.html)。
 
 
 ### 注解
@@ -201,4 +201,4 @@ javax 的 validation 是 Java 定义的一套基于注解的数据校验规范�
 | @Xdigit    | CharSequence 的子类型                                             | 验证注解的元素值是否为 null      |
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.0/com/buession/core/validator/package-summary.html)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.1/com/buession/core/validator/package-summary.html)

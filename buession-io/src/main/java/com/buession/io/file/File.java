@@ -138,11 +138,10 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public byte[] read() throws IOException {
-		final BufferedInputStream bis = new FileBufferedInputStream(this);
 		final byte[] result = new byte[(int) this.length()];
-
-		bis.read(result);
-		bis.close();
+		try(BufferedInputStream bis = new FileBufferedInputStream(this)){
+			bis.read(result);
+		}
 
 		return result;
 	}
@@ -170,8 +169,9 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final char[] chars) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
-		write(bos, chars);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this)){
+			write(bos, chars);
+		}
 	}
 
 	/**
@@ -184,10 +184,10 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final byte[] bytes) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
-
-		bos.write(bytes);
-		afterWrite(bos);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this)){
+			bos.write(bytes);
+			bos.flush();
+		}
 	}
 
 	/**
@@ -201,8 +201,9 @@ public class File extends java.io.File {
 	 * @since 3.0.0
 	 */
 	public void write(final InputStream stream) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
-		write(bos, stream);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this)){
+			write(bos, stream);
+		}
 	}
 
 	/**
@@ -234,8 +235,9 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final char[] chars, boolean append) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
-		write(bos, chars);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this, append)){
+			write(bos, chars);
+		}
 	}
 
 	/**
@@ -251,10 +253,10 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final byte[] bytes, boolean append) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
-
-		bos.write(bytes);
-		afterWrite(bos);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this, append)){
+			bos.write(bytes);
+			bos.flush();
+		}
 	}
 
 	/**
@@ -270,8 +272,9 @@ public class File extends java.io.File {
 	 * @since 3.0.0
 	 */
 	public void write(final InputStream stream, boolean append) throws IOException {
-		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
-		write(bos, stream);
+		try(BufferedOutputStream bos = new FileBufferedOutputStream(this, append)){
+			write(bos, stream);
+		}
 	}
 
 	/**
@@ -294,12 +297,9 @@ public class File extends java.io.File {
 			throw new IOException(getPath() + " is not a file.");
 		}
 
-		final FileInputStream fis = new FileInputStream(this);
-		String result = DigestUtils.md5Hex(fis);
-
-		fis.close();
-
-		return result;
+		try(FileInputStream fis = new FileInputStream(this)){
+			return DigestUtils.md5Hex(fis);
+		}
 	}
 
 	/**
@@ -322,12 +322,9 @@ public class File extends java.io.File {
 			throw new IOException(getPath() + " is not a file.");
 		}
 
-		final FileInputStream fis = new FileInputStream(this);
-		String result = DigestUtils.sha1Hex(fis);
-
-		fis.close();
-
-		return result;
+		try(FileInputStream fis = new FileInputStream(this)){
+			return DigestUtils.sha1Hex(fis);
+		}
 	}
 
 	/**
@@ -351,8 +348,12 @@ public class File extends java.io.File {
 				extension = "tar.gz";
 			}else{
 				int i = fileName.lastIndexOf('.');
-				extension =
-						i == fileName.length() - 1 ? Constants.EMPTY_STRING : fileName.substring(i + 1).toLowerCase();
+
+				if(i == fileName.length() - 1){
+					extension = Constants.EMPTY_STRING;
+				}else{
+					extension = fileName.substring(i + 1).toLowerCase();
+				}
 			}
 		}
 
@@ -432,7 +433,7 @@ public class File extends java.io.File {
 			bos.write(b);
 		}
 
-		afterWrite(bos);
+		bos.flush();
 	}
 
 	private void write(final BufferedOutputStream bos, final InputStream stream) throws IOException {
@@ -443,12 +444,7 @@ public class File extends java.io.File {
 			bos.write(buffer, 0, readSize);
 		}
 
-		afterWrite(bos);
-	}
-
-	protected static void afterWrite(final BufferedOutputStream bos) throws IOException {
 		bos.flush();
-		bos.close();
 	}
 
 	private final static class FileBufferedInputStream extends BufferedInputStream {

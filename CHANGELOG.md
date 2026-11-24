@@ -2,6 +2,37 @@ Buession Framework Changelog
 ===========================
 
 
+## [5.0.1](https://github.com/buession/buessionframework/releases/tag/v5.0.1) (2026-11-25)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v5.0.1)
+
+### ⭐ 新特性
+
+- File Mime 新增 md 支持
+- ServerInfoFilter 支持设置前缀、后缀、删除前缀、删除后缀
+
+### 🔔 变化
+
+- com.buession.web.mvc.view.document.MetaData 变为 record 类
+- 补充文件 MIME
+
+### 🐞 Bug 修复
+
+- 修复 File 获取 MiME TYpe 时，扩展名中有 _ 和 - 获取失败的问题
+
+### ⏪ 优化
+
+- 优化 File 对象对文件的操作
+- 完善文件 Mime Type
+- httpclient 优化
+- Dao 优化
+- GeoIPResolverFactory 增加 close 方法关闭库文件流
+- 其它优化
+
+
+
 ## [5.0.0](https://github.com/buession/buessionframework/releases/tag/v5.0.0) (2026-08-31)
 
 ### 🔨依赖升级

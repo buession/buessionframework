@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
@@ -96,14 +96,8 @@ public class StreamRequestBody extends okhttp3.RequestBody {
 
 	@Override
 	public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
-		Source source = null;
-		try{
-			source = Okio.source(inputStream);
+		try(Source source = Okio.source(inputStream)){
 			bufferedSink.writeAll(source);
-		}finally{
-			if(source != null){
-				source.close();
-			}
 		}
 	}
 
