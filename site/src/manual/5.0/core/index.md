@@ -93,4 +93,4 @@ Map、集合的便捷式构建，减少您的代码行数
 通用异常的定义
 
 
-### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.0/)
+### [API 参考手册>>](https://javadoc.io/static/com.buession/buession-core/5.0.1/)

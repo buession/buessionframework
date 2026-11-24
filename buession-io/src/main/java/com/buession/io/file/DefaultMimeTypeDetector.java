@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -45,8 +44,13 @@ import java.util.regex.Pattern;
  */
 public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 
-	private final static Pattern TYPE_PATTERN = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p" +
-			"{Graph}+\\b)");
+	private final static String EXTEQUAL = "extensions=";
+
+	private final static Pattern TYPE_PATTERN = Pattern.compile(
+			"\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p" + "{Graph}+\\b)");
+
+	private final static Pattern EXT_PATTERN = Pattern.compile(
+			"\\b" + EXTEQUAL + "(\"[\\p{Graph}\\p{Blank}]+?\"|\\p{Graph}+\\b)");
 
 	private final static Logger logger = LoggerFactory.getLogger(DefaultMimeTypeDetector.class);
 
@@ -108,52 +112,36 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		if(initialized == false){
 			synchronized(this){
 				if(initialized == false){
-					InputStream is = DefaultMimeTypeDetector.class.getResourceAsStream("/mime.conf");
-					BufferedReader br = null;
-
-					try{
-						br = new BufferedReader(new InputStreamReader(is));
-						String line = null;
-						StringBuilder entry = new StringBuilder();
-
-						while((line = br.readLine()) != null){
-							entry.append(line);
-
-							if(entry.toString().endsWith("\\")){
-								entry = new StringBuilder(entry.substring(0, entry.length() - 1));
-								continue;
-							}
-
-							parseMimeEntry(entry.toString());
-							entry = new StringBuilder();
-						}
-
-						if((entry.length() == 0) == false){
-							parseMimeEntry(entry.toString());
-						}
-					}catch(Exception e){
-						logger.error("Load mimetype error: {}", e.getMessage(), e);
-					}finally{
-						if(is != null){
-							try{
-								is.close();
-							}catch(IOException e){
-								//
-							}
-						}
-
-						if(br != null){
-							try{
-								br.close();
-							}catch(IOException e){
-								//
-							}
-						}
-					}
-
+					parseMimeFile();
 					initialized = true;
 				}
 			}
+		}
+	}
+
+	private void parseMimeFile() {
+		try(InputStream is = DefaultMimeTypeDetector.class.getResourceAsStream("/mime.conf");
+			BufferedReader br = new BufferedReader(new InputStreamReader(is))){
+			String line;
+			StringBuilder entry = new StringBuilder();
+
+			while((line = br.readLine()) != null){
+				entry.append(line);
+
+				if(entry.toString().endsWith("\\")){
+					entry = new StringBuilder(entry.substring(0, entry.length() - 1));
+					continue;
+				}
+
+				parseMimeEntry(entry.toString());
+				entry = new StringBuilder();
+			}
+
+			if((entry.length() == 0) == false){
+				parseMimeEntry(entry.toString());
+			}
+		}catch(Exception e){
+			logger.error("Load mimetype error: {}", e.getMessage(), e);
 		}
 	}
 
@@ -175,11 +163,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 					type = type.substring(1, type.length() - 1);
 				}
 
-				final String EXTEQUAL = "extensions=";
-
-				String extRegex = "\\b" + EXTEQUAL + "(\"[\\p{Graph}\\p{Blank}]+?\"|\\p{Graph}+\\b)";
-				Pattern extPattern = Pattern.compile(extRegex);
-				Matcher extMatcher = extPattern.matcher(entry);
+				Matcher extMatcher = EXT_PATTERN.matcher(entry);
 
 				if(extMatcher.find()){
 					String exts = extMatcher.group().substring(EXTEQUAL.length());
@@ -189,13 +173,13 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 					}
 
 					final String DESCRIPTIONEQUAL = "description=";
-					String descriptionRegex = "\\b" + DESCRIPTIONEQUAL + "([\\s\\S]*;)";
+					String descriptionRegex = "\\b" + DESCRIPTIONEQUAL + "(([\\s\\S]*);)";
 					Pattern descriptionPattern = Pattern.compile(descriptionRegex);
 					Matcher descriptionMatcher = descriptionPattern.matcher(entry);
 
-					String description = descriptionMatcher.find() ? descriptionMatcher.group() : null;
+					String description = descriptionMatcher.find() ? descriptionMatcher.group(2) : null;
 
-					String[] extList = exts.split("[\\p{Blank}\\p{Punct}]+");
+					String[] extList = exts.split("[\\p{Blank}\\p{Punct}&&[^_-]]+");
 					for(String ext : extList){
 						putIfAbsent(ext, type, description);
 					}

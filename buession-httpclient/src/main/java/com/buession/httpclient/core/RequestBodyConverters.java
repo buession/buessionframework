@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import com.buession.core.converter.Converter;
-import com.buession.httpclient.core.JsonRawRequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -45,12 +44,12 @@ public class RequestBodyConverters {
 
 		private final static Logger logger = LoggerFactory.getLogger(JsonRawRequestBodyConverter.class);
 
-		public JsonRawRequestBodyConverter(final Function<String, R> function){
+		public JsonRawRequestBodyConverter(final Function<String, R> function) {
 			this.function = function;
 		}
 
 		@Override
-		public R convert(JsonRawRequestBody<?> requestBody){
+		public R convert(JsonRawRequestBody<?> requestBody) {
 			if(requestBody == null || requestBody.getContent() == null){
 				return null;
 			}

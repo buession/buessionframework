@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -66,9 +66,7 @@ public class Apache5ResponseBuilder extends AbstractResponseBuilder<org.apache.h
 				new StatusLine(httpResponse.getCode(), httpResponse.getReasonPhrase()));
 		response.setHeaders(responseHeaderParse.parse(httpResponse.getHeaders()));
 
-		if(httpResponse instanceof SimpleHttpResponse){
-			SimpleHttpResponse simpleHttpResponse = (SimpleHttpResponse) httpResponse;
-
+		if(httpResponse instanceof SimpleHttpResponse simpleHttpResponse){
 			response.setBody(simpleHttpResponse.getBodyText());
 			response.setInputStream(new ByteArrayInputStream(simpleHttpResponse.getBodyBytes()));
 
@@ -78,8 +76,7 @@ public class Apache5ResponseBuilder extends AbstractResponseBuilder<org.apache.h
 			}catch(NumberFormatException e){
 				response.setContentLength(response.getBody().length());
 			}
-		}else if(httpResponse instanceof ClassicHttpResponse){
-			ClassicHttpResponse classicHttpResponse = (ClassicHttpResponse) httpResponse;
+		}else if(httpResponse instanceof ClassicHttpResponse classicHttpResponse){
 			org.apache.hc.core5.http.HttpEntity entity = classicHttpResponse.getEntity();
 
 			if(entity != null){

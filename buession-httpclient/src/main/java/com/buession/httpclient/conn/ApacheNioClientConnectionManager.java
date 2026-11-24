@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -61,7 +61,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * 构造函数，创建驱动默认连接管理器
 	 */
 	public ApacheNioClientConnectionManager() {
-		this(new IOReactorConfig());
+		this(IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * 		连接对象
 	 */
 	public ApacheNioClientConnectionManager(Configuration configuration) {
-		this(configuration, new IOReactorConfig());
+		this(configuration, IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * 		驱动连接管理器
 	 */
 	public ApacheNioClientConnectionManager(NHttpClientConnectionManager clientConnectionManager) {
-		this(clientConnectionManager, new IOReactorConfig());
+		this(clientConnectionManager, IOReactorConfig.DEFAULT);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 */
 	public ApacheNioClientConnectionManager(Configuration configuration,
 											NHttpClientConnectionManager clientConnectionManager) {
-		this(configuration, clientConnectionManager, new IOReactorConfig());
+		this(configuration, clientConnectionManager, IOReactorConfig.DEFAULT);
 	}
 
 	/**

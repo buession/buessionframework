@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -27,14 +27,8 @@ package com.buession.httpclient.conn;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
-import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
-import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-import org.apache.hc.core5.http.URIScheme;
-import org.apache.hc.core5.http.config.Registry;
-import org.apache.hc.core5.http.config.RegistryBuilder;
-import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
 import org.apache.hc.core5.util.Timeout;
 
 /**
@@ -92,11 +86,9 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
-		final PoolingHttpClientConnectionManager connectionManager =
-				getConfiguration().getConnectionTimeToLive() != null ? new PoolingHttpClientConnectionManager(
-						getDefaultRegistry(), PoolConcurrencyPolicy.STRICT,
-						Timeout.ofMilliseconds(getConfiguration().getConnectionTimeToLive()),
-						null) : new PoolingHttpClientConnectionManager(getDefaultRegistry());
+		final PoolingHttpClientConnectionManagerBuilder builder = PoolingHttpClientConnectionManagerBuilder.create()
+				.setDefaultConnectionConfig(createDefaultConnectionConfig());
+		final PoolingHttpClientConnectionManager connectionManager = builder.build();
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
@@ -105,8 +97,6 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 		// 空闲连接存活时长
 		propertyMapper.from(getConfiguration().getIdleConnectionTime()).as(Timeout::ofMilliseconds)
 				.to(connectionManager::closeIdle);
-
-		connectionManager.setDefaultConnectionConfig(createDefaultConnectionConfig());
 
 		return connectionManager;
 	}
@@ -122,13 +112,6 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 				.to(connectionConfigBuilder::setTimeToLive);
 
 		return connectionConfigBuilder.build();
-	}
-
-	private static Registry<ConnectionSocketFactory> getDefaultRegistry() {
-		return RegistryBuilder.<ConnectionSocketFactory>create()
-				.register(URIScheme.HTTP.id, PlainConnectionSocketFactory.getSocketFactory())
-				.register(URIScheme.HTTPS.id, SSLConnectionSocketFactory.getSocketFactory())
-				.build();
 	}
 
 }
