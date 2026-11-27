@@ -1,0 +1,206 @@
+---
+title: Nacos 快速开始
+keywords: [Nacos, 快速开始]
+description: 这个快速开始手册是帮忙您快速在您的电脑上，下载、安装并使用 Nacos。
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Nacos 快速开始
+
+这个快速开始手册是帮忙您快速在您的电脑上，下载、安装并使用 Nacos。
+
+:::note
+- 快速开始旨在帮助您快速上手安装、部署及入门使用Nacos，本快速开始所生产出的Nacos服务为**单机模式**，建议仅在测试中使用，若在实际生产环境中部署，请部署**集群模式**并**开启鉴权**，以避免存在**稳定性和安全性**的风险。
+- Nacos定义为一个IDC内部应用组件，并非面向公网环境的产品，建议在内部隔离网络环境中部署，**强烈不建议**部署在公共网络环境。
+:::
+
+## 0. 版本选择
+
+本页使用 Nacos **3.3.0 正式版**。请从[版本下载页面](/download/nacos-server/)下载安装包，并阅读 [3.3.0 发布说明](https://github.com/alibaba/nacos/releases/tag/3.3.0)。已有环境升级前请先阅读[升级手册](../manual/admin/upgrading.mdx)。
+
+## 1. 预备环境准备
+
+Nacos 依赖 [Java](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/) 环境来运行，请确保是在以下版本环境中安装使用:
+
+1. 64 bit OS，支持 Linux/Unix/Mac/Windows，推荐选用 Linux/Unix/Mac。
+2. 64 bit JDK 17+；[下载](https://www.oracle.com/java/technologies/downloads/#java17) & [配置](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/)。
+
+如需构建运行时不依赖 JDK 的可执行程序，请参考 [Nacos Native 快速开始](./quick-start-native.mdx)。该方式从 3.3.0 开始支持，需要单独准备 Native 工具链、插件和元数据。
+
+## 2. 下载并启动Nacos服务
+
+### 2.1. 使用 nacos-setup 一键部署（推荐）
+
+[nacos-setup](https://github.com/nacos-group/nacos-setup) 提供一键自动化部署，自动处理下载、鉴权配置、端口检测和 Java 环境验证等操作。
+
+安装 nacos-setup：
+
+<Tabs>
+  <TabItem label="Linux/macOS">
+    `curl -fsSL https://nacos.io/nacos-installer.sh | sudo bash`
+  </TabItem>
+  <TabItem label="Windows（PowerShell）">
+    `powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr -UseBasicParsing https://nacos.io/nacos-installer.ps1 | iex"`
+  </TabItem>
+</Tabs>
+
+启动 Nacos 服务：
+
+以下命令明确选择 3.3.0：
+
+```bash
+# 本地一键部署 3.3.0 单机 Nacos
+nacos-setup -v 3.3.0
+
+# 本地一键部署 3.3.0 集群 Nacos
+nacos-setup -c cluster -v 3.3.0
+
+# 全局配置使用外置存储，输入数据库地址端口账号密码，配置完成后重新运行 nacos-setup
+nacos-setup --datasource-conf
+```
+
+> 更多用法请参考 [使用 nacos-setup 一键部署](../manual/admin/deployment/deployment-nacos-setup.md)。
+
+### 2.2. 手动下载发行包部署
+
+#### 2.2.1. 下载安装包
+
+你可以通过Nacos官网网站及Github两种方式来获取 **Nacos 发行包** 。
+
+<Tabs>
+  <TabItem label="官网">
+    进入Nacos官网[版本下载页面](/download/nacos-server/)，选择 [稳定版本](/download/nacos-server/#稳定版本)，然后下载 [3.3.0.zip](https://download.nacos.io/nacos-server/nacos-server-3.3.0.zip)。
+
+    > 注意：有时大量用户同时进行下载时，可能会遇到下载限流失败的情况，若出现下载限流失败，请稍等后重试，或采用`从 Github 下载方式`。
+  </TabItem>
+  <TabItem label="Github">
+    进入 Nacos GitHub 的 [3.3.0 发布页面](https://github.com/alibaba/nacos/releases/tag/3.3.0)，在 `Assets` 中下载 `nacos-server-3.3.0.zip` 包。
+  </TabItem>
+</Tabs>
+
+#### 2.2.2. 解压缩Nacos 发行包
+
+```bash
+  unzip nacos-server-3.3.0.zip
+  # 或者 tar -xvf nacos-server-3.3.0.tar.gz
+  cd nacos/bin
+```
+
+#### 2.2.3. 启动服务器
+
+* 注：Nacos的运行建议至少在2C4G 60G的机器配置下运行。
+
+<Tabs>
+  <TabItem label="Linux/Unix/Mac">
+    启动命令(standalone代表着单机模式运行，非集群模式):
+
+    `sh startup.sh -m standalone`
+
+    如果您使用的是ubuntu系统，或者运行脚本报错提示[[符号找不到，可尝试如下运行：`bash startup.sh -m standalone`
+  </TabItem>
+  <TabItem label="Windows">
+    启动命令(standalone代表着单机模式运行，非集群模式):
+
+    `startup.cmd -m standalone`
+  </TabItem>
+</Tabs>
+
+Nacos 3.3 默认开启 Client、Admin 和 Console 鉴权。启动脚本会在以下三项配置缺失时提示输入：token 签名密钥（有效 Base64，解码后不少于 32 字节）及节点间身份 key/value。这些服务端配置不是后续登录使用的用户名和密码。提示示例如下：
+
+```
+`nacos.plugin.auth.nacos.token.secret.key` is missing, please set with Base64 string: ${your_input_token_secret_key}
+nacos.plugin.auth.nacos.token.secret.key` Updated:
+----------------------------------
+`nacos.core.auth.server.identity.key` is missing, please set: ${your_input_server_identity_key}
+`nacos.core.auth.server.identity.key` Updated:
+----------------------------------
+`nacos.core.auth.server.identity.value` is missing, please set: ${your_input_server_identity_value}
+`nacos.core.auth.server.identity.value` Updated:
+----------------------------------
+```
+
+:::note
+若您已经在 `conf/application.properties` 中设置过这3个配置，则不会提示您输入。
+:::
+
+## 3.验证Nacos服务是否启动成功
+
+进入`${nacos.home}/logs/` 目录下， 使用`tail -f start.out` 查看日志，如果看到如下日志，说明服务启动成功。
+
+```
+Nacos started successfully in stand alone mode. use embedded storage
+```
+
+可以通过下列服务，快速检验Nacos的功能。
+
+### 3.1. Nacos控制台页面
+
+打开任意浏览器，输入地址：`http://127.0.0.1:8080`, 即可进入Nacos控制台页面。
+
+> 注意：首次打开会要求初始化管理员用户`nacos`的密码。
+
+#### 3.1.1. 获取访问 token
+
+以下命令使用 Bash（Windows 可使用 Git Bash 或 WSL）。将密码替换为刚初始化的管理员密码，登录后将响应中的 `accessToken` 复制到 `NACOS_ACCESS_TOKEN`：
+
+```bash
+export NACOS_USERNAME='nacos'
+export NACOS_PASSWORD='<your-initialized-password>'
+curl -sS -X POST 'http://127.0.0.1:8848/nacos/v3/auth/user/login' \
+  --data-urlencode "username=${NACOS_USERNAME}" \
+  --data-urlencode "password=${NACOS_PASSWORD}"
+
+export NACOS_ACCESS_TOKEN='<accessToken-from-login-response>'
+```
+
+下面的 Client API 和 Admin API 都需要该 token。token 过期后重新登录获取；应用接入时请使用具有所需权限的业务账号，参见[配置访问凭据](../manual/user/auth.mdx)。
+
+### 3.2. 服务注册
+
+```bash
+curl -X POST 'http://127.0.0.1:8848/nacos/v3/client/ns/instance?serviceName=quickstart.test.service&ip=127.0.0.1&port=8080' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.3. 服务发现
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/ns/instance/list?serviceName=quickstart.test.service' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.4. 发布配置
+
+```bash
+curl -X POST 'http://127.0.0.1:8848/nacos/v3/admin/cs/config?dataId=quickstart.test.config&groupName=test&content=HelloWorld' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.5. 获取配置
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/cs/config?dataId=quickstart.test.config&groupName=test' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+若返回鉴权失败，先检查用户名、密码、token 有效期及账号权限。仅在已有无凭据客户端的临时迁移场景中考虑显式关闭 Client 鉴权，处理方式见[升级手册](../manual/admin/upgrading.mdx#212-准备-client-api-默认鉴权)。
+
+## 4.关闭服务器
+
+### 4.1. Linux/Unix/Mac
+
+`sh shutdown.sh`
+
+### 4.2. Windows
+
+`shutdown.cmd`
+
+或者双击shutdown.cmd运行文件。
+
+## 相关项目
+
+* [Nacos](https://github.com/alibaba/nacos)
+* [nacos-setup](https://github.com/nacos-group/nacos-setup)

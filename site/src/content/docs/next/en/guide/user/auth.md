@@ -1,0 +1,218 @@
+---
+title: Authentication
+keywords: [Authentication]
+description: Authentication
+sidebar:
+    order: 5
+---
+
+> This document is kept for compatibility and will be deprecated. Starting with Nacos 3.3, Client API authentication is enabled by default. For current server-side setup, see [Admin Manual - Authorization](../../manual/admin/auth.mdx). For SDK and OpenAPI credentials, see [User Manual - Configure Access Credentials](../../manual/user/auth.mdx).
+
+> Attention
+> - Nacos is an internal micro service component, which needs to run in a trusted internal network. It can not be exposed to the public network environment to prevent security risks.
+> - Nacos provides a simple authentication implementation. It is a weak authentication system to prevent business misuse, not a strong authentication system to prevent malicious attacks.
+> - If you are running in an untrusted network environment or have strong authentication demands, please refer to the official simple implementation to develop [Authentication plugin](../../plugin/auth-plugin.md).
+
+
+# Authentication
+
+## Related Parameters
+
+|Parameter|Default|Versions|Description|
+|-----|------|------|----|
+|nacos.core.auth.enabled|true since 3.3; false before 3.3|1.2.0 ~ latest|Whether to enable Client/Open API, SDK, and gRPC authentication|
+|nacos.plugin.auth.type|nacos|3.3.0 ~ latest|Auth implementation selector|
+|nacos.plugin.auth.nacos.token.secret.key|No default|3.3.0 ~ latest|Default auth access-token signing key; sensitive and RESTART|
+|nacos.plugin.auth.nacos.token.expire.seconds|18000|3.3.0 ~ latest|Login access-token lifetime; RUNTIME|
+|nacos.core.auth.enable.userAgentAuthWhite|false|1.4.1 ~ latest|Whether to use the useragent whitelist, mainly used to adapt to the upgrade of the old version, **Setting `true` is a security risk**|
+|nacos.core.auth.server.identity.key|serverIdentity(No default since 2.2.1)|1.4.1 ~ latest|Used to replace the identification key of the useragent whitelist, **Using the default value is a security risk**|
+|nacos.core.auth.server.identity.value|security(No default since 2.2.1)|1.4.1 ~ latest|It is used to replace the identification value of the useragent whitelist, **Using the default value is a security risk**|
+|~~nacos.core.auth.system.type~~|nacos|1.2.0 ~ latest|Deprecated legacy auth selector; it will be removed. Use `nacos.plugin.auth.type`|
+|~~nacos.core.auth.plugin.nacos.token.secret.key~~|No default|2.1.0 ~ latest|Deprecated signing-key alias; it will be removed. Use `nacos.plugin.auth.nacos.token.secret.key`|
+|~~nacos.core.auth.plugin.nacos.token.expire.seconds~~|18000|2.1.0 ~ latest|Deprecated token-expiration alias; it will be removed. Use `nacos.plugin.auth.nacos.token.expire.seconds`|
+
+
+## Use Authentication in Servers
+
+### Without Docker
+Starting with Nacos 3.3, Client API authentication is enabled by default. Callers must provide credentials supported by the selected auth plugin.
+
+To retain the earlier unauthenticated Client API behavior temporarily during an upgrade, use this explicit compatibility override:
+```java
+### If turn on auth system:
+nacos.core.auth.enabled=false
+```
+
+After enabling authentication, the configuration in application.properties is as follow:
+```java
+### If turn on auth system:
+nacos.plugin.auth.type=nacos
+nacos.core.auth.enabled=true
+```
+
+#### Custom SecretKey
+
+After enabling authentication, you can customize the key used to generate JWT tokens，the configuration in application.properties is as follow：
+
+> Attention：
+> 1. The secret key provided in the document is a public key. Please replace it with other secret key content during actual deployment to prevent security risks caused by secret key leakage.
+> 2. The signing key has no default. When the canonical value is empty, the distribution startup script first migrates a valid `nacos.core.auth.plugin.nacos.token.secret.key` value from `application.properties`; it prompts for a value only when neither key provides one.
+> 3. The secret key needs to be consistent between nodes, and if it is inconsistent for a long time, it may cause 403 invalid token error.
+
+```properties
+nacos.plugin.auth.nacos.token.secret.key=${custom_base64_token_secret_key}
+```
+
+Set the key to a **Base64 encoded** string whose decoded value is **at least 32 bytes**. Generate a deployment-specific secret and do not commit it to source control.
+
+The historical `nacos.core.auth.plugin.nacos.token.secret.key` remains an alias; use the standard key for new configuration.
+
+> Attention: the authentication switch takes effect immediately after modification. `token.secret.key` is a `RESTART` item: change it in static configuration, keep it consistent on every node, and restart the servers.
+
+### With Docker
+
+#### Official images
+
+Nacos 3.3 and later official images enable Client API authentication when `NACOS_AUTH_ENABLE` is unset. You may set it explicitly for auditable deployment configuration:
+
+```powershell
+NACOS_AUTH_ENABLE=true
+```
+
+For example, you can run this command to run a docker container with Authentication:
+
+```powershell
+docker run --env PREFER_HOST_MODE=hostname \
+  --env MODE=standalone \
+  --env NACOS_AUTH_ENABLE=true \
+  -e NACOS_AUTH_TOKEN=${custom_base64_token_secret_key} \
+  -e NACOS_AUTH_IDENTITY_KEY=${custom_server_identity_key} \
+  -e NACOS_AUTH_IDENTITY_VALUE=${custom_server_identity_value} \
+  -p 8848:8848 nacos/nacos-server:v3.3.0
+```
+
+Besides, you can also add the other related enviroment parameters:
+
+| name                          | description                            | option                                 |
+| ----------------------------- | -------------------------------------- | -------------------------------------- |
+| NACOS_AUTH_ENABLE      |  Client API authentication override        | Unset inherits the image default (`true` for Nacos 3.3+)                          |
+| NACOS_AUTH_TOKEN_EXPIRE_SECONDS      |  The token expiration in seconds        | default :18000                          |
+| NACOS_AUTH_TOKEN      |  Base64-encoded token secret        | No default; use a unique production value                          |
+| NACOS_AUTH_CACHE_ENABLE      |  Turn on/off caching of auth information. By turning on this switch, the update of auth information would have a 15 seconds delay.        | default : false   |
+
+
+
+#### Custom images
+
+If a custom image still carries an explicit compatibility override, change this line before enforcing Client API authentication:
+
+```
+nacos.core.auth.enabled=false
+```
+into
+```
+nacos.plugin.auth.type=nacos
+nacos.core.auth.enabled=true
+```
+
+## Authentication in Clients
+
+### Authentication in Java SDK
+
+The user name and password should be set when creating a 'Properties' class.
+```java
+properties.put("username","${username}");
+properties.put("password","${password}");
+```
+#### Example Code
+```java
+try {
+    // Initialize the configuration service, and the console automatically obtains the following parameters through the sample code.
+	String serverAddr = "{serverAddr}";
+	Properties properties = new Properties();
+	properties.put("serverAddr", serverAddr);
+
+    // if need username and password to login
+        properties.put("username","${username}");
+        properties.put("password","${password}");
+
+	ConfigService configService = NacosFactory.createConfigService(properties);
+} catch (NacosException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+}
+```
+### Authentication in Other languages SDK
+
+Pending...
+
+### Authentication in Open-API
+Firstly, the user name and password should be provided to login.
+
+```plain
+curl -X POST '127.0.0.1:8848/nacos/v1/auth/login' -d 'username=${username}&password=${password}'
+```
+
+If the user name and password are correct, the response will be:
+
+```
+{"accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTYwNTYyOTE2Nn0.2TogGhhr11_vLEjqKko1HJHUJEmsPuCxkur-CfNojDo","tokenTtl":18000,"globalAdmin":true}
+```
+
+Secondly, when using configuration services or naming services, accessToken in the previous response should be provided. To use the accessToken, 'accessToken=${accessToken}' should be appended at the end of request url, e.g.,
+
+```plain
+curl -X GET '127.0.0.1:8848/nacos/v1/cs/configs?accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTYwNTYyMzkyM30.O-s2yWfDSUZ7Svd3Vs7jy9tsfDNHs1SuebJB4KlNY8Q&dataId=nacos.example.1&group=nacos_group'
+```
+
+```plain
+curl -X POST 'http://127.0.0.1:8848/nacos/v1/ns/instance?accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTYwNTYyMzkyM30.O-s2yWfDSUZ7Svd3Vs7jy9tsfDNHs1SuebJB4KlNY8Q&port=8848&healthy=true&ip=11.11.11.11&weight=1.0&serviceName=nacos.test.3&encoding=GBK&namespaceId=n1'
+```
+
+## Open feature for token cache 
+
+Since version 2.2.1 of the server, the default authentication plug-in module supports the feature of token cache, see ISSUE #9906 
+```
+https://github.com/alibaba/nacos/issues/9906
+```
+#### Background
+Regardless of the client SDK or OpenAPI, after calling the `login` interface to obtain the accessToken, carry the accessToken to access the server, and the server parses the token for authentication. The action of token parsing is time-consuming. If you want to improve the performance of the server, you can consider enabling the feature of caching tokens, which using string comparison instead of token parsing.
+
+#### Way to open
+```
+nacos.plugin.auth.nacos.token.cache.enable=true
+```
+
+#### Attention
+Before enabling the feature of token cache, the server will generate a new token for each request carrying a username and password to access the `login` interface. The `tokenTtl` field in the return value of `login` interface is equal to the value set in the server configuration file. The configuration is as follows:
+```
+nacos.plugin.auth.nacos.token.expire.seconds=18000
+```
+After enabling the feature of token cache, the server will first check whether the token corresponding to the username exists in cache for each request to access the `login` interface with username and password. If it does not exist, generate a new token, insert it into the cache and return it to requester; if it exists, return the token to requester, and the value of the `tokenTtl` field is the value set in the configuration file minus the duration of the token stored in the cache. 
+If the token stays in the cache for more than 90% of the value set in the configuration file, when the `login` interface receives a request, although the token corresponding to the username exists in the cache, the server will regenerate the token and return it to the requester, and update cache. Therefore, in the worst case, the `tokenTtl` received by the requester is only 10% of the value set in the configuration file.
+
+## Open feature for server identity
+
+After the authentication feature is enabled, requests between servers will also be affected by the authentication system. Considering that the communication between the servers should be credible, during the 1.2~1.4.0 version, Nacos server use whether the User-Agent includes Nacos-Server to determine whether the request comes from other servers.
+
+However, this implementation is too simple and fixed, leading to possible security issues. Therefore, since version 1.4.1, Nacos has added the server identification feature. Users can configure the identity of the server by themselves, and no longer use User-Agent as the judgment standard for server requests.
+
+Way to open server identity
+
+```
+### Open authentication
+nacos.core.auth.enabled=true
+
+### Shutdown user-agent judgement for server request
+nacos.core.auth.enable.userAgentAuthWhite=false
+
+### Config the server identity key(not empty) and value(not empty)
+nacos.core.auth.server.identity.key=example
+nacos.core.auth.server.identity.value=example
+```
+
+**Attention** All servers in cluster need to be configured with the same `server.identity` information, otherwise it may cause data inconsistency between servers or failure to delete instances.
+
+### Upgrade from old version
+
+Considering that users of the old version need to upgrade, users can turn on the `nacos.core.auth.enable.userAgentAuthWhite=true` during upgrading, and turn off it after the cluster is upgraded to 1.4.1 completely and runs stably.

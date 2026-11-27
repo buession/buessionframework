@@ -1,0 +1,102 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Sidebar from '@components/starlight/Sidebar.astro';
+import { Pagination } from 'virtual:starlight/components';
+import { useTranslations } from '@i18n/util';
+
+const t = useTranslations(Astro); 
+
+export async function getStaticPaths() {
+  const downloadEntries = await getCollection('download', ({ slug }) => {
+    return slug.startsWith('en/');
+  });
+  return downloadEntries.map(entry => {
+    return {
+      params: { slug: entry.slug.replace('en/', '') }, props: { entry },
+    };
+  });
+}
+ 
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const frontmatter = entry?.data;
+ 
+const entries = await getCollection('download', ({ slug }) => {
+  return slug.startsWith('en/');
+});
+
+const menusEntries = entries.map(entry => {
+  
+  const pathname = `/download/${entry.slug.replace('en/', '')}/`;
+  const _active = pathname === Astro.url.pathname;
+  
+  return {
+    type: 'link',
+    label: entry.data.title,
+    order: entry.data.order,
+    href: pathname,
+    isCurrent: _active,
+    attrs: {}
+  }
+}).sort((a, b) => a.order - b.order);
+
+const menus = [{
+  type: 'group',
+	label: t('commmon.header.comm.download'),
+	entries: menusEntries
+}]
+
+const currentIndex = menus[0].entries.findIndex(item => item.isCurrent)
+const prev = menus[0].entries[currentIndex - 1]
+const next = menus[0].entries[currentIndex + 1]
+---
+ 
+<BaseLayout 
+  align='docs' 
+  title={frontmatter.title}
+>
+  <div class="bg-gray-01 h-2"></div>
+  <download-layout>
+    <div class="download-container flex">
+      <div class="download-menu">
+        <Sidebar sidebar={menus} />
+      </div>
+      <div class="download-content">
+        <article class="prose max-w-none">
+          <Content />
+          <div class="pb-6">
+            {(prev || next) && (<Pagination
+              labels={{
+                'page.previousLink': t('commmon.base.page.previousLink'),
+                'page.nextLink': t('commmon.base.page.nextLink')
+              }}
+              pagination={{
+                prev: prev,
+                next: next
+              }}
+            />)}
+          </div>
+        </article>
+      </div>
+    </div>
+  </download-layout>
+</BaseLayout>
+ 
+ 
+<style>
+  .download-container {
+    height: calc(100vh - 4.5rem);
+  }
+  .download-menu {
+    width: 18.75rem;
+    padding: 1rem 1rem;
+    border-right: solid 1px #DDDEE4;
+  }
+ 
+  .download-content {
+    width: 100%;
+    padding: 1rem 1rem 2rem;
+    overflow: auto;
+  }
+</style>

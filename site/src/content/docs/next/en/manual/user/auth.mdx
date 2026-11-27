@@ -1,0 +1,188 @@
+---
+title: Configure Access Credentials
+keywords: [Auth, Credentials, SDK, OpenAPI, OIDC, OAuth2]
+description: Learn how SDKs and OpenAPI callers provide access credentials for different Nacos auth modes.
+sidebar:
+    order: 8
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Configure Access Credentials
+
+> Attention
+> - Nacos is an internal microservice component and must run in a trusted internal network. Do not expose it to the public Internet, or it may bring security risks.
+> - Nacos provides a simple auth implementation to prevent business misuse. It is a weak auth system, not a strong auth system designed to resist malicious attacks.
+> - If Nacos runs in an untrusted network or you require strong auth, use the official simple implementation as a reference to develop a [custom auth plugin](../../plugin/auth-plugin.md).
+
+Nacos 3.3 enables Client authentication by default. SDKs and protected Client HTTP APIs require credentials; Admin and Console APIs also enable authentication by default. Credential types depend on the selected auth plugin.
+
+Before using default authentication, have an administrator complete [server authentication setup and administrator initialization](../admin/auth.mdx), then create application accounts with the required resource permissions. Logging in to the console does not configure credentials for a separate application or terminal. Server token signing secrets and server identities are different from application usernames, passwords, and access tokens.
+
+| Server auth type | Common client credentials | Notes |
+| --- | --- | --- |
+| `nacos` | `username`, `password`, `accessToken` | Default Nacos auth. SDKs log in with username and password and then attach the token. |
+| `ldap` | `username`, `password`, `accessToken` | LDAP validates the username and password. Nacos issues the token. |
+| `oidc` | `Authorization: Bearer ...`, `accessToken` | Uses OAuth2/OIDC tokens issued by an external IdP. |
+
+## SDK Configuration
+
+The Java default-auth example explicitly reads the `NACOS_USERNAME` and `NACOS_PASSWORD` environment variables. Set them to an existing account before running it; the SDK logs in and refreshes its token automatically.
+
+<Tabs>
+  <TabItem label="Java default auth">
+
+    When `username` and `password` are configured, the Java SDK calls the default login API, obtains an `accessToken`, and attaches it to later requests.
+
+    ```java
+    Properties properties = new Properties();
+    properties.setProperty(PropertyKeyConst.SERVER_ADDR, "127.0.0.1:8848");
+    properties.setProperty(PropertyKeyConst.USERNAME, System.getenv("NACOS_USERNAME"));
+    properties.setProperty(PropertyKeyConst.PASSWORD, System.getenv("NACOS_PASSWORD"));
+
+    ConfigService configService = NacosFactory.createConfigService(properties);
+    NamingService namingService = NacosFactory.createNamingService(properties);
+    ```
+
+  </TabItem>
+  <TabItem label="Java OIDC/OAuth2">
+
+    The Java SDK can use the OAuth2 Client Credentials flow to obtain bearer tokens. This is intended for service-to-service access.
+
+    ```java
+    Properties properties = new Properties();
+    properties.setProperty(PropertyKeyConst.SERVER_ADDR, "127.0.0.1:8848");
+    properties.setProperty("nacos.client.auth.oidc.issuer-uri", "https://idp.example.com/realms/nacos");
+    properties.setProperty("nacos.client.auth.oidc.client-id", "nacos-client");
+    properties.setProperty("nacos.client.auth.oidc.client-secret", "${client_secret}");
+    properties.setProperty("nacos.client.auth.oidc.scope", "openid");
+
+    ConfigService configService = NacosFactory.createConfigService(properties);
+    NamingService namingService = NacosFactory.createNamingService(properties);
+    ```
+
+    To skip Discovery, configure the token endpoint directly:
+
+    ```java
+    properties.setProperty("nacos.client.auth.oidc.token-endpoint",
+        "https://idp.example.com/realms/nacos/protocol/openid-connect/token");
+    ```
+
+  </TabItem>
+  <TabItem label="Go">
+
+    The Go SDK uses username and password for default Nacos auth or LDAP auth:
+
+    ```go
+    sc := []constant.ServerConfig{
+        *constant.NewServerConfig("${serverAddr}", 8848, constant.WithContextPath("/nacos")),
+    }
+
+    cc := *constant.NewClientConfig(
+        constant.WithUsername("${username}"),
+        constant.WithPassword("${password}"),
+    )
+
+    namingClient, err := clients.NewNamingClient(vo.NacosClientParam{
+        ClientConfig:  &cc,
+        ServerConfigs: sc,
+    })
+
+    configClient, err := clients.NewConfigClient(vo.NacosClientParam{
+        ClientConfig:  &cc,
+        ServerConfigs: sc,
+    })
+    ```
+
+  </TabItem>
+  <TabItem label="Other languages">
+
+    Check the auth options of the SDK you use. Default Nacos auth usually needs username and password. OIDC/OAuth2 scenarios usually need a bearer token, or business code must obtain a token and inject it into requests.
+
+  </TabItem>
+</Tabs>
+
+## OpenAPI Credentials
+
+The commands below use Bash (Git Bash or WSL on Windows).
+
+### Default Nacos Auth And LDAP Auth
+
+Log in with username and password first:
+
+```bash
+export NACOS_USERNAME='<your-username>'
+export NACOS_PASSWORD='<your-password>'
+curl -sS -X POST 'http://127.0.0.1:8848/nacos/v3/auth/user/login' \
+  --data-urlencode "username=${NACOS_USERNAME}" \
+  --data-urlencode "password=${NACOS_PASSWORD}"
+```
+
+Example response:
+
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+  "tokenTtl": 18000,
+  "globalAdmin": true,
+  "username": "nacos"
+}
+```
+
+Save `accessToken` from the response in an environment variable and run later examples in the same terminal. Log in again and update the variable after expiration. `tokenTtl` is the validity period in seconds.
+
+```bash
+export NACOS_ACCESS_TOKEN='<accessToken-from-login-response>'
+```
+
+When calling OpenAPI, send the Nacos token in the `accessToken` header:
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/cs/config?dataId=example.properties&groupName=DEFAULT_GROUP' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+The default auth plugin also accepts `Authorization: Bearer <token>` for compatibility. This manual uses the `accessToken` header for default Nacos authentication examples.
+
+The `accessToken` request parameter is also supported. Avoid recording or sharing URLs that contain tokens:
+
+```bash
+curl -G 'http://127.0.0.1:8848/nacos/v3/client/cs/config' \
+  --data-urlencode "accessToken=${NACOS_ACCESS_TOKEN}" \
+  --data-urlencode 'dataId=example.properties' \
+  --data-urlencode 'groupName=DEFAULT_GROUP'
+```
+
+### OIDC/OAuth2 Auth
+
+When the server uses `nacos.plugin.auth.type=oidc`, do not use `/v3/auth/user/login` to obtain a token. Obtain an OAuth2/OIDC token from the enterprise IdP, then call Nacos with it:
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/cs/config?dataId=example.properties&groupName=DEFAULT_GROUP' \
+  -H "Authorization: Bearer ${IDP_ACCESS_TOKEN}"
+```
+
+For server-side OIDC/OAuth2 setup, see [Admin Manual - OIDC/OAuth2 Authentication](../admin/oidc-auth.md).
+
+## Anonymous AI Reads
+
+Anonymous AI access is disabled by default in the built-in auth plugin. Reading without credentials requires the administrator to explicitly set `nacos.plugin.auth.nacos.anonymous.ai.enabled=true`, an endpoint that permits anonymous access, and resource permissions and visibility that allow the read. `PUBLIC` visibility does not bypass authentication. Explicitly supplied empty or invalid credentials fail authentication instead of falling back to anonymous access.
+
+## Troubleshooting
+
+### The default login API says the current auth type is unsupported
+
+`/v3/auth/user/login` applies only to `nacos` and `ldap`. If the server uses `oidc`, obtain a token from the external IdP.
+
+### A token suddenly becomes invalid
+
+Common causes:
+
+- The token expired.
+- `nacos.plugin.auth.nacos.token.secret.key` is inconsistent across cluster nodes.
+- The server switched to another auth plugin type.
+- Permissions changed while the client still uses an old token.
+
+### A valid token still has no permission
+
+Successful authentication only means the server recognizes the caller. Whether the caller can read or write a resource also depends on roles, permissions, and resource visibility.
