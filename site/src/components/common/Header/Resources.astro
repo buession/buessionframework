@@ -1,0 +1,78 @@
+---
+import { isChinese } from '@i18n/util';
+const ifzh = isChinese(Astro);
+interface Props {
+  items: {
+    label: string;
+    link?: string;
+  }[];
+}
+
+export const docsItems =  [
+    {
+        label: "博客",
+        target: "_self",
+        link: "/blog/",
+        translations: {
+            en: "BLOG",
+            link: "/en/blog/",
+        }
+    },
+    {
+        label: "电子书",
+        target: "_self",
+        link: "/docs/ebook/kbyo6n/",
+        translations: {
+            en: "E-book",
+            link: "/en/docs/ebook/kbyo6n/",
+        }
+    },
+];
+
+const getVersion = (pathname) => {
+  if(pathname.includes('/docs/ebook/')) {
+    return 'ebook'
+  }
+  if(pathname.includes('/blog/')) {
+    return 'blog'
+  }
+  return 
+}
+
+const ifactive = (link) => {
+  const nowVersion = getVersion(Astro.url.pathname);
+
+  return link.includes(nowVersion);
+}
+---
+
+<resources class="dropdown-docs block bg-gray-13 rounded-lg">
+  <ul class="w-[9.25rem] list-none m-0 p-2">
+    {
+      docsItems.map((item) => {
+        const { label, link, translations } = item;
+        const active = ifactive(ifzh ? link : translations.link);
+        return (
+          <li class={`no-underline cursor-pointer my-1 rounded-lg ${active ? 'bg-gray-12' : ''} hover:bg-gray-12`}>
+            <a 
+              href={ifzh ? link : translations.link}
+              class="inline-block w-full p-2 no-underline text-inherit text-gray-02" 
+            >
+              {ifzh ? label : item.translations?.en}
+            </a>
+          </li>
+        )
+      })
+    }
+  </ul>
+</resources>
+
+<script>
+  class Resources extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+  }
+  customElements.define("resources", Resources);
+</script>

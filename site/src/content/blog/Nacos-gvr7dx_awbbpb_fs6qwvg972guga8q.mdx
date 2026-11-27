@@ -1,0 +1,62 @@
+---
+title: "Nacos 在云原生架构下的演进"
+description: "Nacos 在云原生架构下的演进"
+date: "2024-08-22"
+category: "article"
+keywords: ["Nacos"]
+authors: "CH3CHO"
+---
+
+<a name="F8Chu"></a>
+### 背景
+Nacos 提供的最核心能力是动态服务发现与动态配置管理能力，在云原生环境下，借助云产品，如 EDAS（企业级分布式应用服务）平台中，我们可以很轻松地使用 K8s 来托管 Nacos 体系的微服务应用，同时又享有全链路流量治理、可观测、极致弹性等能力。<br />云原生下的应用由两个主要部分组成：不可变基础设施（代码、运行时）与配置。在这里配置是一个非常广泛的概念，它包含了运维配置（如副本数、发布策略、流量策略等），也包含了运行时配置（如环境变量、文件系统、运行时配置等）。通过 Kubernetes 提供的标准接口，我们可以很方便地修改上述配置。然而令人苦恼的是，Nacos 提供的配置管理能力，在当下却不能融入 Kubernetes 提供的标准接口中。<br />**随之而来的头号问题：**应用交付需要分两步走，1. 发布 Nacos 配置，2. 发布应用。尤其是 Nacos 配置发布过程，依赖于用户编程对接 OpenAPI 或者人工登录控制台进行白屏操作。这里引入一个问题值得我们思考，运维接口不统一、不标准，使得应用生命周期管理有所割裂，进而带来运维效率降低、技术门槛拔高的成本问题。<br />![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795139-05f5609a-d7e8-42a3-9bae-82ef29aef7a3.webp#clientId=u9416460e-4f7f-4&from=paste&id=u9fa0056c&originHeight=325&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=u3f5001a1-7f3f-4231-a789-78838947811&title=)
+<a name="hhH90"></a>
+### Nacos 与 Kubernetes 的桥梁
+归其根本，我们需要看清问题的本质。Nacos 项目所解决根本问题是微服务技术架构下，实现应用间的动态服务发现能力与应用配置管理能力。Kubernetes 平台所解决的问题是大规模应用集合的管理难题。因此，想要解决前面所述的问题，我们引入 NacosController 项目，它作为链接 Nacos 和 Kubernetes 的桥梁，通过 Kubernetes 运维接口管理 Nacos 能力。
+
+![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795222-15b250c7-de86-488b-8da3-8d7408a3a623.webp#clientId=u9416460e-4f7f-4&from=paste&id=u85f7b731&originHeight=464&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=u796ea583-2fde-4bae-ad3e-24ad0497732&title=)<br />项目地址：_https://github.com/nacos-group/nacos-controller_<br />当前 NacosController 项目已经实现了 DynamicConfiguration 概念（后文简称 DC）。通过这个概念，我们可以定义 Nacos 配置与 K8s 配置的同步策略，进而使用 Kubernetes 标准运维接口管理 Nacos 配置。当然，打开一下“脑洞”，我们也可以通过这个概念使用 Nacos 管理应用的常见运行时配置（如环境变量、文件系统）。
+<a name="xToW4"></a>
+### 应用配置在桥梁中通行载体
+通过 NacosController 项目，我们建立起了 NacosServer 与 Kubernetes 的桥梁，我们再引入 DynamicConfiguration 的概念用来解决配置管理的问题。DC 概念承载了从哪里找到配置以及内容，并将其同步到哪里去的信息，有了这样一份简洁明了的 DC 资源，我们可以很轻松地定义一些同步行为，如将 Kubernetes 中的配置同步到 NacosServer 中，又或是将 NacosServer 中的配置同步到 Kubernete 中。基于 DC 概念，我们凝练出两种主要使用场景。<br />![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795099-b2bd9aa6-0230-45b3-aef4-9010ecd053fd.webp#clientId=u9416460e-4f7f-4&from=paste&id=u80b6f94f&originHeight=326&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=u07c2022c-df34-497b-a758-25acd25acb4&title=)
+<a name="tzIzY"></a>
+#### 将配置同步到 NacosServer 中
+我们先看一份 DC 的定义，以下这份 DC 定义了将配置从 Kubernetes 集群中同步到 Nacos Server 去。这份 DC 内容包含几个部份：
+
+1. dataIds：哪些 DataId 是我们关心的。
+2. nacosServer：这些配置将被同步到 NacosServer 的哪个命名空间、分组，并且提供了 Nacos Server 的访问必要信息。
+3. strategy：同步配置时的偏好策略。
+4. objectRef：配置的数据载体。
+```
+apiVersion: nacos.io/v1kind: DynamicConfigurationmetadata:    name: dc-demo-cluster2serverspec:  dataIds:  - data-id1.properties  - data-id2.yml  nacosServer:    endpoint: <your-nacos-server-endpoint>    namespace: <your-nacos-namespace-id>    group: <your-nacos-group>    authRef:      apiVersion: v1      kind: Secret      name: nacos-auth  strategy:    syncPolicy: Always    syncDirection: cluster2server    syncDeletion: true  objectRef:    apiVersion: v1    kind: ConfigMap    name: nacos-config-cm
+---apiVersion: v1kind: ConfigMapmetadata:    name: nacos-config-cm    namespace: defaultdata:    data-id1.properties: |      key=value      key2=value2    data-id2.yml: |      app:        name: test
+---apiVersion: v1kind: Secretmetadata:    name: nacos-authdata:    ak: <base64 ak>    sk: <base64 sk>
+```
+通过这样一份简单清晰的 DC 资源，我们将 Kubernetes 中的 ConfigMap 与 Nacos 中的配置管理建立了关系，当然设计之中并不局限于 ConfigMap，可以是任意的 Kubernetes 资源作为数据载体。不同的数据载体在 Kubernetes 侧有着不同的使用场景，如 ConfigMap 载体可以作为环境变量或文件系统挂在到 Pod 中，hashicorp vault 载体实现了配置安全加密等等。<br />在这样的场景下，我们成功将微服务应用的主要配置维护动作统一到了 Kubernetes 侧。借助一些三方工具，我们可以很轻易的搭建一些功能特性。比如基于 git、kubectl、jenkins，可以很方便的搭建一套带有版本控制、权限控制、自动化更新的配置变更流水线。又或是借助 helm、customize 等软件，**我们可以将应用定义与应用配置真正打包在一起，实现一件交付。**<br />![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795189-7c23a815-3530-4e45-8115-cff1b3a316f5.webp#clientId=u9416460e-4f7f-4&from=paste&id=u16c30928&originHeight=450&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=ub07fcbe1-74f1-4508-a267-c613925024c&title=)
+<a name="TBxTV"></a>
+#### 将配置同步到 Kubernetes 中
+既然 Nacos 配置的管理行为可以通过 DC 概念集成到 Kubernetes 接口中，那么反过来也是可以做到的。下面这份 DC 资源，定义了将 Nacos 中的配置同步到 Kubernetes 中。与上面定义将配置从 Kubernetes 同步到 Nacos 中，只有两处差别。
+
+1. spec.strategy.syncDirection：这个配置表明了配置的同步方向。
+2. spec.objectRef：从 Nacos 中将配置同步到 Kuberntes 中时，我们可以不指定数据载体，那么会默认使用一个同名的 ConfigMap 作为数据载体。
+```
+apiVersion: nacos.io/v1kind: DynamicConfigurationmetadata:    name: dc-demo-server2clusterspec:  dataIds:  - data-id1.properties  - data-id2.yml  nacosServer:    endpoint: <your-nacos-server-endpoint>    namespace: <your-nacos-namespace-id>    group: <your-nacos-group>    authRef:      apiVersion: v1      kind: Secret      name: nacos-auth  strategy:    syncPolicy: Always    syncDirection: server2cluster    syncDeletion: true---apiVersion: v1kind: Secretmetadata:    name: nacos-authdata:    ak: <base64 ak>    sk: <base64 sk>
+```
+如此一来，我们将 Kubernetes 中配置的管理行为统一到了 Nacos Server 侧。借助 Nacos 的特性能力，如丰富的权限控制、历史版本追溯等能力，对于 Kubernetes 中的配置也能享受到这些特性。当然本质上解决的还是将配置管理的集中在一处的问题。<br />![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795188-92445c7f-e61b-4e45-ba36-e2eda75cea7e.webp#clientId=u9416460e-4f7f-4&from=paste&id=u864ed417&originHeight=543&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=u84e1b174-ac77-4210-a47c-9afb2c7b192&title=)
+<a name="YOxbD"></a>
+### 云原生下高效运维微服务应用
+阿里云的企业级分布式应用服务（EDAS）中，根据多年云上微服务应用托管经验，将服务治理、可观测、弹性等能力融合集成在一起，沉淀出 CloudApp 概念。当前 CloudApp 已经集成了 DynamicConfiguration 概念，并针对其中 nacosServer 访问配置做了简化。在 EDAS 环境中，只需要对 Kubernetes 原生 Workload（如 Deployment/StatefulSet）增加一个 label，即可自动启用服务治理、可观测等能力。以下是一份简单的 helm demo，对于用户而言，没有繁琐的各种概念入侵，只需要专注于应用本身。借助于 CloudApp 概念，极大地降低了微服务应用最佳实践的技术门槛，同时又极大地提升了微服务应用的运维效率。
+```
+apiVersion: apps/v1kind: Deploymentmetadata:  name: demo-app-1  labels:    edas.alibabacloud.com/app: demo-app-1spec:  replicas: 1  selector:    matchLabels:      app: demo-app-1  template:    metadata:      labels:        app: demo-app-1    spec:      containers:      - name: main        image: registry.cn-hangzhou.aliyuncs.com/edas-demo-project/consumer:1.0---apiVersion: nacos.io/v1kind: DynamicConfigurationmetadata:    name: for-app1spec:  dataIds:  - data-id1.properties  - data-id2.yml  nacosServer:    namespace: <EDAS 微服务空间ID>    group: <配置分组>  strategy:    syncPolicy: Always    syncDirection: cluster2server    syncDeletion: true  objectRef:    apiVersion: v1    kind: ConfigMap    name: nacos-config-cm
+---apiVersion: v1kind: ConfigMapmetadata:    name: nacos-config-cm    namespace: defaultdata:    data-id1.properties: |      key=value      key2=value2    data-id2.yml: |      app:        name: test
+```
+从 CloudApp 的技术架构图上，可以看出有三条主要变更渠道，可以根据运维偏好选择合适的变更方式。
+
+1. 白屏变更：通过云产品权限控制变更，同时享受完整应用运维能力。
+2. 黑屏变更途径 1：通过 Kubernetes RBAC 权限体系控制变更，同时享受完整应用运维能力。
+3. 黑屏变更途径 2：只关心应用本身和应用运行时配置，在不引入其他认知概念的情况下，享有默认的应用运维能力（如可观测、无损发布等）。
+
+![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291798061-d833f609-c333-45a3-b892-47cd3da9041c.webp#clientId=u9416460e-4f7f-4&from=paste&id=u03efbdfc&originHeight=660&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=ub04fe088-366d-49fc-9322-42ddbf74473&title=)
+<a name="eLDvZ"></a>
+### 下一步规划
+当前 NacosController 项目已经初步实现了 DynamicConfiguration 概念，解决了 Nacos 核心能力之一的配置管理与 Kubernetes 融合问题。<br />下一步我们将围绕 Nacos 的另一个核心能力：服务动态发现，将其与 Kubernetes 进行融合，从而解除应用程序对于 Nacos SDK 的依赖，以及降低 Nacos 体系微服务应用与非 Nacos 体系应用间的调用门槛。<br />![](https://intranetproxy.alipay.com/skylark/lark/0/2024/webp/299576/1724291795869-6488ce13-1b29-4291-87d6-0a0e05b6bb7f.webp#clientId=u9416460e-4f7f-4&from=paste&id=u84a5ff57&originHeight=295&originWidth=1080&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=uc466e7f3-3377-4aee-ae47-0691e1bf68f&title=)
+

@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import EarthBackground from '@components/home/EarthBackground.astro';
+import QuickStart from '@components/home/QuickStart.astro';
+import NacosCliAccess from '@components/home/NacosCliAccess.astro';
+import ChooseReason from '@components/home/ChooseReason.astro';
+import RegistryMcp from '@components/home/RegistryMcp.astro';
+import NacosEBook from '@components/home/NacosEBook.astro';
+import ExploreFeatures from '@components/home/ExploreFeatures.astro';
+// import UseCompanies from '@components/home/UseCompanies.astro';
+import NewUseCompanies from '@components/home/NewUseCompanies.astro';
+import Contributors from '@components/home/Contributors.astro';
+import HomeSolutionsCard from '@components/home/HomeSolutionsCard.astro';
+import HomeFooter from '@components/common/Footer.astro';
+import OverviewImage from '@components/home/OverViewImage/index.astro';
+import HomeCardPlayer from '@components/home/HomeCardPlayer.astro';
+import { useTranslations } from "@i18n/util";
+const t = useTranslations(Astro);
+---
+
+<BaseLayout
+  title={t('home.title')}
+  description={t('home.description')}
+>
+  <home-body>
+    <EarthBackground />
+    <QuickStart />
+    <NacosCliAccess />
+    <NewUseCompanies />
+    <ChooseReason />
+    <RegistryMcp />
+    <NacosEBook />
+    <ExploreFeatures />
+    <!-- <UseCompanies /> -->
+    <OverviewImage />
+    <HomeCardPlayer/>
+    <Contributors />
+  </home-body>
+
+  <HomeFooter>
+    <HomeSolutionsCard slot="after-footer" />
+  </HomeFooter>
+</BaseLayout>
+
+<style is:global>
+  home-body {
+    display: block;
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F4F4F6 30%, #EBECEF 100%);
+  }
+</style>

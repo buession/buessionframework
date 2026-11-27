@@ -1,0 +1,204 @@
+---
+title: Nacos Quick Start
+keywords: [Nacos, Quick Start]
+description: This Quick Start Guide helps you quickly download, install, and use Nacos on your computer.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Nacos Quick Start
+
+This Quick Start Guide helps you quickly download, install, and use Nacos on your computer.
+
+:::note
+- The Quick Start is designed to help you quickly get started with installing, deploying, and using Nacos. The Nacos service produced by this Quick Start runs in **standalone mode**. It is recommended for testing purposes only. For production environments, please deploy in **cluster mode** with **authentication enabled** to avoid **stability and security** risks.
+- Nacos is designed as an internal IDC application component, not a product for public network environments. It is recommended to deploy in an isolated internal network environment. It is **strongly discouraged** to deploy in public network environments.
+:::
+
+## 0. Choose A Version
+
+This page uses the **Nacos 3.3.0 stable release**. Get the package from the [download page](/en/download/nacos-server/) and read the [3.3.0 release notes](https://github.com/alibaba/nacos/releases/tag/3.3.0). For an existing deployment, read the [upgrade guide](../manual/admin/upgrading.mdx) first.
+
+## 1. Prerequisites
+
+Nacos relies on a [Java](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/) environment to run. Please ensure you have the following environment set up:
+
+1. 64-bit OS, supporting Linux/Unix/Mac/Windows. Linux/Unix/Mac is recommended.
+2. 64-bit JDK 17+; [Download](https://www.oracle.com/java/technologies/downloads/#java17) & [Configure](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/).
+
+To build an executable that does not require a JDK at runtime, see the [Nacos Native quick start](./quick-start-native.mdx). Available starting with 3.3.0, this workflow requires a Native toolchain, plugins, and metadata prepared for the build.
+
+## 2. Download and Start Nacos
+
+### 2.1. One-Click Deployment with nacos-setup (Recommended)
+
+[nacos-setup](https://github.com/nacos-group/nacos-setup) provides one-click automated deployment, automatically handling download, authentication configuration, port detection, and Java environment verification.
+
+Install nacos-setup:
+
+<Tabs>
+  <TabItem label="Linux/macOS">
+    `curl -fsSL https://nacos.io/nacos-installer.sh | sudo bash`
+  </TabItem>
+  <TabItem label="Windows (PowerShell)">
+    `powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr -UseBasicParsing https://nacos.io/nacos-installer.ps1 | iex"`
+  </TabItem>
+</Tabs>
+
+Start Nacos with an explicit 3.3.0 version:
+
+```bash
+# One-click deploy standalone Nacos 3.3.0
+nacos-setup -v 3.3.0
+
+# One-click deploy a Nacos 3.3.0 cluster
+nacos-setup -c cluster -v 3.3.0
+
+# Configure external storage globally, enter database address, port, username and password, then re-run nacos-setup
+nacos-setup --datasource-conf
+```
+
+> For more usage, please refer to [One-Click Deployment with nacos-setup](../manual/admin/deployment/deployment-nacos-setup.md).
+
+### 2.2. Manual Download and Deployment
+
+#### 2.2.1. Download the Package
+
+You can obtain the **Nacos distribution package** through the Nacos official website or Github.
+
+<Tabs>
+  <TabItem label="Official Website">
+    Go to the Nacos [download page](/en/download/nacos-server/), select [Stable Versions](/en/download/nacos-server/#stable-versions), and download [3.3.0.zip](https://download.nacos.io/nacos-server/nacos-server-3.3.0.zip).
+
+    > Note: When many users are downloading simultaneously, you may encounter download rate limiting. If this happens, please wait and try again, or use the `Github download method`.
+  </TabItem>
+  <TabItem label="Github">
+    Go to the Nacos GitHub [3.3.0 release page](https://github.com/alibaba/nacos/releases/tag/3.3.0) and download `nacos-server-3.3.0.zip` from `Assets`.
+  </TabItem>
+</Tabs>
+
+#### 2.2.2. Extract the Nacos Distribution Package
+
+```bash
+  unzip nacos-server-3.3.0.zip
+  # or tar -xvf nacos-server-3.3.0.tar.gz
+  cd nacos/bin
+```
+
+#### 2.2.3. Start the Server
+
+* Note: Nacos is recommended to run on machines with at least 2 CPU cores, 4GB RAM, and 60GB disk space.
+
+<Tabs>
+  <TabItem label="Linux/Unix/Mac">
+    Start command (standalone means running in standalone mode, not cluster mode):
+
+    `sh startup.sh -m standalone`
+
+    If you are using Ubuntu, or the script reports an error about the `[[` symbol not found, try running: `bash startup.sh -m standalone`
+  </TabItem>
+  <TabItem label="Windows">
+    Start command (standalone means running in standalone mode, not cluster mode):
+
+    `startup.cmd -m standalone`
+  </TabItem>
+</Tabs>
+
+Nacos 3.3 enables Client, Admin, and Console authentication by default. The startup script prompts for three missing settings: a token signing secret (valid Base64 decoding to at least 32 bytes) and the server identity key/value. These server settings are separate from the username and password used to log in. Example prompts:
+
+```
+`nacos.plugin.auth.nacos.token.secret.key` is missing, please set with Base64 string: ${your_input_token_secret_key}
+nacos.plugin.auth.nacos.token.secret.key` Updated:
+----------------------------------
+`nacos.core.auth.server.identity.key` is missing, please set: ${your_input_server_identity_key}
+`nacos.core.auth.server.identity.key` Updated:
+----------------------------------
+`nacos.core.auth.server.identity.value` is missing, please set: ${your_input_server_identity_value}
+`nacos.core.auth.server.identity.value` Updated:
+----------------------------------
+```
+
+:::note
+If you have already set these 3 configurations in `conf/application.properties`, you will not be prompted.
+:::
+
+## 3. Verify Nacos Service Started Successfully
+
+Navigate to the `${nacos.home}/logs/` directory and use `tail -f start.out` to view the logs. If you see the following log, the service has started successfully.
+
+```
+Nacos started successfully in stand alone mode. use embedded storage
+```
+
+You can use the following services to quickly verify Nacos functionality.
+
+### 3.1. Nacos Console Page
+
+Open any browser and enter the address: `http://127.0.0.1:8080` to access the Nacos console page.
+
+> Note: The first time you open it, you will be asked to initialize the password for the admin user `nacos`.
+
+#### 3.1.1. Obtain An Access Token
+
+Run the following commands in Bash (Git Bash or WSL on Windows). Replace the password with the administrator password you initialized, then copy `accessToken` from the login response into `NACOS_ACCESS_TOKEN`:
+
+```bash
+export NACOS_USERNAME='nacos'
+export NACOS_PASSWORD='<your-initialized-password>'
+curl -sS -X POST 'http://127.0.0.1:8848/nacos/v3/auth/user/login' \
+  --data-urlencode "username=${NACOS_USERNAME}" \
+  --data-urlencode "password=${NACOS_PASSWORD}"
+
+export NACOS_ACCESS_TOKEN='<accessToken-from-login-response>'
+```
+
+Both Client and Admin API calls below use this token. Log in again after it expires. Applications should use an account with the required resource permissions; see [Access Credentials](../manual/user/auth.mdx).
+
+### 3.2. Service Registration
+
+```bash
+curl -X POST 'http://127.0.0.1:8848/nacos/v3/client/ns/instance?serviceName=quickstart.test.service&ip=127.0.0.1&port=8080' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.3. Service Discovery
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/ns/instance/list?serviceName=quickstart.test.service' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.4. Publish Configuration
+
+```bash
+curl -X POST 'http://127.0.0.1:8848/nacos/v3/admin/cs/config?dataId=quickstart.test.config&groupName=test&content=HelloWorld' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+### 3.5. Get Configuration
+
+```bash
+curl -X GET 'http://127.0.0.1:8848/nacos/v3/client/cs/config?dataId=quickstart.test.config&groupName=test' \
+  -H "accessToken: ${NACOS_ACCESS_TOKEN}"
+```
+
+If authentication fails, check the username, password, token validity, and account permissions. Explicitly disabling Client authentication is a temporary migration option for existing clients without credentials; see the [Upgrade Guide](../manual/admin/upgrading.mdx#212-prepare-for-default-client-api-authentication).
+
+## 4. Shutdown Server
+
+### 4.1. Linux/Unix/Mac
+
+`sh shutdown.sh`
+
+### 4.2. Windows
+
+`shutdown.cmd`
+
+Or double-click the shutdown.cmd file to run it.
+
+## Related Projects
+
+* [Nacos](https://github.com/alibaba/nacos)
+* [nacos-setup](https://github.com/nacos-group/nacos-setup)
