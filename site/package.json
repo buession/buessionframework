@@ -28,7 +28,7 @@
     "mdast-util-toc": "^7.0.0",
     "moment": "^2.29.4",
     "preact": "^10.20.2",
-    "qs": "^6.11.2",
+    "qs": "^6.16.1",
     "react": "npm:@preact/compat",
     "react-dom": "npm:@preact/compat",
     "rehype-external-links": "^3.0.0",
