@@ -1,8 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /docs/next/
-Disallow: /docs/v2.3/
-Disallow: /docs/v2/
-Disallow: /docs/v1/
-
-Sitemap: https://nacos.io/sitemap-index.xml
